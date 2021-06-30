@@ -163,7 +163,7 @@
     <!-- Loading -->
     <LoadingComponent :is-visible="isLoading"/>
 
-    <b-modal size="md" ref="modal-sale-low" hide-footer title="BAJA DEL COMPROBANTE">
+    <b-modal size="lg" ref="modal-sale-low" hide-footer title="BAJA DEL COMPROBANTE">
       <b-form @submit.prevent="ValidateSaleLow">
         <b-row>
           <b-col md="12">
@@ -373,7 +373,7 @@ export default {
 
 function showModalSaleLow() {
   if (this.sale.type_invoice == '01' || this.sale.type_invoice == '03' || this.sale.type_invoice == '07' || this.sale.type_invoice == '08' ) {
-    if (this.sale.state != 4) {
+    if (this.sale.state == 3) {
       Swal.fire({ icon: 'error', text: 'Para dar de baja un comprobante, se requiere que el comprobante este aceptado', timer: 3000,})  
       return false;
     }
