@@ -31,6 +31,7 @@ const state = {
   // url_base: 'https://dev.sertaads.com/api/',
    url_base: 'https://agroterra.rlpfacts.com/api/',
   // url_base: 'https://agroplant.rlpfacts.com/api/',
+  // url_base: 'https://kalyfarm.rlpfacts.com/api/',
   // url_base: 'https://bertha.rlpfacts.com/api/',
   // url_base: 'https://dev.rlpfacts.com/api/',
   // url_base: 'http://localhost:8000/',

@@ -23,17 +23,17 @@ if(user_permissions.indexOf('SaleList') > -1 ){
 }
 
 
-if(user_permissions.indexOf('OrderList') > -1 ){
-  let me = this;
+// if(user_permissions.indexOf('OrderList') > -1 ){
+//   let me = this;
 
-  let TypeUser = {
-    _name: 'CSidebarNavItem',
-    name: 'Pedidos',
-    to: '/pedidos/listar',
-    icon: 'cil-cart',
-  }
-  modules.push(TypeUser);
-}
+//   let TypeUser = {
+//     _name: 'CSidebarNavItem',
+//     name: 'Pedidos',
+//     to: '/pedidos/listar',
+//     icon: 'cil-cart',
+//   }
+//   modules.push(TypeUser);
+// }
 
 if(user_permissions.indexOf('CashList') > -1 || user_permissions.indexOf('ExpenseList') > -1 || user_permissions.indexOf('IncomeList') > -1 ){
   let me = this;

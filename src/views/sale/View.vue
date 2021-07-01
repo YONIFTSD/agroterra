@@ -161,7 +161,11 @@
                 </b-col>
 
                 <b-col md="3"></b-col>
-                <b-col md="6">
+        
+                <b-col md="3">
+                  <b-button  type="button" @click="DataPrint(sale.id_sale)" class="form-control" variant="warning" >IMPRIMIR</b-button>
+                </b-col>
+                <b-col md="3">
                   <b-link class="btn form-control btn-primary" :to="{ path: '/venta/listar' }" append >REGRESAR</b-link>
                 </b-col>
               </b-row>
@@ -217,7 +221,7 @@ export default {
   data() {
     return {
       module: 'Sale',
-      role: 2,
+      role: 5,
       sale: {
         id_sale: "",
         id_client: "",
@@ -312,6 +316,9 @@ export default {
     ViewSale,
     EditSale,
     Validate,
+
+    DataPrint,
+    Print,
 
     ...mapActions('Sale',['mLoadResetSaleDetail','mLoadAddSaleDetail']),
   },
@@ -530,5 +537,45 @@ function Validate() {
 }
 
 
+
+function DataPrint(id_sale) {
+  let me = this;
+  let url = me.url_base + "sale/data-print/"+id_sale;
+  let data = me.sale;
+  axios({
+    method: "GET",
+    url: url,
+    data: data,
+    headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
+  })
+  .then(function (response) {
+    if (response.data.status == 200) {
+      me.Print(response.data.result);
+    } 
+
+  })
+}
+
+function Print(info) {
+  let url = 'http://localhost/print/consumirapi.php';
+  var data = new FormData(); 
+  data.append("info",JSON.stringify(info)); 
+
+  axios({
+    method: "POST",
+    url: url,
+    data:data,
+    headers: {
+      "Content-Type": "application/json",
+      "Accept":"*/*",
+    },
+  })
+    .then(function (response) {
+     
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
 </script>

@@ -386,6 +386,8 @@ export default {
 
     AddSale,
     Validate,
+    DataPrint,
+    Print,
 
     BntFeesCollected,
     ModalFeedCollected,
@@ -650,6 +652,7 @@ function AddSale(_this) {
         me.ListSeries();
         me.mLoadResetSaleDetail();
         me.mLoadResetLinkages();
+        me.DataPrint(me,response.data.result.id_sale);
         Swal.fire({ icon: 'success', text: 'Se ha emitido correctamente la venta', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: response.data.response, timer: 3000,})
@@ -696,6 +699,45 @@ function Validate() {
   })
 }
 
+function DataPrint(me,id_sale) {
+    // me.isLoading = true;
+  let url = me.url_base + "sale/data-print/"+id_sale;
+  let data = me.sale;
+  axios({
+    method: "GET",
+    url: url,
+    data: data,
+    headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
+  })
+  .then(function (response) {
+    if (response.data.status == 200) {
+      me.Print(response.data.result);
+    } 
+
+  })
+}
+
+function Print(info) {
+  let url = 'http://localhost/print/consumirapi.php';
+  var data = new FormData(); 
+  data.append("info",JSON.stringify(info)); 
+
+  axios({
+    method: "POST",
+    url: url,
+    data:data,
+    headers: {
+      "Content-Type": "application/json",
+      "Accept":"*/*",
+    },
+  })
+    .then(function (response) {
+     
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
 // CUOTAS DE PAGO
 function BntFeesCollected() {

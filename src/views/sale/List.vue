@@ -51,7 +51,7 @@
 
 
 
-            <div class="table-responsive mt-3 height-table">
+            <div class="table-responsive mt-3 height-table-sale">
               <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
@@ -111,7 +111,11 @@
     <ModalReferralGuide />
   </div>
 </template>
-
+<style>
+.height-table-sale{
+  min-height: 220px !important;
+}
+</style>
 <script>
 import vSelect from "vue-select";
 import 'vue-select/dist/vue-select.css';
