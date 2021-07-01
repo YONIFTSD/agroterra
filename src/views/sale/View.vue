@@ -134,7 +134,7 @@
                             </thead>
                             <tbody v-for="(item, it) in sale.linkages" :key="it">
                               <tr>
-                                  <td class="align-middle text-center">{{ item.date }}</td>
+                                  <td class="align-middle text-center">{{ item.broadcast_date }}</td>
                                   <td class="align-middle text-left">{{ item.reference }}</td>
                               </tr>
                             </tbody>

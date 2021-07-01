@@ -57,6 +57,7 @@
 
                 <b-col md="3">
                   <b-form-group label="Fecha Emision:">
+                    <!-- <b-form-input :readonly="document_type == 1" class="text-center" type="date" ref="broadcast_date" v-model="sale.broadcast_date"></b-form-input> -->
                     <b-form-input class="text-center" type="date" ref="broadcast_date" v-model="sale.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>
@@ -122,7 +123,7 @@
                             </thead>
                             <tbody v-for="(item, it) in linkages" :key="it">
                               <tr>
-                                  <td class="align-middle text-center">{{ item.date }}</td>
+                                  <td class="align-middle text-center">{{ item.broadcast_date }}</td>
                                   <td class="align-middle text-left">{{ item.reference }}</td>
                                   <td class="align-middle text-center">
                                     <button type="button" @click="DeleteLinkeage(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
@@ -663,11 +664,11 @@ function AddSale(_this) {
 
 function Validate() {
   
-  this.errors.id_serie = this.sale.id_serie == 0 ? true : false;
-  this.errors.broadcast_date = this.sale.broadcast_date == 0 ? true : false;
+  this.errors.id_serie = this.sale.id_serie.length == 0 ? true : false;
+  this.errors.broadcast_date = this.sale.broadcast_date.length == 0 ? true : false;
   this.errors.id_client = this.client == null ? true : false;
-  this.errors.coin = this.sale.coin == 0 ? true : false;
-  this.errors.way_to_pay = this.sale.way_to_pay == 0 ? true : false;
+  this.errors.coin = this.sale.coin.length == 0 ? true : false;
+  this.errors.way_to_pay = this.sale.way_to_pay.length == 0 ? true : false;
   this.errors.sale_detail = this.sale_detail.length == 0 ? true : false;
   this.errors.total = parseFloat(this.total_sale.total) <= 0 ? true : false;
   

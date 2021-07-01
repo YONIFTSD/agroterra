@@ -102,7 +102,7 @@ const actions = {
             }
         }
         total.total = (total.taxed_operation + total.exonerated_operation + total.unaffected_operation);
-        total.igv = total.total - (total.taxed_operation / 1.18);
+        total.igv = total.taxed_operation - (total.taxed_operation / 1.18);
         total.subtotal = total.total  - total.igv;
         total.taxed_operation = total.taxed_operation - total.igv;
 

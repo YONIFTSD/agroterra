@@ -34,8 +34,6 @@ const state = {
   // url_base: 'https://bertha.rlpfacts.com/api/',
   // url_base: 'https://dev.rlpfacts.com/api/',
   // url_base: 'http://localhost:8000/',
-  //demo adasdasd asd adas
-  
 }
 
 const mutations = {

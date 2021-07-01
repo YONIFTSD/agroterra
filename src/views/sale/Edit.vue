@@ -113,7 +113,7 @@
                             </thead>
                             <tbody v-for="(item, it) in sale.linkages" :key="it">
                               <tr>
-                                  <td class="align-middle text-center">{{ item.date }}</td>
+                                  <td class="align-middle text-center">{{ item.broadcast_date }}</td>
                                   <td class="align-middle text-left">{{ item.reference }}</td>
                               </tr>
                             </tbody>
@@ -609,8 +609,8 @@ function Validate() {
   
   
   this.errors.id_client = this.client == null ? true : false;
-  this.errors.coin = this.sale.coin == 0 ? true : false;
-  this.errors.way_to_pay = this.sale.way_to_pay == 0 ? true : false;
+  this.errors.coin = this.sale.coin.length == 0 ? true : false;
+  this.errors.way_to_pay = this.sale.way_to_pay.length == 0 ? true : false;
   this.errors.sale_detail = this.sale_detail.length == 0 ? true : false;
   this.errors.total = parseFloat(this.total_sale.total) <= 0 ? true : false;
   

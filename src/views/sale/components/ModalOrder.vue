@@ -117,7 +117,7 @@ function AddOrder(id_order) {
           module:'Order',
           id_module:response.data.result.order.id_order,
           concept:'Pedido',
-          date:response.data.result.order.date,
+          broadcast_date:response.data.result.order.date,
           reference: 'NP - ' + response.data.result.order.number_of_order,
         };
         me.mLoadAddLinkages(order);

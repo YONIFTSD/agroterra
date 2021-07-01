@@ -83,9 +83,10 @@
                     <td class="text-center">
                       <b-dropdown bloque size="sm" text="Acciones" right>
                         <b-dropdown-item v-if="item.state == 3 || item.state == 5" @click="SendXML(item.id_sale)">Enviar XML</b-dropdown-item>
-                        <b-dropdown-item v-if="Permission('SaleEdit')" @click="EditSale(item.id_sale)">Editar</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('SaleEdit')  && (item.state == 1 || item.state == 3)" @click="EditSale(item.id_sale)">Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleView')"  @click="ViewSale(item.id_sale)">Ver</b-dropdown-item>
-                        <b-dropdown-item v-if="Permission('SaleDelete')" @click="ConfirmDeleteSale(item.id_sale)">Eliminar</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 1 || item.state == 3"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 3)" @click="ConfirmDeleteSale(item.id_sale)">Eliminar</b-dropdown-item>
                       </b-dropdown>
                     </td>
                   </tr>
@@ -107,6 +108,7 @@
     </CRow>
 
     <LoadingComponent :is-visible="isLoading"/>
+    <ModalReferralGuide />
   </div>
 </template>
 
@@ -121,14 +123,16 @@ const je = require("json-encrypt");
 import { mapState } from "vuex";
 import CodeToName from "@/assets/js/CodeToName";
 var moment = require("moment");
-
+import EventBus from "@/assets/js/EventBus";
 import LoadingComponent from './../pages/Loading'
+import ModalReferralGuide from './components/ModalReferralGuide'
 
 export default {
   name: "UsuarioList",
   components:{
     vSelect,
     LoadingComponent,
+    ModalReferralGuide,
   },
   data() {
     return {
@@ -142,7 +146,7 @@ export default {
 
       id_client:0,
       to:moment(new Date()).local().format("YYYY-MM-DD"),
-      from:moment().subtract(30, 'days').local().format("YYYY-MM-DD"),
+      from:moment().subtract(1, 'days').local().format("YYYY-MM-DD"),
       search: "",
       clients: [],
       client:null,
@@ -165,6 +169,7 @@ export default {
     CodeInvoice,
     SearchClients,
 
+    ViewReferralGuide,
     SendXML,
   },
 
@@ -248,6 +253,10 @@ function ViewSale(id_sale) {
     name: "SaleView",
     params: { id_sale: je.encrypt(id_sale) },
   });
+}
+
+function ViewReferralGuide(id_sale) {
+  EventBus.$emit('ModalReferralGuideShow',id_sale);
 }
 
 function SendXML(id_sale) {

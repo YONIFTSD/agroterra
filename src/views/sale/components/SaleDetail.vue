@@ -38,9 +38,6 @@
   </div>
 </template>
 <style scoped>
-.table-responsive{
-  min-height: 15px !important;
-}
 </style>
 <script>
 const axios = require("axios").default;
