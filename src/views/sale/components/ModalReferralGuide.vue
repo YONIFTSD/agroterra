@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal size="lg" hide-footer v-model="modal_referral_guide" class="w-100" title="GENERAR GUIA DE REMISIÓN">
+    <b-modal size="lg" ref="modal-referral-guide" hide-footer v-model="modal_referral_guide" class="w-100" title="GENERAR GUIA DE REMISIÓN">
       <b-row>
           <b-col md="4">
             <b-form-group label="Tipo de Comprobante :">
@@ -40,6 +40,8 @@
      
       </b-row>
     </b-modal>
+
+      <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 <style>
@@ -56,11 +58,17 @@ const je = require("json-encrypt");
 import { mapState,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 var moment = require("moment");
+import LoadingComponent from './../../pages/Loading'
 
 export default {
   name: "ModalsProduct",
+  components:{
+      LoadingComponent,
+  },
   data() {
     return {
+
+        isLoading: false,
         modal_referral_guide:false,
         module:'Sale',
         role:1,
@@ -95,6 +103,7 @@ export default {
   },
   mounted () {
     EventBus.$on('ModalReferralGuideShow', (id_sale) => {
+      this.isLoading = true;
       this.modal_referral_guide = true;
       this.id_sale = id_sale;
       this.ListSerie();
@@ -158,6 +167,7 @@ function ListSerie() {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
@@ -209,7 +219,7 @@ function Validate() {
   })
 }
 function AddReferralGuide(me) {
-
+  me.isLoading = true;
   let url = me.url_base + "sale/generate-referral-guide";
   me.referral_guide.id_sale = me.id_sale;
   me.referral_guide.id_user = me.user.id_user;
@@ -222,11 +232,13 @@ function AddReferralGuide(me) {
     headers: { token: me.token, module: me.module, role: 1,},
   })
     .then(function (response) {
-      if (response.data.status == 200) {
-        // me.referral_guide.number = response.data.result.number;
+      if (response.data.status == 201) {
+          me.$refs['modal-referral-guide'].hide()
+          Swal.fire({ icon: 'success', text: 'Se ha generado la guia de remisión correctamente', timer: 3000,})
       } else {
-        // me.referral_guide.number = '';
+        Swal.fire({ icon: 'error', text: 'A Ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
 }
 </script>

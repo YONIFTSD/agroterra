@@ -129,7 +129,7 @@
                               <th class="text-center">Importe</th>
                             </tr>
                           </thead>
-                          <tbody v-for="(item, it) in shopping_detail" :key="item.id_product">
+                          <tbody v-for="(item, it) in shopping.shopping_detail" :key="it">
                             <tr>
                                 <td class="align-middle text-center">{{ it + 1 }}</td>
                                 <td class="align-middle text-left">{{ item.code }}</td>
@@ -159,22 +159,22 @@
                     <b-form-input class="text-right" type="number" step="any" disabled v-model="shopping.expenses"></b-form-input>
                   </b-form-group>
                   <b-form-group  label-cols-sm="7" label="Ope. Gravadas :" class="text-right m-0">
-                    <b-form-input class="text-right" type="number" step="any" disabled v-model="total_shopping.taxed_operation"></b-form-input>
+                    <b-form-input class="text-right" type="number" step="any" disabled v-model="shopping.taxed_operation"></b-form-input>
                   </b-form-group>
                   <b-form-group label-cols-sm="7" label="Ope. Exonerada :" class="text-right m-0">
-                    <b-form-input class="text-right" type="number" step="any" disabled v-model="total_shopping.exonerated_operation"></b-form-input>
+                    <b-form-input class="text-right" type="number" step="any" disabled v-model="shopping.exonerated_operation"></b-form-input>
                   </b-form-group>
                   <b-form-group  label-cols-sm="7" label="Ope. Inafecta :" class="text-right m-0">
-                    <b-form-input class="text-right" type="number" step="any" disabled v-model="total_shopping.unaffected_operation"></b-form-input>
+                    <b-form-input class="text-right" type="number" step="any" disabled v-model="shopping.unaffected_operation"></b-form-input>
                   </b-form-group>
                   <b-form-group  label-cols-sm="7" label="Descuentos :" class="text-right m-0">
-                    <b-form-input class="text-right" type="number" step="any" disabled v-model="total_shopping.discount"></b-form-input>
+                    <b-form-input class="text-right" type="number" step="any" disabled v-model="shopping.discount"></b-form-input>
                   </b-form-group>
                   <b-form-group label-cols-sm="7" label="IGV (18%) :" class="text-right m-0">
-                    <b-form-input class="text-right" type="number" step="any" disabled v-model="total_shopping.igv"></b-form-input>
+                    <b-form-input class="text-right" type="number" step="any" disabled v-model="shopping.igv"></b-form-input>
                   </b-form-group>
                   <b-form-group label-cols-sm="7" label="Total :" class="text-right m-0">
-                    <b-form-input class="text-right" type="number" step="any" disabled v-model="total_shopping.total"></b-form-input>
+                    <b-form-input class="text-right" type="number" step="any" disabled v-model="shopping.total"></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -399,7 +399,7 @@ export default {
   },
 
   computed: {
-    ...mapState('Shopping',['shopping_detail','total_shopping']),
+    // ...mapState('Shopping',['shopping_detail','total_shopping']),
     ...mapState(["url_base"]),
     token: function () {
       let user = window.localStorage.getItem("user");
@@ -507,39 +507,7 @@ function ViewShopping() {
           me.shopping.state = response.data.result.shopping.state;
           me.provider = {id: response.data.result.shopping.id_provider, name: response.data.result.shopping.name+" - "+ response.data.result.shopping.document_number};
           me.shopping.email = response.data.result.shopping.email;
-
-          me.mLoadUnitValue(me.shopping.unit_value);
-          me.mLoadExpensesValue(me.shopping.expenses);
-
-          //agregar detalle
-          let details = response.data.result.detail; 
-          for (let index = 0; index < details.length; index++) {
-            
-              let detail = {
-                id_product : details[index].id_product,
-                code : details[index].code,
-                name : details[index].name,
-                unit_measure : details[index].unit_measure,
-                igv : details[index].igv,
-                quantity : details[index].quantity,
-                percentage_discount : parseFloat(details[index].percentage_discount).toFixed(2),
-                package : parseFloat(details[index].package).toFixed(0),
-                unit_value : parseFloat(details[index].unit_value).toFixed(2),
-                unit_discount : parseFloat(details[index].unit_discount).toFixed(2),
-                net_unit_value : parseFloat(details[index].net_unit_value).toFixed(2),
-                unit_igv : parseFloat(details[index].unit_igv).toFixed(2),
-                unit_price : parseFloat(details[index].unit_price).toFixed(2),
-                total_value : parseFloat(details[index].total_value).toFixed(2),
-                total_discount : parseFloat(details[index].total_discount).toFixed(2),
-                net_total_value : parseFloat(details[index].net_total_value).toFixed(2),
-                total_igv : parseFloat(details[index].total_igv).toFixed(2),
-                total_price : parseFloat(details[index].total_price).toFixed(2),
-              }
-      
-              
-              me.mLoadAddShoppingDetail(detail);
-
-          }
+          me.shopping.shopping_detail = response.data.result.detail;
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }

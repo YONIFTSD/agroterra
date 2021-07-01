@@ -5,7 +5,7 @@
         <b-col md="12">
           <b-form id="Form" @submit.prevent="AddProvider">
               <b-row>
-                <b-col md="3">
+                <b-col md="6">
                   <b-form-group label="Tipo de Documento :">
                     <select
                       ref="document_type"
@@ -23,7 +23,7 @@
                     >
                   </b-form-group>
                 </b-col>
-                <b-col md="3">
+                <b-col md="6">
                   <b-form-group label="Nro Documento :">
                     <b-input-group>
                       <b-form-input
@@ -45,7 +45,7 @@
                 </b-col>
             
 
-                <b-col md="6">
+                <b-col md="12">
                   <b-form-group label="Nombres / Razón Social:" required>
                     <b-form-input
                       type="text"
@@ -159,6 +159,7 @@ export default {
   mounted () {
     EventBus.$on('ModalProvidersShow', () => {
       this.modalProviders = true;
+      this.ListUbigeos();
     });
   },
   methods: {

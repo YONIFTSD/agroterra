@@ -62,7 +62,7 @@
                     <td class="text-center"> {{ item.broadcast_date }}</td>
                     <td class="text-center"> {{ CodeInvoice(item.type_invoice)+ ' '+item.serie+'-'+item.number }}</td>
                     <td class="text-left"> {{ item.name + ' - '+item.document_number }}</td>
-                    <td class="text-right"> {{ item.total }} </td>
+                    <td class="text-right"> {{ item.total_final }} </td>
                     <td class="text-center">
                         <b-badge v-if="item.state == 1" variant="info">Pendiente</b-badge>
                         <b-badge v-if="item.state == 2" variant="success">Finalizado</b-badge>

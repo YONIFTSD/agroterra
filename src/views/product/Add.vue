@@ -225,7 +225,7 @@ export default {
         regular_price: 0.0,
         sale_price: 0.0,
         gross_weight: 0.0,
-        gross_weight: 0.0,
+        weight_cost: 0.0,
         state: 1,
       },
       mprovider :{id:1, name:'Proveedor varios'},

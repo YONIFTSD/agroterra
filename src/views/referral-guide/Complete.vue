@@ -94,7 +94,7 @@
                               <small v-if="errors.total_weight"  class="form-text text-danger" >ingrese el peso</small>
                             </b-form-group>
                               <b-form-group label="Nro Paquetes:">
-                              <b-form-input type="number" step="any" class="text-center" v-model="referral_guide.number_packages"></b-form-input>
+                              <b-form-input type="number" step="any" class="text-left" v-model="referral_guide.number_packages"></b-form-input>
                               <small v-if="errors.number_packages"  class="form-text text-danger" >Ingrese el nro de paquetes</small>
                             </b-form-group>
                           </b-col>

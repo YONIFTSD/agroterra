@@ -78,7 +78,7 @@
                       <b-dropdown bloque size="sm" text="Acciones" right>
                         <b-dropdown-item v-if="Permission('ShoppingEdit') && item.state == 1" @click="EditShopping(item.id_shopping)" >Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('ShoppingView')"  @click="ViewShopping(item.id_shopping)">Ver</b-dropdown-item>
-                        <b-dropdown-item v-if="Permission('ShoppingDelete') && item.state == 1" @click="ConfirmDeleteShopping(item.id_shopping)">Eliminar</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('ShoppingDelete') && item.state == 1" @click="ConfirmDeleteShopping(item.id_shopping)">Anular</b-dropdown-item>
                       </b-dropdown>
                     </td>
                   </tr>
@@ -258,7 +258,7 @@ function ViewShopping(id_shopping) {
 // Confirmar eliminar
 function ConfirmDeleteShopping(id_shopping) {
   Swal.fire({
-    title: "Esta seguro de eliminar el registro?",
+    title: "Esta seguro de anular la compra ?",
     text: "No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,
@@ -275,7 +275,7 @@ function ConfirmDeleteShopping(id_shopping) {
 // eliminar usuario
 function DeleteShopping(id_shopping) {
   let me = this;
-  let url = this.url_base + "shopping/delete/" + id_shopping;
+  let url = this.url_base + "shopping/cancel/" + id_shopping;
   axios({
     method: "delete",
     url: url,
@@ -290,15 +290,11 @@ function DeleteShopping(id_shopping) {
         //eliminado del objeto
         for (var i = 0; i < me.data_table.length; i++) {
           if (me.data_table[i].id_shopping == id_shopping) {
-            me.data_table.splice(i, 1);
+            me.data_table[i].state = 0;
             break;
           }
         }
-        Swal.fire({
-          icon: 'success',
-          text: 'Se ha eliminado el registro',
-          timer: 2000,
-        })
+        Swal.fire({ icon: 'success', text: 'Se ha anulado la compra', timer: 2000, })
       } else {
         Swal.fire({
           icon: 'error',

@@ -214,9 +214,9 @@ if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('Init
   if (user_permissions.indexOf('StockGeneralList') > -1) {
     item.push({ name: 'Stock General', to: '/kardex/stock-general'});
   }
-  if (user_permissions.indexOf('StockValuedList') > -1) {
-    item.push({ name: 'Stock Valorado', to: '/kardex/stock-valorado'});
-  }
+  // if (user_permissions.indexOf('StockValuedList') > -1) {
+  //   item.push({ name: 'Stock Valorado', to: '/kardex/stock-valorado'});
+  // }
   if (user_permissions.indexOf('TransformationList') > -1) {
     item.push({ name: 'Transformación', to: '/transformacion/listar'});
   }

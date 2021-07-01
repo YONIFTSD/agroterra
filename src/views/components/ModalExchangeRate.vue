@@ -219,9 +219,9 @@ function GetExchangeRate() {
   let me = this;
   ApiQuery.ExchangeRate().then((data) => {
           if (data.status == 200) {
-            me.exchange_rate_sunat.day = data.cambio_actual.dia;
-            me.exchange_rate_sunat.shopping = data.cambio_actual.compra;
-            me.exchange_rate_sunat.sale = data.cambio_actual.venta;
+            me.exchange_rate_sunat.day = data.fecha;
+            me.exchange_rate_sunat.shopping = data.compra;
+            me.exchange_rate_sunat.sale = data.venta;
           }
   });
 }

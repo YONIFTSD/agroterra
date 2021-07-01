@@ -557,6 +557,7 @@ function ViewShopping() {
                 id_product : details[index].id_product,
                 code : details[index].code,
                 name : details[index].name,
+                presentation : details[index].presentation,
                 unit_measure : details[index].unit_measure,
                 igv : details[index].igv,
                 package : details[index].package,

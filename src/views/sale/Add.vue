@@ -124,7 +124,7 @@
                             <tbody v-for="(item, it) in linkages" :key="it">
                               <tr>
                                   <td class="align-middle text-center">{{ item.broadcast_date }}</td>
-                                  <td class="align-middle text-left">{{ item.reference }}</td>
+                                  <td class="align-middle text-center">{{ item.reference }}</td>
                                   <td class="align-middle text-center">
                                     <button type="button" @click="DeleteLinkeage(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
                                   </td>

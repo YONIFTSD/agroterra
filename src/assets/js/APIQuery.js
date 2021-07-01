@@ -21,7 +21,7 @@ var SearchRuc = (function() {
 
 var ExchangeRate = (function() {
     return function ExchangeRate() {
-        return fetch('https://apis.reyfact.com/tipo-cambio/WiVRjaW02IXGC070tOEdjehzrbd0rYOAso1baByj')
+        return fetch('https://apis.reyfact.com/tipo-cambio')
         .then(response => response.json())
         .then(json => {
             return json;

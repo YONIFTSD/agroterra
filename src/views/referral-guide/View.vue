@@ -78,11 +78,35 @@
                           </b-col>
 
 
-                          <!-- Detalle venta -->
-                          <ReferralGuideDetail/>
-                          <b-col md="12" class="text-center">
-                            <small  v-if="errors.referral_guide_detail"  class="form-text tex-center text-danger">Ingrese Productos</small>
-                          </b-col>
+                         <div class="col-md-12">
+                            <div class="table-responsive mt-3">
+                                  <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                                    <thead class="">
+                                      <tr>
+                                        <th width="5%" class="text-center">#</th>
+                                        <th width="8%" class="text-center">Codigo</th>
+                                        <th width="43%" class="text-center">Nombre</th>
+                                        <th width="5%" class="text-center">UM</th>
+                                        <th width="10%" class="text-center">Cantidad</th>
+                                        <th width="10%" class="text-center">Peso Unit.</th>
+                                        <th width="8%" class="text-center">Peso Total</th>
+                                        <!-- <th width="5%" class="text-center">Acciones</th> -->
+                                      </tr>
+                                    </thead>
+                                    <tbody v-for="(item, it) in referral_guide_detail" :key="it">
+                                      <tr>
+                                          <td class="align-middle text-center">{{ it + 1 }}</td>
+                                          <td class="align-middle text-left">{{ item.code }}</td>
+                                          <td class="align-middle text-left">{{ item.name + " - "+item.presentation }}</td>
+                                          <td class="align-middle text-center">{{ item.unit_measure }}</td>
+                                          <td class="align-middle text-center">{{ item.quantity }}</td>
+                                          <td class="align-middle text-right">{{ item.weight_unit }}</td>
+                                          <td class="align-middle text-right">{{ item.weight_total }}</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
                           
 
                           <b-col md="12" class="mt-3"></b-col>
@@ -90,11 +114,11 @@
                           </b-col>
                           <b-col md="2">
                             <b-form-group label="Peso Total:">
-                              <b-form-input disabled type="number" step="any" class="text-right" v-model="total_weight"></b-form-input>
+                              <b-form-input disabled type="number" step="any" class="text-right" v-model="referral_guide.total_weight"></b-form-input>
                               <small v-if="errors.total_weight"  class="form-text text-danger" >ingrese el peso</small>
                             </b-form-group>
                               <b-form-group label="Nro Paquetes:">
-                              <b-form-input disabled type="number" step="any" class="text-center" v-model="referral_guide.number_packages"></b-form-input>
+                              <b-form-input disabled type="number" step="any" class="text-right" v-model="referral_guide.number_packages"></b-form-input>
                               <small v-if="errors.number_packages"  class="form-text text-danger" >Ingrese el nro de paquetes</small>
                             </b-form-group>
                           </b-col>
@@ -141,7 +165,7 @@
               <b-row>
                 <b-col md="3"></b-col>
                 <b-col md="6">
-                  <b-button  type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                  <b-link class="btn form-control btn-primary" :to="{ path: '/guia-remision/listar' }" append>REGRESAR</b-link >
                 </b-col>
               </b-row>
 
@@ -235,7 +259,7 @@ export default {
         observation: "",
         state: '1',
       },
-
+      referral_guide_detail:[],
       providers: [],
       provider:null,
       carriers: [],
@@ -311,7 +335,6 @@ export default {
   },
 
   computed: {
-    ...mapState('ReferralGuide',['referral_guide_detail','total_weight']),
     ...mapState(["url_base"]),
     token: function () {
       let user = window.localStorage.getItem("user");
@@ -343,7 +366,7 @@ function ViewReferralGuide() {
     }).then(function (response) {
       if (response.data.status == 200) {
         let referral_guide = response.data.result.referral_guide;
-        let referral_guide_detail = response.data.result.referral_guide_detail;
+        me.referral_guide_detail = response.data.result.referral_guide_detail;
         me.referral_guide.id_referral_guide = referral_guide.id_referral_guide;
         me.referral_guide.id_user = referral_guide.id_user;
         me.referral_guide.id_serie = referral_guide.id_serie;
@@ -381,22 +404,6 @@ function ViewReferralGuide() {
         me.car = referral_guide.id_car == 0 ? null: { id:referral_guide.id_car, text: referral_guide.brand + " | "+ referral_guide.plate+ " | "+ referral_guide.record_number};
         me.drive = referral_guide.id_drive == 0 ? null: { id:referral_guide.id_drive, text: referral_guide.drive_name + " | "+ referral_guide.drive_document_number + " | "+ referral_guide.drive_license_number};
 
-        for (let index = 0; index < referral_guide_detail.length; index++) {
-          const element = referral_guide_detail[index];
-          let detail = {
-            id_product: element.id_product,
-            code:element.code,
-            name:element.name,
-            presentation:element.presentation,
-            unit_measure:element.unit_measure,
-            igv:element.igv,
-            existence_type:element.existence_type,
-            quantity: element.quantity,
-            weight_unit: element.weight_unit,
-            weight_total: element.weight_total,
-          }
-          me.mLoadAddReferralGuideDetail(detail);
-        }
 
       }
       
