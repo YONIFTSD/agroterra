@@ -25,13 +25,13 @@
 
                 <b-col md="2">
                   <b-form-group label="Serie :">
-                    <b-form-input type="text" ref="serie" @change="UpperCase" v-model="income.serie" disabled></b-form-input>
+                    <b-form-input type="text" ref="serie"  v-model="income.serie" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="Numero :">
-                    <b-form-input class="text-right" type="text" ref="number" @change="NumberPadStart" v-model="income.number" disabled></b-form-input>
+                    <b-form-input class="text-right" type="text" ref="number" v-model="income.number" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 

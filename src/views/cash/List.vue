@@ -44,7 +44,6 @@
                     <th width="23%" class="text-center">Usuario</th>
                     <th width="7%" class="text-center">Soles</th>
                     <th width="7%" class="text-center">Dolares</th>
-                    <th width="7%" class="text-center">Pesos</th>
                     <th width="10%" class="text-center">Estado</th>
                     <th width="8%" class="text-center">Acciones</th>
                   </tr>
@@ -55,11 +54,9 @@
                     <td class="align-middle text-left"> {{ item.cash_number }}</td>
                     <td class="align-middle text-center"> {{ item.start_date }}</td>
                     <td class="align-middle text-center"> {{ item.end_date }}</td>
-                    <td class="align-middle text-left"> {{ item.email }}</td>
+                    <td class="align-middle text-left"> {{ item.user }}</td>
                     <td class="align-middle text-right"> {{ item.total_income_pen }}</td>
                     <td class="align-middle text-right"> {{ item.total_income_usd }}</td>
-                    <td class="align-middle text-right"> {{ item.total_income_clp }}</td>
-                    
                     <td class="align-middle text-center">
                       <span v-if="item.state == 1">Pendiente</span>
                       <span v-if="item.state == 2">Finalizado</span>
@@ -157,6 +154,11 @@ export default {
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user;
     },
+    id_establishment: function () {
+      let establishment = window.localStorage.getItem("id_establishment");
+      establishment = JSON.parse(je.decrypt(establishment));
+      return establishment;
+    }
   },
 };
 
@@ -167,7 +169,7 @@ function ListCash() {
   let search = this.search == "" ? "all" : this.search;
   let me = this;
   let url =
-    this.url_base + "cash/list/"+this.user.id_user+"/" + search + "?page=" + this.currentPage;
+    this.url_base + "cash/list/"+this.id_establishment+"/" + search + "?page=" + this.currentPage;
 
   axios({
     method: "GET",

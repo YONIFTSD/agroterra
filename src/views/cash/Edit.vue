@@ -233,7 +233,7 @@ export default {
 function ExportExcel() {
   let id_cash = je.decrypt(this.id_cash);
   let me = this;
-  let url = this.url_base + "cash-export-excel/"+id_cash+'/2';
+  let url = this.url_base + "cash-export-excel/"+id_cash+'/'+this.cash.end_date;
   
   window.open(url,'_blank');
 }
@@ -242,7 +242,7 @@ function ExportExcel() {
 function ExportPDF() {
 
   let me = this;
-  let url = this.url_base + "cash-export-pdf/"+this.cash.id_cash+'/2';
+  let url = this.url_base + "cash-export-pdf/"+this.cash.id_cash+'/'+this.cash.end_date;
   
   window.open(url,'_blank');
 }

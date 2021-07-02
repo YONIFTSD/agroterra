@@ -7,7 +7,7 @@
             <strong> Modulo Ingresos - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="AddIncome">
+            <b-form id="Form" @submit.prevent="Validate">
               <b-row>
                
                 
@@ -115,6 +115,7 @@ export default {
       role: 2,
       income: {
           id_user:'',
+          id_establishment:'',
           id_provider:'',
           voucher_type:'01',
           serie:'',
@@ -190,6 +191,11 @@ export default {
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user;
     },
+    id_establishment: function () {
+      let establishment = window.localStorage.getItem("id_establishment");
+      establishment = JSON.parse(je.decrypt(establishment));
+      return establishment;
+    }
   },
 };
 
@@ -224,30 +230,18 @@ function ShowModalProvider() {
   EventBus.$emit('ModalProvidersShow');
 }
 
-function AddIncome() {
-  // validacion de campos obligatorios
-  this.Validate();
-  if (this.validate) {
-    return false;
-  }
+function AddIncome(me) {
 
-
-  this.income.id_user = this.user.id_user;
-  this.income.id_provider = this.provider.id;
-  let me = this;
-  let url = this.url_base + "income/add";
-  let data = this.income;
-
+  me.income.id_establishment = me.id_establishment;
+  me.income.id_user = me.user.id_user;
+  me.income.id_provider = me.provider.id;
+  let url = me.url_base + "income/add";
+  let data = me.income;
   axios({
     method: "POST",
     url: url,
     data: data,
-    headers: {
-      "Content-Type": "application/json",
-      token: this.token,
-      module: this.module,
-      role: 2,
-    },
+    headers: { "Content-Type": "application/json", token: me.token, module: me.module,role: 2, },
   })
     .then(function (response) {
       if (response.data.status == 201) {
@@ -275,7 +269,6 @@ function AddIncome() {
 
 function Validate() {
 
- 
   this.errors.id_provider = this.provider == null || this.provider == {}  ? true : false;
   this.errors.voucher_type = this.income.voucher_type.length == 0 ? true : false;
   this.errors.serie = this.income.serie.length != 4 ? true : false;
@@ -285,16 +278,27 @@ function Validate() {
   this.errors.total = this.income.total.length == 0 ? true : false;
   
 
-  if (this.errors.id_provider == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.errors.voucher_type == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.errors.serie == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.errors.number == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.errors.broadcast_date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.id_provider) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate_add = false; }
+  if (this.errors.voucher_type) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate_add = false; }
+  if (this.errors.serie) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate_add = false; }
+  if (this.errors.broadcast_date) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate_add = false; }
+  if (this.errors.coin) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate_add = false; }
+  if (this.errors.total) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate_add = false; }
 
- 
- 
 
+  let me = this;
+  Swal.fire({
+    title: "Esta seguro de registrar el ingreso ?",
+    text: "No podrás revertir esto!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, Estoy de acuerdo!",
+  }).then((result) => {
+    if (result.value) {
+      this.AddIncome(me);
+    }
+  });
 }
 </script>

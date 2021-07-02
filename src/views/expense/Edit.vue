@@ -7,7 +7,7 @@
             <strong> Modulo Egresos - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="EditExpense">
+            <b-form id="Form" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="6">
@@ -231,16 +231,10 @@ function ViewExpense() {
 }
 
 //editar usuario
-function EditExpense() {
-  // validacion de campos obligatorios
-  this.Validate();
-  if (this.validate) {
-    return false;
-  }
-
-  let me = this;
-  let url = this.url_base + "expense/edit";
-  let data = this.expense;
+function EditExpense(me) {
+ 
+  let url = me.url_base + "expense/edit";
+  let data = me.expense;
 
   axios({
     method: "PUT",
@@ -248,9 +242,9 @@ function EditExpense() {
     data: data,
     headers: {
       "Content-Type": "application/json",
-      token: this.token,
-      module: this.module,
-      role: this.role,
+      token: me.token,
+      module: me.module,
+      role: me.role,
     },
   })
     .then(function (response) {
@@ -287,5 +281,20 @@ function Validate() {
   if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   
+  let me = this;
+  Swal.fire({
+    title: "Esta seguro de modificar el egreso ?",
+    text: "No podrás revertir esto!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, Estoy de acuerdo!",
+  }).then((result) => {
+    if (result.value) {
+      this.EditExpense(me);
+    }
+  });
+
 }
 </script>

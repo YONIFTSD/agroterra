@@ -21,7 +21,7 @@
 
                           <b-col md="2">
                               <b-form-group label="Fecha Inicio:">
-                              <b-form-input type="text" class="text-center" readonly v-model="newcash.start_date" ></b-form-input>
+                              <b-form-input :min="min_date" type="date" class="text-center"  v-model="newcash.start_date" ></b-form-input>
                               </b-form-group>
                           </b-col>
 
@@ -41,7 +41,7 @@
 
                           <b-col md="2">
                               <b-form-group label="Usuario :">
-                              <b-form-input type="number" step="any" class="text-right" v-model="user.email" ></b-form-input>
+                              <b-form-input disabled  v-model="user.user" ></b-form-input>
                               </b-form-group>
                           </b-col>
 
@@ -72,19 +72,19 @@
 
                                 <b-col md="3">
                                     <b-form-group label="Fecha Inicio:">
-                                    <b-form-input type="text" class="text-center" readonly v-model="cash.start_date" ></b-form-input>
+                                    <b-form-input type="date" class="text-center" readonly v-model="cash.start_date" ></b-form-input>
                                     </b-form-group>
                                 </b-col>
 
                                 <b-col md="3">
                                     <b-form-group label="Fecha Final:">
-                                    <b-form-input type="text" class="text-center" readonly v-model="cash.start_date" ></b-form-input>
+                                    <b-form-input type="date" @change="CalculateCash" :min="cash.start_date" class="text-center" v-model="cash.end_date" ></b-form-input>
                                     </b-form-group>
                                 </b-col>
 
                                 <b-col md="3">
                                     <b-form-group label="Usuario:">
-                                    <b-form-input type="text" class="text-center" readonly v-model="cash.email" ></b-form-input>
+                                    <b-form-input type="text" class="text-center" readonly v-model="cash.user" ></b-form-input>
                                     </b-form-group>
                                 </b-col>
 
@@ -214,14 +214,14 @@ export default {
       module: "Cash",
       role: 2,
       state: 0,
-
+      min_date:'',
       //new
       newcash: {
           id_cash:0,
           id_user:0,
           id_correlative:0,
           cash_number:'',
-          start_date:moment(new Date()).local().format("YYYY-MM-DD") +' '+ moment(new Date()).local().format("H:m:s"),
+          start_date:moment(new Date()).local().format("YYYY-MM-DD"),
           end_date:'',
           initial_balance_pen:(0).toFixed(2),
           initial_balance_usd:(0).toFixed(2),
@@ -307,6 +307,7 @@ export default {
     GetActiveCash,
     CalculateCash,
     Closecash,
+    GetLastDate,
     Validate,
 
   },
@@ -323,13 +324,18 @@ export default {
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user;
     },
+    id_establishment: function () {
+      let establishment = window.localStorage.getItem("id_establishment");
+      establishment = JSON.parse(je.decrypt(establishment));
+      return establishment;
+    }
   },
 };
 
 function ExportExcel() {
 
   let me = this;
-  let url = this.url_base + "cash-export-excel/"+this.cash.id_cash+'/1';
+  let url = this.url_base + "cash-export-excel/"+this.cash.id_cash+'/'+this.cash.end_date;
   
   window.open(url,'_blank');
 }
@@ -337,14 +343,14 @@ function ExportExcel() {
 function ExportPDF() {
 
   let me = this;
-  let url = this.url_base + "cash-export-pdf/"+this.cash.id_cash+'/1';
+  let url = this.url_base + "cash-export-pdf/"+this.cash.id_cash+'/'+this.cash.end_date;
   
   window.open(url,'_blank');
 }
 
 function ValidateOpenBox() {
   let me = this;
-  let url = this.url_base + "cash/validate-open-box/"+this.user.id_user;
+  let url = this.url_base + "cash/validate-open-box/"+this.id_establishment;
 
   axios({
     method: "GET",
@@ -358,10 +364,14 @@ function ValidateOpenBox() {
     .then(function (response) {
       if (response.data.status == 200) {
         me.state = 2;
+        me.cash.end_date = moment(new Date()).local().format("YYYY-MM-DD");
         me.GetActiveCash();
       }else{
         me.state = 1;
         me.GetCorrelative();
+        me.GetLastDate();
+
+       
 
       }
     })
@@ -370,6 +380,21 @@ function ValidateOpenBox() {
 
 
 
+function GetLastDate() {
+  let me = this;
+  let url = this.url_base + "cash/get-last-date/"+this.id_establishment;
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: this.role,},
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.min_date = response.data.result.end_date;
+        me.newcash.start_date = response.data.result.end_date;
+      } 
+    })
+}
 
 
 ////STATE 1
@@ -398,6 +423,7 @@ function Addcash(_this) {
 
   
   let me = _this;
+  me.newcash.id_establishment = me.id_establishment;
   me.newcash.id_user = me.user.id_user;
   let url = me.url_base + "cash/add";
   let data = me.newcash;
@@ -462,7 +488,7 @@ function ValidateAdd() {
 //listar usuario
 function GetActiveCash() {
   let me = this;
-  let url = this.url_base + "cash/get-active-cash/"+this.user.id_user;
+  let url = this.url_base + "cash/get-active-cash/"+this.id_establishment;
 
   axios({
     method: "GET",
@@ -477,26 +503,28 @@ function GetActiveCash() {
       if (response.data.status == 200) {
         
           me.cash.id_cash = response.data.result.id_cash;
+          me.cash.id_establishment = response.data.result.id_establishment;
           me.cash.id_user = response.data.result.id_user;
           me.cash.id_correlative = response.data.result.id_correlative;
           me.cash.cash_number = response.data.result.cash_number;
           me.cash.start_date = response.data.result.start_date;
-          me.cash.end_date = moment(new Date()).local().format("YYYY-MM-DD") +' '+ moment(new Date()).local().format("H:m:s");
+          me.cash.end_date = response.data.result.start_date;
 
           me.cash.observation = response.data.result.observation;
           me.cash.state = response.data.result.state;
-          me.cash.email = response.data.result.email;
+          me.cash.user = response.data.result.user;
+          
 
-          me.CalculateCash(response.data.result.id_cash);
+          me.CalculateCash();
           
 
       } 
     })
 }
 
-function CalculateCash(id_cash) {
+function CalculateCash() {
   let me = this;
-  let url = this.url_base + "cash/calculate_cash/"+id_cash;
+  let url = this.url_base + "cash/calculate_cash/"+me.cash.id_cash+"/"+me.cash.end_date;
 
   axios({
     method: "GET",
@@ -535,24 +563,13 @@ function CalculateCash(id_cash) {
           me.cash.total_extraordinary_expenses_usd = response.data.result.total_extraordinary_expenses_usd;
           me.cash.total_income_usd = response.data.result.total_income_usd;
 
-
-
-
       } 
     })
 }
 
-function Closecash(_this) {
-  // validacion de campos obligatorios
-  let me = _this;
-  me.Validate();
-  if (me.validate) {
-    return false;
-  }
-
+function Closecash(me) {
   me.cash.id_user = me.user.id_user;
-
-  
+  me.cash.id_establishment = me.user.id_establishment;
   let url = me.url_base + "cash/close";
   let data = me.cash;
 
@@ -583,8 +600,10 @@ function Closecash(_this) {
 
 function Validate() {
   this.errors.id_cash = this.cash.id_cash.length == 0 ? true : false;
+  this.errors.end_date = this.cash.end_date.length == 0 ? true : false;
 
   if (this.errors.id_cash) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.end_date) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
 
   let me = this;

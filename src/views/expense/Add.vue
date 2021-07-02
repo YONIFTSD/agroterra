@@ -7,7 +7,7 @@
             <strong> Modulo Egresos - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="AddExpense">
+            <b-form id="Form" @submit.prevent="Validate">
               <b-row>
                
                 
@@ -190,6 +190,11 @@ export default {
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user;
     },
+    id_establishment: function () {
+      let establishment = window.localStorage.getItem("id_establishment");
+      establishment = JSON.parse(je.decrypt(establishment));
+      return establishment;
+    }
   },
 };
 
@@ -224,28 +229,20 @@ function ShowModalProvider() {
   EventBus.$emit('ModalProvidersShow');
 }
 
-function AddExpense() {
-  // validacion de campos obligatorios
-  this.Validate();
-  if (this.validate) {
-    return false;
-  }
-
-
-  this.expense.id_user = this.user.id_user;
-  this.expense.id_provider = this.provider.id;
-  let me = this;
-  let url = this.url_base + "expense/add";
-  let data = this.expense;
-
+function AddExpense(me) {
+  me.expense.id_establishment = me.id_establishment;
+  me.expense.id_user = me.user.id_user;
+  me.expense.id_provider = me.provider.id;
+  let url = me.url_base + "expense/add";
+  let data = me.expense;
   axios({
     method: "POST",
     url: url,
     data: data,
     headers: {
       "Content-Type": "application/json",
-      token: this.token,
-      module: this.module,
+      token: me.token,
+      module: me.module,
       role: 2,
     },
   })
@@ -261,6 +258,7 @@ function AddExpense() {
           me.expense.observation = '';
           me.expense.total = (0).toFixed(2);
           me.expense.state = 1;
+          me.provider = null;
         Swal.fire("Sistema", "Se ha registrado el ingreso", "success");
       } else if(response.data.status == 400) {
         Swal.fire("Sistema", "El comprobante ya fue registrado previamente", "warning");
@@ -293,7 +291,20 @@ function Validate() {
   if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
- 
+  let me = this;
+  Swal.fire({
+    title: "Esta seguro de registrar el egreso ?",
+    text: "No podrás revertir esto!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, Estoy de acuerdo!",
+  }).then((result) => {
+    if (result.value) {
+      this.AddExpense(me);
+    }
+  });
  
 
 }
