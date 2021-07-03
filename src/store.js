@@ -36,7 +36,6 @@ const state = {
   // url_base: 'https://dev.rlpfacts.com/api/',
   // url_base: 'http://localhost:8000/',
 }
-
 const mutations = {
   toggleSidebarDesktop (state) {
     const sidebarOpened = [true, 'responsive'].includes(state.sidebarShow)

@@ -82,11 +82,13 @@
                     </td>
                     <td class="text-center">
                       <b-dropdown bloque size="sm" text="Acciones" right>
-                        <b-dropdown-item v-if="item.state == 3 || item.state == 5" @click="SendXML(item.id_sale)">Enviar XML</b-dropdown-item>
+                        
                         <b-dropdown-item v-if="Permission('SaleEdit')  && (item.state == 1 || item.state == 3)" @click="EditSale(item.id_sale)">Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleView')"  @click="ViewSale(item.id_sale)">Ver</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 1 || item.state == 3"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 3)" @click="ConfirmDeleteSale(item.id_sale)">Eliminar</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 3 || item.state == 5" @click="SendXML(item.id_sale)">Enviar XML</b-dropdown-item>
+                        <b-dropdown-item v-if="3 == 3" @click="modalCPESunat(item.id_sale)">VER CPE</b-dropdown-item>
                       </b-dropdown>
                     </td>
                   </tr>
@@ -109,6 +111,7 @@
 
     <LoadingComponent :is-visible="isLoading"/>
     <ModalReferralGuide />
+    <ModalCPESunat />
   </div>
 </template>
 <style>
@@ -130,6 +133,7 @@ var moment = require("moment");
 import EventBus from "@/assets/js/EventBus";
 import LoadingComponent from './../pages/Loading'
 import ModalReferralGuide from './components/ModalReferralGuide'
+import ModalCPESunat from './components/ModalCPESunat'
 
 export default {
   name: "UsuarioList",
@@ -137,6 +141,7 @@ export default {
     vSelect,
     LoadingComponent,
     ModalReferralGuide,
+    ModalCPESunat,
   },
   data() {
     return {
@@ -175,6 +180,7 @@ export default {
 
     ViewReferralGuide,
     SendXML,
+    modalCPESunat
   },
 
   computed: {
@@ -261,6 +267,9 @@ function ViewSale(id_sale) {
 
 function ViewReferralGuide(id_sale) {
   EventBus.$emit('ModalReferralGuideShow',id_sale);
+}
+function modalCPESunat(id_sale) {
+  EventBus.$emit('ModalCPESunatShow',id_sale);
 }
 
 function SendXML(id_sale) {

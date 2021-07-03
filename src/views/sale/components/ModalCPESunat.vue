@@ -1,15 +1,53 @@
 <template>
   <div>
-    <b-modal size="xl" hide-footer v-model="modal_cpe_sunat" class="w-100" title="CPE SUNAT">
+    <b-modal size="md" hide-footer v-model="modal_cpe_sunat" class="w-100" title="CPE SUNAT">
       <b-row>
-        <b-col md="12">
-          <b-form-group label="Buscar Pedido :">
-            <b-form-input type="text"></b-form-input>
+        <b-col md="4" class="text-center">
+          <b-button @click="DownloadResource('XML')" class="text-center" variant="primary">
+            <img class="img-fluid" src="@/assets/icons/xml.png"/>
+            <b-col md="12">
+              <label class="text-center mt-2">Descargar <br> XML</label>
+            </b-col>
+          </b-button>
+        </b-col>
+        <b-col md="4" class="text-center">
+          <b-button @click="DownloadResource('CDR')" class="text-center" variant="primary">
+            <img class="text-center" src="@/assets/icons/cdr.png"/>
+            <b-col md="12">
+              <label class="text-center mt-2">Descargar <br> CDR</label>
+            </b-col>
+          </b-button>
+        </b-col>
+        <b-col md="4" class="text-center">
+          <b-button @click="DownloadResource('PDF')" class="text-center" variant="primary">
+            <img class="text-center" src="@/assets/icons/pdf.png"/>
+            <b-col md="12">
+              <label class="text-center mt-2">Descargar <br> PDF</label>
+            </b-col>
+          </b-button>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col md="12" class="mt-3">
+          <b-form-group label="Mensaje Sunat">
+             <b-alert variant="success" show>{{sale.sunat_message}}</b-alert>
           </b-form-group>
         </b-col>
-     
+        <b-col md="12">
+          <b-form-group label="Enviar por correo electrónico">
+            <b-input-group>
+            <b-form-input type="email" v-model="sale.email" class="form-control"></b-form-input>
+            <b-input-group-append>
+              <b-button @click="SendEmail" variant="primary"><i class="far fa-paper-plane"></i></b-button>
+            </b-input-group-append>
+          </b-input-group>
+          </b-form-group>
+        </b-col>
       </b-row>
     </b-modal>
+
+    <LoadingComponent :is-visible="isLoading"/>
+
   </div>
 </template>
 <style>
@@ -25,36 +63,44 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
-// import Notifications from 'vue-notification/dist/ssr.js';
+
+import LoadingComponent from './../../pages/Loading'
 
 
 export default {
   name: "ModalsProduct",
+  components:{
+      LoadingComponent,
+  },
   data() {
     return {
+        isLoading: false,
         modal_cpe_sunat:false,
         module:'Sale',
-        role:0,
-        search_order:'',
-        orders: [],
+        id_sale:0,
+        role:1,
+        sale:{
+          id_sale:'',
+          sunat_message:'',
+          email :'',
+        }
     };
   },
   created (){
     
   },
   mounted () {
-    EventBus.$on('ModalOrderShow', (role) => {
+    EventBus.$on('ModalCPESunatShow', (id_sale) => {
       this.modal_cpe_sunat = true;
-      this.role = role;
-      this.SearchOrders();
-      // this.ListWarehouse();
+      this.id_sale = id_sale;
+      this.ViewSale();
     });
     
   },
   methods: {
-      SearchOrders,
-      AddOrder,
-      ...mapActions('Sale',['mLoadAddSaleDetail','mLoadAddLinkages']),
+      ViewSale,
+      DownloadResource,
+      SendEmail,
   },
   computed: {
     ...mapState(["url_base"]),
@@ -71,78 +117,56 @@ export default {
   },
 };
 
-function AddOrder(id_order) {
-
-    let me = this;
-    let url = this.url_base + "order/view/" + id_order;
-
-    axios({
-      method: "GET",
-      url: url,
-      headers: { token: this.token, module: this.module,role: this.role},
-    })
-    .then(function (response) {
-      if (response.data.status == 200) {
-        ///agregar pedido
-        let order = {
-          module:'Order',
-          id_module:response.data.result.order.id_order,
-          concept:'Pedido',
-          date:response.data.result.order.date,
-          reference: 'NP - ' + response.data.result.order.number_of_order,
-        };
-        me.mLoadAddLinkages(order);
-
-        let invoice_information = {
-          client : {id: response.data.result.order.id_client,full_name: response.data.result.order.client_name + ' - '+ response.data.result.order.client_document_number},
-          type_invoice : response.data.result.order.type_invoice,
-        }
-
-        EventBus.$emit('InvoiceInformation', invoice_information);
-        
-        ///agregar detalle pedido
-        let order_detail = response.data.result.order_detail;
-        for (let index = 0; index < order_detail.length; index++) {
-          const element = order_detail[index];
-          let detail = {
-            id_product: element.id_product,
-            code: element.code,
-            name: element.name,
-            unit_measure: element.unit_measure,
-            igv: element.igv,
-            existence_type: element.existence_type,
-            quantity: parseFloat(element.quantity),
-            unit_price: parseFloat(element.unit_price).toFixed(2),
-            total_price: parseFloat(element.total_price).toFixed(2),
-          }
-          
-          me.mLoadAddSaleDetail(detail);
-
-        }
-        
-      } else {
-        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-      }
-    })
-
-   
-}
-//Buscar productos
-function SearchOrders() {
+function ViewSale() {
   let me = this;
-  let search = this.search_order == "" ? "all" : this.search_order;
-  let url = this.url_base + "order/search-order/"+ search;
-
+  let url = me.url_base + "sale/view/"+this.id_sale;
   axios({
     method: "GET",
     url: url,
-    headers: { token: this.token,module: this.module,role: this.role},
+    headers: {"Content-Type": "application/json", token: me.token, module: me.module,role: me.role, },
   })
-  .then(function (response) {
+    .then(function (response) {
       if (response.data.status == 200) {
-        me.orders = response.data.result;
+        me.sale.sunat_message = response.data.result.sunat_message;
+        me.sale.state = response.data.result.state;
+        me.sale.id_sale = response.data.result.id_sale;
+        me.sale.email = response.data.result.email;
       }
+    })
+   
+}
+
+
+function DownloadResource(resource) {
+  let url = this.url_base + "sale-download-resource/"+this.id_sale+'/'+resource;
+  window.open(url,'_blank');
+}
+
+
+function SendEmail() {
+  if (this.sale.email.length == 0) {
+    Swal.fire({ icon: 'warning', text: 'Ingrese un correo electrónico', timer: 3000,})
+    return false;
+  }
+  let me = this;
+  let url = me.url_base + "sale/send-voucher-email";
+  let data = me.sale;
+  me.isLoading = true;
+  axios({
+    method: "POST",
+    url: url,
+    data: data,
+    headers: {"Content-Type": "application/json", token: me.token, module: me.module,role: me.role, },
   })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.isLoading = false;
+        Swal.fire({ icon: 'success', text: 'Se enviado el comprobante al correo exitosamente', timer: 3000,})
+      }else{
+        me.isLoading = false;
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error al enviar el correo', timer: 3000,})
+      }
+    })
 }
 
 </script>
