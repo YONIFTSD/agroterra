@@ -620,8 +620,7 @@ function Closecash(me) {
     .then(function (response) {
       if (response.data.status == 200) {
         Swal.fire("Sistema", "Se ha Cerrado la caja", "success");
-        me.state = 1;
-        me.GetCorrelative();
+        me.ValidateOpenBox();
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }

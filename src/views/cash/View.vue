@@ -31,7 +31,7 @@
 
                           <b-col md="3">
                               <b-form-group label="Usuario:">
-                              <b-form-input type="text" class="text-center" readonly v-model="cash.email" ></b-form-input>
+                              <b-form-input type="text" class="text-center" readonly v-model="cash.user" ></b-form-input>
                               </b-form-group>
                           </b-col>
 
@@ -45,96 +45,104 @@
 
                           <b-col md="12"> <br><br> </b-col>
 
-                          <b-col md="12">
+                          <b-col md="6">
+                            
+                            <div class="w-100 p-2 text-center"><strong class="header">RESUMEN DE VENTAS</strong></div>
                             <div class="table-responsive">
                               <table class="table table-striped table-bordered w-100">
                                 <thead>
                                     <tr class="bg-danger">
-                                      <td class="text-center" width="40%" ></td>
-                                      <td class="text-center" width="20%">SOLES</td>
-                                      <td class="text-center" width="20%">DOLARES</td>
-                                      <td class="text-center" width="20%">PESOS</td>
+                                      <td class="text-center" width="50%" ></td>
+                                      <td class="text-center" width="25%">SOLES</td>
+                                      <td class="text-center" width="25%">DOLARES</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <tr class="bg-info">
+                                      <td class="text-let pl-3" >Ventas al Contado</td>
+                                      <td class="text-right" >{{cash.total_cash_sales_pen}}</td>
+                                      <td class="text-right" >{{cash.total_cash_sales_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-light text-dark">
+                                      <td class="text-let pl-5" >Efectivo</td>
+                                      <td class="text-right" >{{cash.counted_pen}}</td>
+                                      <td class="text-right" >{{cash.counted_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-light text-dark">
+                                      <td class="text-let pl-5" >Deposito a cuenta</td>
+                                      <td class="text-right" >{{cash.deposit_account_pen}}</td>
+                                      <td class="text-right" >{{cash.deposit_account_usd}}</td>
+                                      
+                                    </tr>
+                                    <tr class="bg-light text-dark">
+                                      <td class="text-let pl-5" >Giro</td>
+                                      <td class="text-right" >{{cash.turn_pen}}</td>
+                                      <td class="text-right" >{{cash.turn_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-light text-dark">
+                                      <td class="text-let pl-5" >Tarjeta de Débito</td>
+                                      <td class="text-right" >{{cash.debit_pen}}</td>
+                                      <td class="text-right" >{{cash.debit_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-info">
+                                      <td class="text-let pl-3" >Ventas al Credito</td>
+                                      <td class="text-right" >{{cash.total_credit_sales_pen}}</td>
+                                      <td class="text-right" >{{cash.total_credit_sales_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-success">
+                                      <td class="text-let" >Total de Ventas del Periodo</td>
+                                      <td class="text-right" >{{cash.total_sales_period_pen}}</td>
+                                      <td class="text-right" >{{cash.total_sales_period_usd}}</td>
+                                    </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </b-col>
+
+
+                          <b-col md="6">
+                            <div class="w-100 p-2 text-center"><strong class="header">ESTADO DE CAJA</strong></div>
+                            <div class="table-responsive">
+                              <table class="table table-striped table-bordered w-100">
+                                <thead>
+                                    <tr class="bg-danger">
+                                      <td class="text-center" width="70%" ></td>
+                                      <td class="text-center" width="15%">SOLES</td>
+                                      <td class="text-center" width="15%">DOLARES</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr class="bg-success">
-                                            <td class="text-let" >Saldo Inicial</td>
-                                            <td class="text-right" >{{cash.initial_balance_pen}}</td>
-                                            <td class="text-right" >{{cash.initial_balance_usd}}</td>
-                                            <td class="text-right" >{{cash.initial_balance_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-success">
-                                            <td class="text-let" >Total de Ventas del Periodo</td>
-                                            <td class="text-right" >{{cash.total_sales_period_pen}}</td>
-                                            <td class="text-right" >{{cash.total_sales_period_usd}}</td>
-                                            <td class="text-right" >{{cash.total_sales_period_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-info">
-                                            <td class="text-let pl-3" >Ventas al Contado</td>
-                                            <td class="text-right" >{{cash.total_cash_sales_pen}}</td>
-                                            <td class="text-right" >{{cash.total_cash_sales_usd}}</td>
-                                            <td class="text-right" >{{cash.total_cash_sales_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-light text-dark">
-                                            <td class="text-let pl-5" >Efectivo</td>
-                                            <td class="text-right" >{{cash.cash_pen}}</td>
-                                            <td class="text-right" >{{cash.cash_usd}}</td>
-                                            <td class="text-right" >{{cash.cash_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-light text-dark">
-                                            <td class="text-let pl-5" >Visa</td>
-                                            <td class="text-right" >{{cash.visa_pen}}</td>
-                                            <td class="text-right" >{{cash.visa_usd}}</td>
-                                            <td class="text-right" >{{cash.visa_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-light text-dark">
-                                            <td class="text-let pl-5" >Mastercard</td>
-                                            <td class="text-right" >{{cash.mastercard_pen}}</td>
-                                            <td class="text-right" >{{cash.mastercard_usd}}</td>
-                                            <td class="text-right" >{{cash.mastercard_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-light text-dark">
-                                            <td class="text-let pl-5" >American Express</td>
-                                            <td class="text-right" >{{cash.american_express_pen}}</td>
-                                            <td class="text-right" >{{cash.american_express_usd}}</td>
-                                            <td class="text-right" >{{cash.american_express_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-light text-dark">
-                                            <td class="text-let pl-5" >Transferencia de Fondos</td>
-                                            <td class="text-right" >{{cash.transfer_funds_pen}}</td>
-                                            <td class="text-right" >{{cash.transfer_funds_usd}}</td>
-                                            <td class="text-right" >{{cash.transfer_funds_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-light text-dark">
-                                            <td class="text-let pl-5" >Deposito a Cuenta</td>
-                                            <td class="text-right" >{{cash.account_deposit_pen}}</td>
-                                            <td class="text-right" >{{cash.account_deposit_usd}}</td>
-                                            <td class="text-right" >{{cash.account_deposit_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-info">
-                                            <td class="text-let pl-3" >Ventas al Credito</td>
-                                            <td class="text-right" >{{cash.total_credit_sales_pen}}</td>
-                                            <td class="text-right" >{{cash.total_credit_sales_usd}}</td>
-                                            <td class="text-right" >{{cash.total_credit_sales_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-success">
-                                            <td class="text-let" >Ingresos Extraordinarios</td>
-                                            <td class="text-right" >{{cash.total_extraordinary_income_pen}}</td>
-                                            <td class="text-right" >{{cash.total_extraordinary_income_usd}}</td>
-                                            <td class="text-right" >{{cash.total_extraordinary_income_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-success">
-                                            <td class="text-let" >Egresos Extraordinarios</td>
-                                            <td class="text-right" >{{cash.total_extraordinary_expenses_pen}}</td>
-                                            <td class="text-right" >{{cash.total_extraordinary_expenses_usd}}</td>
-                                            <td class="text-right" >{{cash.total_extraordinary_expenses_clp}}</td>
-                                          </tr>
-                                          <tr class="bg-dark">
-                                            <td class="text-let" >Saldo Final</td>
-                                            <td class="text-right" >{{cash.total_income_pen}}</td>
-                                            <td class="text-right" >{{cash.total_income_usd}}</td>
-                                            <td class="text-right" >{{cash.total_income_clp}}</td>
-                                          </tr>
+                                      <td class="text-let" >Saldo Inicial</td>
+                                      <td class="text-right" >{{cash.initial_balance_pen}}</td>
+                                      <td class="text-right" >{{cash.initial_balance_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-success">
+                                      <td class="text-let" >Ingresos por Ventas al Contado - Efectivo</td>
+                                      <td class="text-right" >{{cash.counted_pen}}</td>
+                                      <td class="text-right" >{{cash.counted_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-success">
+                                      <td class="text-let" >Ingresos por cobros de creditos - Efectivo</td>
+                                      <td class="text-right" >{{cash.total_credit_collection_income_pen}}</td>
+                                      <td class="text-right" >{{cash.total_credit_collection_income_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-success">
+                                      <td class="text-let" >Ingresos Extraordinarios</td>
+                                      <td class="text-right" >{{cash.total_extraordinary_income_pen}}</td>
+                                      <td class="text-right" >{{cash.total_extraordinary_income_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-success">
+                                      <td class="text-let" >Egresos Extraordinarios</td>
+                                      <td class="text-right" >{{cash.total_extraordinary_expenses_pen}}</td>
+                                      <td class="text-right" >{{cash.total_extraordinary_expenses_usd}}</td>
+                                    </tr>
+                                    <tr class="bg-dark">
+                                      <td class="text-let" >Saldo Final</td>
+                                      <td class="text-right" >{{cash.total_income_pen}}</td>
+                                      <td class="text-right" >{{cash.total_income_usd}}</td>
+                                    </tr>
                                 </tbody>
                               </table>
                             </div>
@@ -265,15 +273,16 @@ export default {
 function ExportExcel() {
   let id_cash = je.decrypt(this.id_cash);
   let me = this;
-  let url = this.url_base + "cash-export-excel/"+id_cash+'/2';
+  let url = this.url_base + "cash-export-excel/"+id_cash+'/'+this.cash.end_date;
   
   window.open(url,'_blank');
 }
 
+
 function ExportPDF() {
 
   let me = this;
-  let url = this.url_base + "cash-export-pdf/"+this.cash.id_cash+'/2';
+  let url = this.url_base + "cash-export-pdf/"+this.cash.id_cash+'/'+this.cash.end_date;
   
   window.open(url,'_blank');
 }

@@ -58,9 +58,10 @@
                     <td class="align-middle text-right"> {{ item.total_income_pen }}</td>
                     <td class="align-middle text-right"> {{ item.total_income_usd }}</td>
                     <td class="align-middle text-center">
-                      <span v-if="item.state == 1">Pendiente</span>
-                      <span v-if="item.state == 2">Finalizado</span>
-                      <span v-if="item.state == 0">Anulado</span>
+                      <b-badge v-if="item.state == 1" variant="warning">Pendiente</b-badge>
+                      <b-badge v-if="item.state == 2" variant="success">Finalizado</b-badge>
+                      <b-badge v-if="item.state == 0" variant="danger">Anulado</b-badge>
+                  
                     </td>
                     <td class="align-middle text-center">
                       <b-dropdown bloque size="sm" text="Acciones" right>
@@ -70,14 +71,14 @@
                           >Editar</b-dropdown-item
                         >
                         <b-dropdown-item
-                          v-if="Permission('CashView') && item.state == 2"
+                          v-if="Permission('CashView') && item.state != 1"
                           @click="ViewCash(item.id_cash)"
                           >Ver</b-dropdown-item
                         >
                         <b-dropdown-item
-                          v-if="Permission('CashDelete')"
+                          v-if="Permission('CashDelete') && item.state != 0"
                           @click="ConfirmDeleteCash(item.id_cash)"
-                          >Eliminar</b-dropdown-item
+                          >Anular</b-dropdown-item
                         >
                       </b-dropdown>
                     </td>
@@ -212,7 +213,7 @@ function ViewCash(id_cash) {
 // Confirmar eliminar
 function ConfirmDeleteCash(id_cash) {
   Swal.fire({
-    title: "Esta seguro de eliminar el registro?",
+    title: "Esta seguro de anular la caja?",
     text: "No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,
@@ -229,7 +230,7 @@ function ConfirmDeleteCash(id_cash) {
 // eliminar usuario
 function DeleteCash(id_cash) {
   let me = this;
-  let url = this.url_base + "cash/delete/" + id_cash;
+  let url = this.url_base + "cash/cancel/" + id_cash;
   axios({
     method: "delete",
     url: url,
@@ -244,17 +245,13 @@ function DeleteCash(id_cash) {
         //eliminado del objeto
         for (var i = 0; i < me.data_table.length; i++) {
           if (me.data_table[i].id_cash == id_cash) {
-            me.data_table.splice(i, 1);
+            me.data_table[i].state = 0;
             break;
           }
         }
-        Swal.fire("Eliminado!", "El registro ha sido eliminado", "success");
+        Swal.fire("Eliminado!", "Se ha anulado la caja", "success");
       } else {
-        Swal.fire(
-          "A Ocurrido un error",
-          "El registro no ha sido eliminado",
-          "error"
-        );
+        Swal.fire( "A Ocurrido un error", "El registro no ha sido anulado", "error");
       }
     })
     .catch((error) => {
