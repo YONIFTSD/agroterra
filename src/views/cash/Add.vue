@@ -96,9 +96,10 @@
                                 </b-col>
 
 
-                                <b-col md="12"> <br><br> </b-col>
-
-                                <b-col md="12">
+                                <b-col md="12"></b-col>
+                                <b-col md="6">
+                                  
+                                  <div class="w-100 p-2 text-center"><strong class="header">RESUMEN DE VENTAS</strong></div>
                                   <div class="table-responsive">
                                     <table class="table table-striped table-bordered w-100">
                                       <thead>
@@ -109,17 +110,7 @@
                                           </tr>
                                       </thead>
                                       <tbody>
-                                          <tr class="bg-success">
-                                            <td class="text-let" >Saldo Inicial</td>
-                                            <td class="text-right" >{{cash.initial_balance_pen}}</td>
-                                            <td class="text-right" >{{cash.initial_balance_usd}}</td>
-                      
-                                          </tr>
-                                          <tr class="bg-success">
-                                            <td class="text-let" >Total de Ventas del Periodo</td>
-                                            <td class="text-right" >{{cash.total_sales_period_pen}}</td>
-                                            <td class="text-right" >{{cash.total_sales_period_usd}}</td>
-                                          </tr>
+                                          
                                           <tr class="bg-info">
                                             <td class="text-let pl-3" >Ventas al Contado</td>
                                             <td class="text-right" >{{cash.total_cash_sales_pen}}</td>
@@ -152,6 +143,44 @@
                                             <td class="text-right" >{{cash.total_credit_sales_usd}}</td>
                                           </tr>
                                           <tr class="bg-success">
+                                            <td class="text-let" >Total de Ventas del Periodo</td>
+                                            <td class="text-right" >{{cash.total_sales_period_pen}}</td>
+                                            <td class="text-right" >{{cash.total_sales_period_usd}}</td>
+                                          </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </b-col>
+
+
+                                <b-col md="6">
+                                  <div class="w-100 p-2 text-center"><strong class="header">ESTADO DE CAJA</strong></div>
+                                  <div class="table-responsive">
+                                    <table class="table table-striped table-bordered w-100">
+                                      <thead>
+                                          <tr class="bg-danger">
+                                            <td class="text-center" width="70%" ></td>
+                                            <td class="text-center" width="15%">SOLES</td>
+                                            <td class="text-center" width="15%">DOLARES</td>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          <tr class="bg-success">
+                                            <td class="text-let" >Saldo Inicial</td>
+                                            <td class="text-right" >{{cash.initial_balance_pen}}</td>
+                                            <td class="text-right" >{{cash.initial_balance_usd}}</td>
+                                          </tr>
+                                          <tr class="bg-success">
+                                            <td class="text-let" >Ingresos por Ventas al Contado - Efectivo</td>
+                                            <td class="text-right" >{{cash.counted_pen}}</td>
+                                            <td class="text-right" >{{cash.counted_usd}}</td>
+                                          </tr>
+                                          <tr class="bg-success">
+                                            <td class="text-let" >Ingresos por cobros de creditos - Efectivo</td>
+                                            <td class="text-right" >{{cash.total_credit_collection_income_pen}}</td>
+                                            <td class="text-right" >{{cash.total_credit_collection_income_usd}}</td>
+                                          </tr>
+                                          <tr class="bg-success">
                                             <td class="text-let" >Ingresos Extraordinarios</td>
                                             <td class="text-right" >{{cash.total_extraordinary_income_pen}}</td>
                                             <td class="text-right" >{{cash.total_extraordinary_income_usd}}</td>
@@ -174,7 +203,7 @@
                           
 
 
-                                <b-col md="2"></b-col>
+                                <b-col md="3"></b-col>
                                 <b-col md="2">
                                     <b-button type="button" @click="ExportPDF" class="form-control btn btn-primary" variant="info">PDF</b-button>
                                 </b-col>
@@ -257,6 +286,7 @@ export default {
           total_cash_sales_pen:(0).toFixed(2),
           total_credit_sales_pen:(0).toFixed(2),
           total_sales_period_pen:(0).toFixed(2),
+          total_credit_collection_income_pen:(0).toFixed(2),
           total_extraordinary_income_pen:(0).toFixed(2),
           total_extraordinary_expenses_pen:(0).toFixed(2),
           total_income_pen:(0).toFixed(2),
@@ -269,6 +299,7 @@ export default {
           total_cash_sales_usd:(0).toFixed(2),
           total_credit_sales_usd:(0).toFixed(2),
           total_sales_period_usd:(0).toFixed(2),
+          total_credit_collection_income_usd:(0).toFixed(2),
           total_extraordinary_income_usd:(0).toFixed(2),
           total_extraordinary_expenses_usd:(0).toFixed(2),
           total_income_usd:(0).toFixed(2),
@@ -508,7 +539,7 @@ function GetActiveCash() {
           me.cash.id_correlative = response.data.result.id_correlative;
           me.cash.cash_number = response.data.result.cash_number;
           me.cash.start_date = response.data.result.start_date;
-          me.cash.end_date = response.data.result.start_date;
+          me.cash.end_date = moment(new Date()).local().format("YYYY-MM-DD");
 
           me.cash.observation = response.data.result.observation;
           me.cash.state = response.data.result.state;
@@ -547,6 +578,7 @@ function CalculateCash() {
           me.cash.total_cash_sales_pen = response.data.result.total_cash_sales_pen;
           me.cash.total_credit_sales_pen = response.data.result.total_credit_sales_pen;
           me.cash.total_sales_period_pen = response.data.result.total_sales_period_pen;
+          me.cash.total_credit_collection_income_pen = response.data.result.total_credit_collection_income_pen;
           me.cash.total_extraordinary_income_pen = response.data.result.total_extraordinary_income_pen;
           me.cash.total_extraordinary_expenses_pen = response.data.result.total_extraordinary_expenses_pen;
           me.cash.total_income_pen = response.data.result.total_income_pen;
@@ -559,6 +591,7 @@ function CalculateCash() {
           me.cash.total_cash_sales_usd = response.data.result.total_cash_sales_usd;
           me.cash.total_credit_sales_usd = response.data.result.total_credit_sales_usd;
           me.cash.total_sales_period_usd = response.data.result.total_sales_period_usd;
+          me.cash.total_credit_collection_income_usd = response.data.result.total_credit_collection_income_usd;
           me.cash.total_extraordinary_income_usd = response.data.result.total_extraordinary_income_usd;
           me.cash.total_extraordinary_expenses_usd = response.data.result.total_extraordinary_expenses_usd;
           me.cash.total_income_usd = response.data.result.total_income_usd;
