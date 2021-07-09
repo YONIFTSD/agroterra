@@ -22,18 +22,17 @@ if(user_permissions.indexOf('SaleList') > -1 ){
   modules.push(TypeUser);
 }
 
+if(user_permissions.indexOf('OrderList') > -1 ){
+  let me = this;
 
-// if(user_permissions.indexOf('OrderList') > -1 ){
-//   let me = this;
-
-//   let TypeUser = {
-//     _name: 'CSidebarNavItem',
-//     name: 'Pedidos',
-//     to: '/pedidos/listar',
-//     icon: 'cil-cart',
-//   }
-//   modules.push(TypeUser);
-// }
+  let TypeUser = {
+    _name: 'CSidebarNavItem',
+    name: 'Pedidos',
+    to: '/pedidos/listar',
+    icon: 'cil-cart',
+  }
+  modules.push(TypeUser);
+}
 
 if(user_permissions.indexOf('CashList') > -1 || user_permissions.indexOf('ExpenseList') > -1 || user_permissions.indexOf('IncomeList') > -1 ){
   let me = this;
@@ -62,11 +61,23 @@ if(user_permissions.indexOf('CashList') > -1 || user_permissions.indexOf('Expens
 }
 
 
-if(user_permissions.indexOf('AccountReceivableList') > -1 ){
+if(user_permissions.indexOf('AccountReceivableList') > -1 || user_permissions.indexOf('AccountPayList') > -1 || user_permissions.indexOf('ExchangeDocumentList') > -1 || user_permissions.indexOf('PaymentList') > -1 || user_permissions.indexOf('ChargeList') > -1 ){
   let me = this;
   let item = [];
   if (user_permissions.indexOf('AccountReceivableList') > -1) {
     item.push({ name: 'Cuentas por Cobrar', to: '/cuentas-por-cobrar/listar' });
+  }
+  if (user_permissions.indexOf('AccountPayList') > -1) {
+    item.push({ name: 'Cuentas por Pagar', to: '/cuentas-por-pagar/listar' });
+  }
+  if (user_permissions.indexOf('ExchangeDocumentList') > -1) {
+    item.push({ name: 'Canje de Documentos', to: '/canje-de-documentos/listar' });
+  }
+  if (user_permissions.indexOf('PaymentList') > -1) {
+    item.push({ name: 'Registro de Pagos', to: '/registro-de-pagos/listar' });
+  }
+  if (user_permissions.indexOf('ChargeList') > -1) {
+    item.push({ name: 'Registro de Cobros', to: '/registro-de-cobros/listar' });
   }
 
   let TypeUser = {

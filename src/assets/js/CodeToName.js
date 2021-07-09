@@ -144,4 +144,28 @@ var NameOperationType = (function() {
     };
 })();
 
-export default {NameDocumentType,CodeInvoice,NameInvoice,NameOperationType}
+
+var NameMethodPayment = (function() {
+
+    return function NameMethodPayment(code_method_payment) {
+        var name = '';
+        switch (code_method_payment) {
+            case '001': name = 'DEPÓSITO EN CUENTA'; break;
+            case '003': name = 'TRANSFERENCIA DE FONDOS'; break;
+            case '004': name = 'ORDEN DE PAGO'; break;
+            case '005': name = 'TARJETA DE DÉBITO'; break;
+            case '006': name = 'TARJETA DE CRÉDITO'; break;
+            case '007': name = 'CHEQUES CON LA CLÁUSULA DE "NO NEGOCIABLE"'; break;
+            case '008': name = 'EFECTIVO'; break;
+            case '009': name = 'EFECTIVO, EN LOS DEMÁS CASOS'; break;
+            case '101': name = 'TRANSFERENCIAS - COMERCIO EXTERIOR'; break;
+            case '102': name = 'CHEQUES BANCARIOS  - COMERCIO EXTERIOR'; break;
+            default: name = ''; break;
+        }
+
+        return (name);
+    };
+})();
+
+
+export default {NameDocumentType,CodeInvoice,NameInvoice,NameOperationType,NameMethodPayment}

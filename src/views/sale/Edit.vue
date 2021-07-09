@@ -17,7 +17,7 @@
                   </b-form-group>
                 </b-col>
 
-               
+               {{sale}}
 
     
                 <b-col md="6"></b-col>
@@ -231,7 +231,7 @@ export default {
         id_sale: "",
         id_client: "",
         id_serie: "",
-        id_warehouse: 1,
+        id_warehouse: '',
         linkages:[],
         type_operation: "01",
         type_invoice: "03",
@@ -313,6 +313,7 @@ export default {
       errors: {
         id_serie: false,
         id_client: false,
+        id_warehouse: false,
         way_to_pay: false,
         sale_detail: false,
         total: false,
@@ -500,6 +501,7 @@ function ViewSale() {
         me.client = {id: response.data.result.id_client,full_name: response.data.result.name + ' - ' + response.data.result.document_number};
 
         me.sale.id_sale = response.data.result.id_sale,
+        me.sale.id_warehouse = response.data.result.id_warehouse,
         me.sale.linkages = response.data.result.linkages;
         me.sale.type_operation = response.data.result.type_operation,
         me.sale.type_invoice = response.data.result.type_invoice;
@@ -612,6 +614,7 @@ function Validate() {
   
   
   this.errors.id_client = this.client == null ? true : false;
+  this.errors.id_warehouse = this.sale.id_warehouse.length == 0 ? true : false;
   this.errors.coin = this.sale.coin.length == 0 ? true : false;
   this.errors.way_to_pay = this.sale.way_to_pay.length == 0 ? true : false;
   this.errors.sale_detail = this.sale_detail.length == 0 ? true : false;
@@ -619,6 +622,7 @@ function Validate() {
   
 
   if (this.errors.id_client == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.id_warehouse == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.way_to_pay == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.sale_detail == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }

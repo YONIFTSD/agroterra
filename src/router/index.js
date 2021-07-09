@@ -638,6 +638,149 @@ function configRoutes() {
       ],
     },
 
+
+
+    {
+      path: "/cuentas-por-pagar",
+      redirect: "/cuentas-por-pagar/listar",
+      name: "CuentasPorPagar",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "AccountPayList",
+          component: () => import("@/views/account-pay/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "AccountPayAdd",
+          component: () => import("@/views/account-pay/Add"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "editar/:id_account_pay",
+          name: "AccountPayEdit",
+          component: () => import("@/views/account-pay/Edit"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ver/:id_account_pay",
+          name: "AccountPayView",
+          component: () => import("@/views/account-pay/View"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+      ],
+    },
+
+    {
+      path: "/canje-de-documentos",
+      redirect: "/canje-de-documentos/listar",
+      name: "CanjeDeDocumentos",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "ExchangeDocumentList",
+          component: () => import("@/views/exchange-document/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "ExchangeDocumentAdd",
+          component: () => import("@/views/exchange-document/Add"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "editar/:id_exchange_document",
+          name: "ExchangeDocumentEdit",
+          component: () => import("@/views/exchange-document/Edit"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ver/:id_exchange_document",
+          name: "ExchangeDocumentView",
+          component: () => import("@/views/exchange-document/View"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+      ],
+    },
+
+
+    {
+      path: "/registro-de-pagos",
+      redirect: "/registro-de-pagos/listar",
+      name: "RegistroPagos",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "PaymentList",
+          component: () => import("@/views/payment/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "PaymentAdd",
+          component: () => import("@/views/payment/Add"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "editar/:id_payment",
+          name: "PaymentEdit",
+          component: () => import("@/views/payment/Edit"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ver/:id_payment",
+          name: "PaymentView",
+          component: () => import("@/views/payment/View"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+      ],
+    },
+
+    {
+      path: "/registro-de-cobros",
+      redirect: "/registro-de-cobros/listar",
+      name: "RegistroCobros",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "ChargeList",
+          component: () => import("@/views/charge/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "ChargeAdd",
+          component: () => import("@/views/charge/Add"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "editar/:id_charge",
+          name: "ChargeEdit",
+          component: () => import("@/views/charge/Edit"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ver/:id_charge",
+          name: "ChargeView",
+          component: () => import("@/views/charge/View"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+      ],
+    },
+
     {
       path: "/ingresos",
       redirect: "/ingresos/listar",

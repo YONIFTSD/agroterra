@@ -668,6 +668,7 @@ function AddSale(_this) {
 function Validate() {
   
   this.errors.id_serie = this.sale.id_serie.length == 0 ? true : false;
+  this.errors.id_warehouse = this.sale.id_warehouse.length == 0 ? true : false;
   this.errors.broadcast_date = this.sale.broadcast_date.length == 0 ? true : false;
   this.errors.id_client = this.client == null ? true : false;
   this.errors.coin = this.sale.coin.length == 0 ? true : false;
@@ -676,6 +677,7 @@ function Validate() {
   this.errors.total = parseFloat(this.total_sale.total) <= 0 ? true : false;
   
   if (this.errors.id_provider == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.id_warehouse == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.broadcast_date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.id_client == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }

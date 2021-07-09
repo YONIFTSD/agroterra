@@ -4,32 +4,29 @@
       <CCol col>
         <CCard>
           <CCardHeader>
-            <strong> Modulo Registro de Pagos - Listar</strong>
+            <strong> Modulo Registro de Cobros - Listar</strong>
           </CCardHeader>
           <CCardBody>
 
             <b-tabs content-class="mt-3">
-              <b-tab title="Registro de Pagos - No Aplicados" active>
+              <b-tab title="Registro de Cobros - No Aplicados" active>
                 <b-row>
-                  
-
-                  <b-col md="5">
-                    <b-form-group>
-                      <label>Proveedor: </label>
-                      <v-select @input="ListPaymentPending" placeholder="Seleccione un proveedor" class="w-100" :filterable="false" label="name" v-model="provider_pending" @search="SearchProvidersPending" :options="providers_pending"></v-select>
+                  <b-col sm="12" md="5">
+                    <b-form-group label="Cliente:">
+                      <v-select @input="ListChargesPending" placeholder="Todos" class="w-100" :filterable="false" label="full_name" v-model="client_pending" @search="SearchClientsPending" :options="clients_pending"></v-select>
                     </b-form-group>
                   </b-col>
 
                   <b-col sm="12" md="2">
                     <b-form-group label="Desde :">
-                      <b-form-input @change="ListPaymentPending" class="text-center" :max="to_pending" type="date"  v-model="from_pending"></b-form-input>
+                      <b-form-input @change="ListChargesPending" class="text-center" :max="to_pending" type="date"  v-model="from_pending"></b-form-input>
                       <small v-if="errors_pending.from_pending" class="form-text text-danger" >Selccione una fecha</small>
                     </b-form-group>
                   </b-col>
 
                   <b-col sm="12" md="2">
                     <b-form-group label="Hasta :">
-                      <b-form-input @change="ListPaymentPending" class="text-center" :min="from_pending" type="date" v-model="to_pending"></b-form-input>
+                      <b-form-input @change="ListChargesPending" class="text-center" :min="from_pending" type="date" v-model="to_pending"></b-form-input>
                       <small v-if="errors_pending.to_pending" class="form-text text-danger" >Selccione una fecha</small>
                     </b-form-group>
                   </b-col>
@@ -39,7 +36,7 @@
                       <b-input-group>
                         <b-form-input v-model="search_pending" class="form-control" ></b-form-input>
                         <b-input-group-append>
-                          <b-button variant="primary" @click="ListPaymentPending">
+                          <b-button variant="primary" @click="ListChargesPending">
                             <b-icon icon="search"></b-icon></b-button>
                         </b-input-group-append>
                       </b-input-group>
@@ -47,7 +44,7 @@
                   </b-col>
                   <b-col sm="6" md="1">
                   <b-form-group label=".">
-                    <b-link  v-if="Permission('PaymentAdd')" class="btn form-control btn-primary"  :to="{ path: '/registro-de-pagos/nuevo' }" append ><i class="fas fa-file"></i></b-link>
+                    <b-link  v-if="Permission('ChargeAdd')" class="btn form-control btn-primary"  :to="{ path: '/registro-de-cobros/nuevo' }" append ><i class="fas fa-file"></i></b-link>
                   </b-form-group>
                 </b-col>
                 </b-row>
@@ -67,7 +64,7 @@
                         <th width="7%" class="text-center">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody v-for="(item, it) in payment_pending" :key="it">
+                    <tbody v-for="(item, it) in charge_pending" :key="it">
                       <tr>
                         <td class="text-center">{{ it + 1 }}</td>
                         <td class="text-center"> {{ item.broadcast_date  }}</td>
@@ -84,9 +81,9 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
-                            <b-dropdown-item v-if="Permission('PaymentEdit')" @click="EditPayment(item.id_payment)">Editar</b-dropdown-item>
-                            <b-dropdown-item v-if="Permission('PaymentView')" @click="ViewPayment(item.id_payment)" >Ver</b-dropdown-item >
-                            <b-dropdown-item v-if="Permission('PaymentDelete')" @click="ConfirmDeletePayment(item.id_payment)">Anular</b-dropdown-item>
+                            <b-dropdown-item v-if="Permission('ChargeEdit')" @click="EditCharge(item.id_charge)">Editar</b-dropdown-item>
+                            <b-dropdown-item v-if="Permission('ChargeView')" @click="ViewCharge(item.id_charge)" >Ver</b-dropdown-item >
+                            <b-dropdown-item v-if="Permission('ChargeDelete')" @click="ConfirmDeleteCharge(item.id_charge)">Anular</b-dropdown-item>
                           </b-dropdown>
                         </td>
                       </tr>
@@ -95,33 +92,31 @@
                 </div>
                 <b-row class="mt-4">
                   <b-col md="8">
-                    <b-pagination v-model="currentPage_pending" v-on:input="ListPaymentPending" :total-rows="rows_pending" :per-page="perPage_pending" align="center"></b-pagination>
+                    <b-pagination v-model="currentPage_pending" v-on:input="ListChargesPending" :total-rows="rows_pending" :per-page="perPage_pending" align="center"></b-pagination>
                   </b-col>
                   <b-col md="4 text-center">
                     <p>Pagina Actual: {{ currentPage_pending }}</p>
                   </b-col>
                 </b-row>
               </b-tab>
-              <b-tab title="Registro de Pagos - Aplicados">
+              <b-tab title="Registro de Cobros - Aplicados">
                 <b-row>
-              
-                  <b-col md="6">
-                    <b-form-group>
-                      <label>Proveedor: </label>
-                      <v-select @input="ListPaymentCancelled" placeholder="Seleccione un proveedor" class="w-100" :filterable="false" label="name" v-model="provider_cancelled" @search="SearchProvidersCancelled" :options="providers_cancelled"></v-select>
+                  <b-col sm="12" md="6">
+                    <b-form-group label="Cliente:">
+                      <v-select @input="ListChargeCancelled" placeholder="Todos" class="w-100" :filterable="false" label="full_name" v-model="client_cancelled" @search="SearchClientsCancelled" :options="clients_cancelled"></v-select>
                     </b-form-group>
                   </b-col>
 
                   <b-col sm="12" md="2">
                     <b-form-group label="Desde :">
-                      <b-form-input @change="ListPaymentCancelled" class="text-center" :max="to_cancelled" type="date"  v-model="from_cancelled"></b-form-input>
+                      <b-form-input @change="ListChargeCancelled" class="text-center" :max="to_cancelled" type="date"  v-model="from_cancelled"></b-form-input>
                       <small v-if="errors_cancelled.from_cancelled" class="form-text text-danger" >Selccione una fecha</small>
                     </b-form-group>
                   </b-col>
 
                   <b-col sm="12" md="2">
                     <b-form-group label="Hasta :">
-                      <b-form-input @change="ListPaymentCancelled" class="text-center" :min="from_cancelled" type="date" v-model="to_cancelled"></b-form-input>
+                      <b-form-input @change="ListChargeCancelled" class="text-center" :min="from_cancelled" type="date" v-model="to_cancelled"></b-form-input>
                       <small v-if="errors_cancelled.to_cancelled" class="form-text text-danger" >Selccione una fecha</small>
                     </b-form-group>
                   </b-col>
@@ -131,7 +126,7 @@
                       <b-input-group>
                         <b-form-input v-model="search_cancelled" class="form-control" ></b-form-input>
                         <b-input-group-append>
-                          <b-button variant="primary" @click="ListPaymentCancelled">
+                          <b-button variant="primary" @click="ListChargeCancelled">
                             <b-icon icon="search"></b-icon></b-button>
                         </b-input-group-append>
                       </b-input-group>
@@ -154,7 +149,7 @@
                         <th width="7%" class="text-center">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody v-for="(item, it) in payment_cancelled" :key="it">
+                    <tbody v-for="(item, it) in charge_cancelled" :key="it">
                       <tr>
                         <td class="text-center">{{ it + 1 }}</td>
                         <td class="text-center"> {{ item.broadcast_date  }}</td>
@@ -171,7 +166,7 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
-                            <b-dropdown-item v-if="Permission('PaymentView')" @click="ViewPayment(item.id_payment)" >Ver</b-dropdown-item >
+                            <b-dropdown-item v-if="Permission('ChargeView')" @click="ViewCharge(item.id_charge)" >Ver</b-dropdown-item >
                           </b-dropdown>
                         </td>
                       </tr>
@@ -180,7 +175,7 @@
                 </div>
                 <b-row class="mt-4">
                   <b-col md="8">
-                    <b-pagination v-model="currentPage_cancelled" v-on:input="ListPaymentPending" :total-rows="rows_cancelled" :per-page="perPage_cancelled" align="center"></b-pagination>
+                    <b-pagination v-model="currentPage_cancelled" v-on:input="ListChargesPending" :total-rows="rows_cancelled" :per-page="perPage_cancelled" align="center"></b-pagination>
                   </b-col>
                   <b-col md="4 text-center">
                     <p>Pagina Actual: {{ currentPage_cancelled }}</p>
@@ -237,7 +232,7 @@ export default {
   data() {
     return {
       isLoading:false,
-      module:'Payment',
+      module:'Charge',
 
       perPage_pending: 15,
       currentPage_pending: 1,
@@ -245,9 +240,9 @@ export default {
       to_pending:moment(new Date()).local().format("YYYY-MM-DD"),
       from_pending:moment().subtract(30, 'days').local().format("YYYY-MM-DD"),
       search_pending: "",
-      payment_pending: [],
-      providers_pending: [],
-      provider_pending:null,
+      charge_pending: [],
+      clients_pending: [],
+      client_pending:null,
       errors_pending:{
         to_pending:false,
         from_pending:false,
@@ -260,9 +255,9 @@ export default {
       to_cancelled:moment(new Date()).local().format("YYYY-MM-DD"),
       from_cancelled:moment().subtract(30, 'days').local().format("YYYY-MM-DD"),
       search_cancelled: "",
-      payment_cancelled: [],
-      providers_cancelled: [],
-      provider_cancelled:null,
+      charge_cancelled: [],
+      clients_cancelled: [],
+      client_cancelled:null,
       errors_cancelled:{
         to_cancelled:false,
         from_cancelled:false,
@@ -270,31 +265,29 @@ export default {
     };
   },
   mounted() {
-    EventBus.$on('RefreshPayment', () => {
-        this.ListPaymentPending();
-        this.ListPaymentCancelled();
+    EventBus.$on('RefreshCharge', () => {
+        this.ListChargesPending();
+        this.ListChargeCancelled();
     });
 
-    this.ListPaymentPending();
-    this.ListPaymentCancelled();
+    this.ListChargesPending();
+    this.ListChargeCancelled();
   },
   methods: {
-
-
-    ListPaymentPending,
-    SearchProvidersPending,
+    ListChargesPending,
+    SearchClientsPending,
  
-    ListPaymentCancelled,
-    SearchProvidersCancelled,
+    ListChargeCancelled,
+    SearchClientsCancelled,
 
     ShowModalAmortization,
     ShowModalEECC,
     CodeInvoice,
     CodeMethodPayment,
-    EditPayment,
-    ViewPayment,
-    ConfirmDeletePayment,
-    DeletePayment,
+    EditCharge,
+    ViewCharge,
+    ConfirmDeleteCharge,
+    DeleteCharge,
     Permission,
   },
 
@@ -313,36 +306,35 @@ export default {
   },
 };
 
-
-function SearchProvidersPending(search, loading) {
+function SearchClientsPending(search, loading) {
   
-    let me = this;
-    let url = this.url_base + "search-providers/" + search;
+   let me = this;
+    let url = this.url_base + "search-clients/" + search;
     if (search !== "") {
       loading(true);
       axios({
         method: "GET",
         url: url,
       }).then(function (response) {
-            me.providers_pending = response.data.result;
+            me.clients_pending = response.data;
             loading(false);
       })
     }
-    
 }
 
 function CodeMethodPayment(code) {
   return CodeToName.NameMethodPayment(code);
 }
 
+
 //listar usuario
-function ListPaymentPending() {
+function ListChargesPending() {
   let search = this.search_pending == "" ? "all" : this.search_pending;
-  let id_provider = this.provider_pending == null ? "all": this.provider_pending.id;
+  let id_client = this.client_pending == null ? "all": this.client_pending.id;
   if (this.from_pending.length == 0) {this.errors_pending.from_pending = true; return false;}
   if (this.to_pending.length == 0) {this.errors_pending.to_pending = true; return false;}
   let me = this;
-  let url = this.url_base + "payment/list/" +id_provider+"/1/"+ this.from_pending +"/"+this.to_pending +"/"+ search + "?page=" + this.currentPage_pending;
+  let url = this.url_base + "charge/list/" +id_client+"/1/"+ this.from_pending +"/"+this.to_pending +"/"+ search + "?page=" + this.currentPage_pending;
   axios({
     method: "GET",
     url: url,
@@ -351,7 +343,7 @@ function ListPaymentPending() {
     .then(function (response) {
       if (response.data.status == 200) {
         me.rows_pending = response.data.result.total;
-        me.payment_pending = response.data.result.data;
+        me.charge_pending = response.data.result.data;
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
@@ -362,31 +354,32 @@ function ListPaymentPending() {
 }
 
 
-function SearchProvidersCancelled(search, loading) {
+function SearchClientsCancelled(search, loading) {
   
-    let me = this;
-    let url = this.url_base + "search-providers/" + search;
+   let me = this;
+    let url = this.url_base + "search-clients/" + search;
     if (search !== "") {
       loading(true);
       axios({
         method: "GET",
         url: url,
       }).then(function (response) {
-            me.providers_cancelled = response.data.result;
+            me.clients_cancelled = response.data;
             loading(false);
       })
     }
-    
 }
 
+
+
 //listar usuario
-function ListPaymentCancelled() {
-  let search = this.search_cancelled == "" ? "all" : this.search_cancelled;
-  let id_provider = this.client_cancelled == null ? "all": this.client_cancelled.id;
+function ListChargeCancelled() {
+    let search = this.search_cancelled == "" ? "all" : this.search_cancelled;
+  let id_client = this.client_cancelled == null ? "all": this.client_cancelled.id;
   if (this.from_cancelled.length == 0) {this.errors_cancelled.from_cancelled = true; return false;}
   if (this.to_cancelled.length == 0) {this.errors_cancelled.to_cancelled = true; return false;}
   let me = this;
-  let url = this.url_base + "payment/list/" +id_provider+"/2/"+ this.from_cancelled +"/"+this.to_cancelled +"/"+ search + "?page=" + this.currentPage_cancelled;
+  let url = this.url_base + "charge/list/" +id_client+"/2/"+ this.from_cancelled +"/"+this.to_cancelled +"/"+ search + "?page=" + this.currentPage_cancelled;
   axios({
     method: "GET",
     url: url,
@@ -395,7 +388,7 @@ function ListPaymentCancelled() {
     .then(function (response) {
       if (response.data.status == 200) {
         me.rows_cancelled = response.data.result.total;
-        me.payment_cancelled = response.data.result.data;
+        me.charge_cancelled = response.data.result.data;
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
@@ -406,10 +399,10 @@ function ListPaymentCancelled() {
 }
 
 // Editar usuario
-function EditPayment(id_payment) {
+function EditCharge(id_charge) {
   this.$router.push({
-    name: "PaymentEdit",
-    params: { id_payment: je.encrypt(id_payment) },
+    name: "ChargeEdit",
+    params: { id_charge: je.encrypt(id_charge) },
   });
 }
 
@@ -418,24 +411,24 @@ function CodeInvoice(code) {
 }
 
 // Ver Usuario
-function ViewPayment(id_payment) {
+function ViewCharge(id_charge) {
   this.$router.push({
-    name: "PaymentView",
-    params: { id_payment: je.encrypt(id_payment) },
+    name: "ChargeView",
+    params: { id_charge: je.encrypt(id_charge) },
   });
 }
 
-function ShowModalAmortization(id_payment) {
-  EventBus.$emit('ModalAmortizationsShow',id_payment);
+function ShowModalAmortization(id_charge) {
+  EventBus.$emit('ModalAmortizationsShow',id_charge);
 }
 function ShowModalEECC() {
   EventBus.$emit('ModalEECCShow');  
 }
 
 // Confirmar eliminar
-function ConfirmDeletePayment(id_payment) {
+function ConfirmDeleteCharge(id_charge) {
   Swal.fire({
-    title: "Esta seguro de anular el pago?",
+    title: "Esta seguro de anular el cobro?",
     text: "No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,
@@ -444,15 +437,15 @@ function ConfirmDeletePayment(id_payment) {
     confirmButtonText: "Si, Estoy de acuerdo!",
   }).then((result) => {
     if (result.value) {
-      this.DeletePayment(id_payment);
+      this.DeleteCharge(id_charge);
     }
   });
 }
 
 // eliminar usuario
-function DeletePayment(id_payment) {
+function DeleteCharge(id_charge) {
   let me = this;
-  let url = this.url_base + "payment/cancel/" + id_payment;
+  let url = this.url_base + "charge/cancel/" + id_charge;
   axios({
     method: "delete",
     url: url,
@@ -465,13 +458,13 @@ function DeletePayment(id_payment) {
     .then(function (response) {
       if (response.data.status == 200) {
         //eliminado del objeto
-        for (var i = 0; i < me.payment_pending.length; i++) {
-          if (me.payment_pending[i].id_payment == id_payment) {
-            me.payment_pending[i].state = 0;
+        for (var i = 0; i < me.charge_pending.length; i++) {
+          if (me.charge_pending[i].id_charge == id_charge) {
+            me.charge_pending[i].state = 0;
             break;
           }
         }
-        Swal.fire({ icon: 'success', text: 'Se ha anulado el pago', timer: 3000,})
+        Swal.fire({ icon: 'success', text: 'Se ha anulado el cobro', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: response.data.message, timer: 3000,})
       }

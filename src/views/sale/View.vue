@@ -226,7 +226,7 @@ export default {
         id_sale: "",
         id_client: "",
         id_serie: "",
-        id_warehouse: 1,
+        id_warehouse: '',
         linkages:[],
         type_operation: "01",
         type_invoice: "03",
@@ -411,6 +411,7 @@ function ViewSale() {
         me.client = {id: response.data.result.id_client,full_name: response.data.result.name + ' - ' + response.data.result.document_number};
 
         me.sale.id_sale = response.data.result.id_sale,
+        me.sale.id_warehouse = response.data.result.id_warehouse,
         me.sale.type_operation = response.data.result.type_operation,
         me.sale.type_invoice = response.data.result.type_invoice;
         me.sale.linkages = response.data.result.linkages;

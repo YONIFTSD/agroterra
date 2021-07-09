@@ -11,6 +11,7 @@ import Requirement from './modules/Requirement'
 import Transform from './modules/Transform'
 import InitialKardex from './modules/InitialKardex'
 import ReferralGuide from './modules/ReferralGuide'
+import ExchangeDocument from './modules/ExchangeDocument'
 
 const modules = {
   RoomControl,
@@ -23,6 +24,7 @@ const modules = {
   Transform,
   InitialKardex,
   ReferralGuide,
+  ExchangeDocument,
 }
 
 const state = {
@@ -34,6 +36,7 @@ const state = {
   // url_base: 'https://kalyfarm.rlpfacts.com/api/',
   // url_base: 'https://bertha.rlpfacts.com/api/',
   // url_base: 'https://dev.rlpfacts.com/api/',
+  // url_base: 'https://dutyfree.reyfact.com/api/',
   // url_base: 'http://localhost:8000/',
 }
 const mutations = {
