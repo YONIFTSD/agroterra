@@ -17,9 +17,6 @@
                   </b-form-group>
                 </b-col>
 
-               {{sale}}
-
-    
                 <b-col md="6"></b-col>
                 <b-col md="3">
                   <b-form-group>
