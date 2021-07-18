@@ -83,7 +83,7 @@
                           <b-dropdown bloque size="sm" text="Acciones" right>
                             <b-dropdown-item v-if="Permission('ChargeEdit')" @click="EditCharge(item.id_charge)">Editar</b-dropdown-item>
                             <b-dropdown-item v-if="Permission('ChargeView')" @click="ViewCharge(item.id_charge)" >Ver</b-dropdown-item >
-                            <b-dropdown-item v-if="Permission('ChargeDelete')" @click="ConfirmDeleteCharge(item.id_charge)">Anular</b-dropdown-item>
+                            <b-dropdown-item v-if="Permission('ChargeDelete')" @click="ConfirmDeleteCharge(item.id_charge)">Eliminar</b-dropdown-item>
                           </b-dropdown>
                         </td>
                       </tr>
@@ -428,7 +428,7 @@ function ShowModalEECC() {
 // Confirmar eliminar
 function ConfirmDeleteCharge(id_charge) {
   Swal.fire({
-    title: "Esta seguro de anular el cobro?",
+    title: "Esta seguro de eliminar el cobro?",
     text: "No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,
@@ -445,7 +445,7 @@ function ConfirmDeleteCharge(id_charge) {
 // eliminar usuario
 function DeleteCharge(id_charge) {
   let me = this;
-  let url = this.url_base + "charge/cancel/" + id_charge;
+  let url = this.url_base + "charge/delete/" + id_charge;
   axios({
     method: "delete",
     url: url,
@@ -460,11 +460,11 @@ function DeleteCharge(id_charge) {
         //eliminado del objeto
         for (var i = 0; i < me.charge_pending.length; i++) {
           if (me.charge_pending[i].id_charge == id_charge) {
-            me.charge_pending[i].state = 0;
+            me.charge_pending.splice(i, 1);
             break;
           }
         }
-        Swal.fire({ icon: 'success', text: 'Se ha anulado el cobro', timer: 3000,})
+        Swal.fire({ icon: 'success', text: 'Se ha eliminado el cobro', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: response.data.message, timer: 3000,})
       }

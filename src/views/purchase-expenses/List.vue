@@ -267,7 +267,9 @@ function DeletePurchaseExpenses(id_purchase_expenses) {
           }
         }
         Swal.fire({ icon: 'success', text: 'El registro ha sido eliminado', timer: 3000,})
-      } else {
+      }else if(response.data.status == 400){
+          Swal.fire({ icon: 'error', text: response.data.message, timer: 3000,})
+      }else {
         Swal.fire({ icon: 'error', text: 'El registro no ha sido eliminado', timer: 3000,})
       }
     })

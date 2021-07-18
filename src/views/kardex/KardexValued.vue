@@ -48,9 +48,21 @@
                 </b-col>
                 
 
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group label=".">
                     <b-button type="submit" class="form-control" variant="primary">BUSCAR</b-button>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
+                  <b-form-group label=".">
+                    <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i> EXCEL</b-button>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
+                  <b-form-group label=".">
+                    <b-button type="button" title="Exportar Excel" @click="ExportExcelGeneral" class="form-control" variant="success"><i class="fas fa-file-excel"></i> EXCEL GENERAL</b-button>
                   </b-form-group>
                 </b-col>
 
@@ -182,6 +194,9 @@ export default {
     SearchKardexMovement,
     CodeInvoice,
     NameOperationType,
+
+    ExportExcel,
+    ExportExcelGeneral,
  
   },
 
@@ -200,6 +215,38 @@ export default {
   },
 };
 
+function ExportExcel() {
+  this.errors.id_establishment = this.kardex.id_establishment.length == 0 ? true : false;
+  this.errors.id_warehouse = this.kardex.id_warehouse.length == 0 ? true : false;
+  this.errors.to = this.kardex.to.length == 0 ? true : false;
+  this.errors.id_product = this.product == null ? true : false;
+
+  if (this.errors.id_establishment == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.id_warehouse == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.to == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.id_product == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+ 
+  let voucher_of_payment = this.kardex.voucher_of_payment.length == 0 ? 'all':this.kardex.voucher_of_payment;
+  let me = this;
+  let url = this.url_base + "excel-kardex-valued/"+this.kardex.id_warehouse +"/"+ voucher_of_payment+"/"+ this.kardex.to +"/"+ this.product.id;
+
+  window.open(url,'_blank');
+}
+function ExportExcelGeneral() {
+  this.errors.id_establishment = this.kardex.id_establishment.length == 0 ? true : false;
+  this.errors.id_warehouse = this.kardex.id_warehouse.length == 0 ? true : false;
+  this.errors.to = this.kardex.to.length == 0 ? true : false;
+
+  if (this.errors.id_establishment == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.id_warehouse == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.to == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+ 
+  let voucher_of_payment = this.kardex.voucher_of_payment.length == 0 ? 'all':this.kardex.voucher_of_payment;
+  let me = this;
+  let url = this.url_base + "excel-kardex-valued-general/"+this.kardex.id_warehouse +"/"+ voucher_of_payment+"/"+ this.kardex.to;
+
+  window.open(url,'_blank');
+}
 
 function SearchProduct(search, loading) {
   

@@ -20,10 +20,11 @@
     <CHeaderNav class="d-md-down-none mr-auto">
 
         <b-badge variant="info">{{name_bussines}}</b-badge>
+        <b-badge class="ml-2" variant="info">{{name_establishment}}</b-badge>
 
     </CHeaderNav>
     <CHeaderNav class="d-md-down-none mr-1">
-    <b-badge variant="success">{{name_establishment}}</b-badge>
+    <b-badge variant="success">{{user.user}}</b-badge>
     </CHeaderNav>
     <CHeaderNav class="mr-4">
       <TheHeaderDropdownAccnt/>

@@ -1,7 +1,7 @@
 <template>
   <div>
+
     <CRow>
-      
        <CCol col="12" sm="6" lg="2">
         <b-link class="text-decoration-none" :disabled="!Permission('SaleAdd')" :to="{ path: '/venta/nuevo' }" append>
         <CWidgetIcon header="Nueva" text="Venta" color="gradient-primary">
@@ -20,15 +20,15 @@
 
       <CCol col="12" sm="6" lg="2">
         <b-link class="text-decoration-none" @click="modalProductsDeliveredShow">
-        <CWidgetIcon :header="number_home.products_delivered" text="Ventas x Entregar" color="gradient-dark">
+        <CWidgetIcon header="Ventas " text="Ventas " color="gradient-dark">
           <img src="@/assets/icons/entregar.png" class="" />
         </CWidgetIcon>
         </b-link>
       </CCol>
 
-       <CCol col="12" sm="6" lg="2">
-        <b-link class="text-decoration-none" @click="modalObserverVouchersShow">
-        <CWidgetIcon :header="number_home.voucher_observer" text="Compr. Obs." color="gradient-warning">
+       <CCol col="12" sm="6" lg="2" >
+        <b-link class="text-decoration-none bg-danger" @click="modalObserverVouchersShow">
+        <CWidgetIcon header="Compr. Obs." text="Compr. Obs." color="gradient-warning">
           <img src="@/assets/icons/facturas.png" class="" />
         </CWidgetIcon>
         </b-link>

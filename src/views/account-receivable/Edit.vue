@@ -13,7 +13,7 @@
                 
                 <b-col md="6">
                   <b-form-group>
-                    <label>Cliente: <span @click="modalClients" class="text-info link">Nuevo</span></label>
+                    <label>Proveedor: <span @click="modalClients" class="text-info link">Nuevo</span></label>
                     <v-select placeholder="Seleccione un cliente" class="w-100" :filterable="false" label="full_name" v-model="client" @search="SearchClients" :options="clients"></v-select>
                     <small v-if="errors.id_client" class="form-text text-danger" >Selccione un cliente</small>
                   </b-form-group>
@@ -113,7 +113,7 @@ import ModalClients from './../components/ModalClient'
 
 export default {
   name: "UsuarioAdd",
-  props: ["id_account_receivable"],
+  props: ["id_account_pay"],
   components:{
       vSelect,
       ModalClients,
@@ -123,7 +123,7 @@ export default {
       module: 'AccountReceivable',
       role: 3,
       account_receivable: {
-          id_account_receivable:'',
+          id_account_pay:'',
           id_sale:'',
           id_client:'',
           id_establishment:'',
@@ -164,7 +164,6 @@ export default {
       coins:[
         {value: "PEN", text : "Soles"},
         {value: "USD", text : "Dolares"},
-        {value: "CLP", text : "Pesos Chilenos"},
       ],
 
       //errors
@@ -219,9 +218,9 @@ export default {
 
 function ViewAccountReceivable() {
 
-  let id_account_receivable = je.decrypt(this.id_account_receivable);
+  let id_account_pay = je.decrypt(this.id_account_pay);
   let me = this;
-  let url = this.url_base + "account-receivable/view/" + id_account_receivable;
+  let url = this.url_base + "account-receivable/view/" + id_account_pay;
   axios({
     method: "GET",
     url: url,
@@ -231,7 +230,7 @@ function ViewAccountReceivable() {
       if (response.data.status == 200) {
 
           me.client = {id: response.data.result.id_client, full_name : response.data.result.name+' - '+response.data.result.document_number };
-          me.account_receivable.id_account_receivable = response.data.result.id_account_receivable;
+          me.account_receivable.id_account_pay = response.data.result.id_account_pay;
           me.account_receivable.id_sale = response.data.result.id_sale;
           me.account_receivable.id_client = response.data.result.id_client;
           me.account_receivable.client = response.data.result.name+' - '+response.data.result.document_number;

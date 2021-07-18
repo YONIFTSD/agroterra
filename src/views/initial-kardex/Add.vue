@@ -61,12 +61,12 @@
 
                 <b-col md="12">
                   <b-row>
-                      <b-col md="1">
+                      <b-col md="2">
                         <b-form-group label="Registros">
                           <b-form-select id="per-page-select" v-model="perPage" :options="pageOptions"></b-form-select>
                         </b-form-group>
                       </b-col>
-                      <b-col md="8">
+                      <b-col md="7">
                       </b-col>
                       <b-col md="3">
                         <b-form-group label="Buscar" >

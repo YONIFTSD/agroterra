@@ -452,7 +452,7 @@ function ConfirmDeletePayment(id_payment) {
 // eliminar usuario
 function DeletePayment(id_payment) {
   let me = this;
-  let url = this.url_base + "payment/cancel/" + id_payment;
+  let url = this.url_base + "payment/delete/" + id_payment;
   axios({
     method: "delete",
     url: url,
@@ -467,11 +467,11 @@ function DeletePayment(id_payment) {
         //eliminado del objeto
         for (var i = 0; i < me.payment_pending.length; i++) {
           if (me.payment_pending[i].id_payment == id_payment) {
-            me.payment_pending[i].state = 0;
+            me.payment_pending.splice(i, 1);
             break;
           }
         }
-        Swal.fire({ icon: 'success', text: 'Se ha anulado el pago', timer: 3000,})
+        Swal.fire({ icon: 'success', text: 'Se ha eliminado el pago', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: response.data.message, timer: 3000,})
       }

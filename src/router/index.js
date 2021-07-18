@@ -126,6 +126,12 @@ function configRoutes() {
           props: true,
           beforeEnter: userGuard,
         },
+        {
+          path: "profile",
+          name: "UserProfile",
+          component: () => import("@/views/pages/Profile"),
+          props: true,
+        },
       ],
     },
 
@@ -693,18 +699,46 @@ function configRoutes() {
           component: () => import("@/views/exchange-document/Add"),
           beforeEnter: userGuard,
         },
+      ],
+    },
+
+    {
+      path: "/liquidacion-de-pagos",
+      redirect: "/liquidacion-de-pagos/listar",
+      name: "LIquidacionDePagos",
+      component: TheContainer,
+      children: [
         {
-          path: "editar/:id_exchange_document",
-          name: "ExchangeDocumentEdit",
-          component: () => import("@/views/exchange-document/Edit"),
-          props: true,
+          path: "listar",
+          name: "SettlementPaymentList",
+          component: () => import("@/views/settlement-payment/List"),
           beforeEnter: userGuard,
         },
         {
-          path: "ver/:id_exchange_document",
-          name: "ExchangeDocumentView",
-          component: () => import("@/views/exchange-document/View"),
-          props: true,
+          path: "nuevo",
+          name: "SettlementPaymentAdd",
+          component: () => import("@/views/settlement-payment/Add"),
+          beforeEnter: userGuard,
+        },
+      ],
+    },
+
+    {
+      path: "/liquidacion-de-cobros",
+      redirect: "/liquidacion-de-cobros/listar",
+      name: "LIquidacionDeCobros",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "SettlementCollectionList",
+          component: () => import("@/views/settlement-collection/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "SettlementCollectionAdd",
+          component: () => import("@/views/settlement-collection/Add"),
           beforeEnter: userGuard,
         },
       ],
@@ -1028,6 +1062,41 @@ function configRoutes() {
     },
 
     {
+      path: "/control-stock",
+      redirect: "/control-stock/listar",
+      name: "ControlStock",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "ControlStockList",
+          component: () => import("@/views/control-stock/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "ControlStockAdd",
+          component: () => import("@/views/control-stock/Add"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "editar/:id_control_stock",
+          name: "ControlStockEdit",
+          component: () => import("@/views/control-stock/Edit"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ver/:id_control_stock",
+          name: "ControlStockView",
+          component: () => import("@/views/control-stock/View"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+      ],
+    },
+
+    {
       path: "/kardex",
       redirect: "/kardex/fisico",
       name: "Kardex",
@@ -1043,6 +1112,13 @@ function configRoutes() {
           path: "valorado",
           name: "KardexValuedList",
           component: () => import("@/views/kardex/KardexValued"),
+          beforeEnter: userGuard,
+        },
+        
+        {
+          path: "existencias",
+          name: "StockGeneralList",
+          component: () => import("@/views/kardex/KardexExistence"),
           beforeEnter: userGuard,
         },
         {

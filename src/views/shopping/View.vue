@@ -477,6 +477,14 @@ function ViewShopping() {
   })
     .then(function (response) {
       if (response.data.status == 200) {
+
+          if (response.data.result.shopping.payment_type == "01") {
+            me.shopping.way_to_pay = response.data.result.shopping.payment_type +"-"+response.data.result.shopping.payment_method;
+          }
+          if (response.data.result.shopping.payment_type == "03") {
+            me.shopping.way_to_pay = response.data.result.shopping.payment_type +"-"+response.data.result.shopping.payment_deadline;
+          }
+
           me.shopping.id_shopping = response.data.result.shopping.id_shopping;
           me.shopping.id_provider = response.data.result.shopping.id_provider;
           me.shopping.id_warehouse = response.data.result.shopping.id_warehouse;

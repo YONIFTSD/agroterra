@@ -56,21 +56,25 @@
                 <thead>
                   <tr>
                     <th width="3%" class="text-center">#</th>
-                    <th width="10%" class="text-center">Fecha</th>
+                    <th width="12%" class="text-center">Fecha</th>
                     <th width="13%" class="text-center">Comprobante</th>
-                    <th width="49%" class="text-center">Cliente</th>
-                    <th width="8%" class="text-center">Total</th>
-                    <th width="10%" class="text-center">Estado</th>
+                    <th width="37%" class="text-center">Cliente</th>
+                    <th width="6%" class="text-center">Moneda</th>
+                    <th width="6%" class="text-center">Total</th>
+                    <th width="10%" class="text-center">Usuario</th>
+                    <th width="7%" class="text-center">Estado</th>
                     <th width="10%" class="text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in data_table" :key="it">
                   <tr>
                     <td class="text-center">{{ it + 1 }}</td>
-                    <td class="text-center"> {{ item.broadcast_date }}</td>
+                    <td class="text-center"> {{ item.broadcast_date }} {{ item.broadcast_time }}</td>
                     <td class="text-center"> {{ CodeInvoice(item.type_invoice)+ ' '+item.serie+'-'+item.number }}</td>
                     <td class="text-left"> {{ item.client_name + ' - '+item.client_document_number }}</td>
+                    <td class="text-center"> {{ item.coin }} </td>
                     <td class="text-right"> {{ item.total }} </td>
+                    <td class="text-left"> {{ item.user }} </td>
                     <td class="text-center">
                           <b-badge v-if="item.state == 0" variant="danger">XML</b-badge>
                           <b-badge v-if="item.state == 1" variant="warning">Girado</b-badge>
@@ -148,7 +152,7 @@ export default {
       isLoading:false,
       module: 'Sale',
       role:1,
-      perPage: 15,
+      perPage: 30,
       currentPage: 1,
       rows: 0,
       data_table: [],

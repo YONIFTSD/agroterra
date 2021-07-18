@@ -55,9 +55,10 @@
                   <tr>
                     <th width="3%" class="text-center">#</th>
                     <th width="10%" class="text-center">Fecha</th>
-                    <th width="15%" class="text-center">Comprobante</th>
-                    <th width="45%" class="text-center">Razón Social</th>
-                    <th width="10%" class="text-center">Total</th>
+                    <th width="10%" class="text-center">Comprobante</th>
+                    <th width="50%" class="text-center">Razón Social</th>
+                    <th width="6%" class="text-center">Moneda</th>
+                    <th width="6%" class="text-center">Total</th>
                     <th width="10%" class="text-center">Estado</th>
                     <th width="10%" class="text-center">Acciones</th>
                   </tr>
@@ -68,6 +69,7 @@
                     <td class="text-center"> {{ item.broadcast_date }}</td>
                     <td class="text-center"> {{ CodeInvoice(item.type_invoice)+ ' '+item.serie+'-'+item.number }}</td>
                     <td class="text-left"> {{ item.name + ' - '+item.document_number }}</td>
+                    <td class="text-center"> {{ item.coin }} </td>
                     <td class="text-right"> {{ item.total }} </td>
                     <td class="text-center">
                         <b-badge v-if="item.state == 1" variant="info">Pendiente</b-badge>
@@ -78,7 +80,7 @@
                       <b-dropdown bloque size="sm" text="Acciones" right>
                         <b-dropdown-item v-if="Permission('ShoppingEdit') && item.state == 1" @click="EditShopping(item.id_shopping)" >Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('ShoppingView')"  @click="ViewShopping(item.id_shopping)">Ver</b-dropdown-item>
-                        <b-dropdown-item v-if="Permission('ShoppingDelete') && item.state == 1" @click="ConfirmDeleteShopping(item.id_shopping)">Anular</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('ShoppingDelete') && item.state == 1" @click="ConfirmDeleteShopping(item.id_shopping)">Eliminar</b-dropdown-item>
                       </b-dropdown>
                     </td>
                   </tr>
@@ -258,7 +260,7 @@ function ViewShopping(id_shopping) {
 // Confirmar eliminar
 function ConfirmDeleteShopping(id_shopping) {
   Swal.fire({
-    title: "Esta seguro de anular la compra ?",
+    title: "Esta seguro de eliminar la compra ?",
     text: "No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,
@@ -275,7 +277,7 @@ function ConfirmDeleteShopping(id_shopping) {
 // eliminar usuario
 function DeleteShopping(id_shopping) {
   let me = this;
-  let url = this.url_base + "shopping/cancel/" + id_shopping;
+  let url = this.url_base + "shopping/delete/" + id_shopping;
   axios({
     method: "delete",
     url: url,
@@ -290,12 +292,14 @@ function DeleteShopping(id_shopping) {
         //eliminado del objeto
         for (var i = 0; i < me.data_table.length; i++) {
           if (me.data_table[i].id_shopping == id_shopping) {
-            me.data_table[i].state = 0;
+            me.data_table.splice(i, 1);
             break;
           }
         }
         Swal.fire({ icon: 'success', text: 'Se ha anulado la compra', timer: 2000, })
-      } else {
+      }else if(response.data.status == 400){
+          Swal.fire({icon: 'error',  text: response.data.message , timer: 3000, })
+      }else {
         Swal.fire({
           icon: 'error',
           text: 'A ocurrido un error',

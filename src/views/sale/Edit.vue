@@ -76,11 +76,7 @@
                 </b-col>
 
 
-                <b-col md="12">
-                  <b-form-group label="Observación:">
-                    <b-form-textarea rows="1"  v-model="sale.observation" max-rows="2"></b-form-textarea>
-                  </b-form-group>
-                </b-col>
+                
 
 
                 <!-- Detalle venta -->
@@ -92,13 +88,18 @@
                 
                 <!-- Detalle venta -->
 
-                <b-col md="12" class="mt-3"></b-col>
+                <b-col md="12" class="mt-2"></b-col>
 
                 <b-col md="8">
                   <b-form-group class="m-0" >
                     <b-form-input readonly v-model="total_sale.number_to_letters" ></b-form-input>
                   </b-form-group>
                   <b-row>
+                    <b-col md="6">
+                      <b-form-group label="Observación:">
+                        <b-form-textarea rows="1"  v-model="sale.observation" max-rows="2"></b-form-textarea>
+                      </b-form-group>
+                    </b-col>
                     <b-col md="6">
                         <div class="table-responsive mt-3">
                           <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">

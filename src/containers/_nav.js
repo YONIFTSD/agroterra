@@ -10,26 +10,21 @@ var modules = [{
   icon: 'cilHome',
 }];
 
-if(user_permissions.indexOf('SaleList') > -1 ){
+if(user_permissions.indexOf('SaleList') > -1 || user_permissions.indexOf('OrderList') > -1 ){
   let me = this;
-
-  let TypeUser = {
-    _name: 'CSidebarNavItem',
-    name: 'Venta',
-    to: '/venta/listar',
-    icon: 'cil-cash',
+  let item = [];
+  if (user_permissions.indexOf('SaleList') > -1) {
+    item.push({ name: 'Venta', to: '/venta/listar' });
   }
-  modules.push(TypeUser);
-}
-
-if(user_permissions.indexOf('OrderList') > -1 ){
-  let me = this;
-
+  if (user_permissions.indexOf('OrderList') > -1) {
+    item.push({ name: 'Pedidos', to: '/pedidos/listar' });
+  }
+  
   let TypeUser = {
-    _name: 'CSidebarNavItem',
-    name: 'Pedidos',
-    to: '/pedidos/listar',
-    icon: 'cil-cart',
+    _name: 'CSidebarNavDropdown',
+    name: 'Ventas',
+    icon: 'cil-cash',
+    items: item
   }
   modules.push(TypeUser);
 }
@@ -61,29 +56,38 @@ if(user_permissions.indexOf('CashList') > -1 || user_permissions.indexOf('Expens
 }
 
 
-if(user_permissions.indexOf('AccountReceivableList') > -1 || user_permissions.indexOf('AccountPayList') > -1 || user_permissions.indexOf('ExchangeDocumentList') > -1 || user_permissions.indexOf('PaymentList') > -1 || user_permissions.indexOf('ChargeList') > -1 ){
+if(user_permissions.indexOf('AccountReceivableList') > -1 || user_permissions.indexOf('AccountPayList') > -1 || user_permissions.indexOf('ExchangeDocumentList') > -1 || user_permissions.indexOf('PaymentList') > -1 || user_permissions.indexOf('ChargeList') > -1 || user_permissions.indexOf('SettlementCollectionList') > -1 || user_permissions.indexOf('SettlementPaymentList') > -1 ){
   let me = this;
   let item = [];
   if (user_permissions.indexOf('AccountReceivableList') > -1) {
     item.push({ name: 'Cuentas por Cobrar', to: '/cuentas-por-cobrar/listar' });
   }
+  if (user_permissions.indexOf('ChargeList') > -1) {
+    item.push({ name: 'Registro de Cobros', to: '/registro-de-cobros/listar' });
+  }
+  if (user_permissions.indexOf('SettlementCollectionList') > -1) {
+    item.push({ name: 'Liquidacion de Cobros', to: '/liquidacion-de-cobros/listar' });
+  }
+
+
   if (user_permissions.indexOf('AccountPayList') > -1) {
     item.push({ name: 'Cuentas por Pagar', to: '/cuentas-por-pagar/listar' });
-  }
-  if (user_permissions.indexOf('ExchangeDocumentList') > -1) {
-    item.push({ name: 'Canje de Documentos', to: '/canje-de-documentos/listar' });
   }
   if (user_permissions.indexOf('PaymentList') > -1) {
     item.push({ name: 'Registro de Pagos', to: '/registro-de-pagos/listar' });
   }
-  if (user_permissions.indexOf('ChargeList') > -1) {
-    item.push({ name: 'Registro de Cobros', to: '/registro-de-cobros/listar' });
+  if (user_permissions.indexOf('SettlementPaymentList') > -1) {
+    item.push({ name: 'Liquidacion de Pagos', to: '/liquidacion-de-pagos/listar' });
   }
+  if (user_permissions.indexOf('ExchangeDocumentList') > -1) {
+    item.push({ name: 'Canje de Documentos', to: '/canje-de-documentos/listar' });
+  }
+  
 
   let TypeUser = {
     _name: 'CSidebarNavDropdown',
-    name: 'Tesoreria',
-    icon: 'cib-cashapp',
+    name: 'Finanzas',
+    icon: 'cilDollar',
     items: item
   }
   modules.push(TypeUser);
@@ -163,7 +167,7 @@ if(user_permissions.indexOf('ShoppingList') > -1 || user_permissions.indexOf('Co
   let TypeUser = {
     _name: 'CSidebarNavDropdown',
     name: 'Compras',
-    icon: 'cilClipboard',
+    icon: 'cilGrid',
     items: item
   }
   modules.push(TypeUser);
@@ -204,7 +208,7 @@ if(user_permissions.indexOf('RequirementList') > - 1 || user_permissions.indexOf
 //   modules.push(TypeUser);
 // }
 
-if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('InitialKardexList') > -1  || user_permissions.indexOf('OutputList') > -1  || user_permissions.indexOf('StockGeneralList') > -1 || user_permissions.indexOf('TransformationList') > -1){
+if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('ControlStockList') > -1  || user_permissions.indexOf('InitialKardexList') > -1  || user_permissions.indexOf('OutputList') > -1  || user_permissions.indexOf('StockGeneralList') > -1 || user_permissions.indexOf('TransformationList') > -1){
   let me = this;
   let item = [];
   if (user_permissions.indexOf('InputList') > -1) {
@@ -214,7 +218,7 @@ if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('Init
     item.push({ name: 'Salidas', to: '/salida/listar'});
   }
   if (user_permissions.indexOf('InitialKardexList') > -1) {
-    item.push({ name: 'Kardex Inicial', to: '/kardex-inicial/listar'});
+    item.push({ name: 'Inventario Inicial', to: '/kardex-inicial/listar'});
   }
   if (user_permissions.indexOf('KardexPsysicalList') > -1) {
     item.push({ name: 'Kardex Fisico', to: '/kardex/fisico'});
@@ -222,12 +226,15 @@ if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('Init
   if (user_permissions.indexOf('KardexValuedList') > -1) {
     item.push({ name: 'Kardex Valorado', to: '/kardex/valorado'});
   }
+  if (user_permissions.indexOf('KardexExistenceList') > -1) {
+    item.push({ name: 'Kardex de Existencias', to: '/kardex/existencias'});
+  }
   if (user_permissions.indexOf('StockGeneralList') > -1) {
     item.push({ name: 'Stock General', to: '/kardex/stock-general'});
   }
-  // if (user_permissions.indexOf('StockValuedList') > -1) {
-  //   item.push({ name: 'Stock Valorado', to: '/kardex/stock-valorado'});
-  // }
+  if (user_permissions.indexOf('ControlStockList') > -1) {
+    item.push({ name: 'Control Stock', to: '/control-stock/listar'});
+  }
   if (user_permissions.indexOf('TransformationList') > -1) {
     item.push({ name: 'Transformación', to: '/transformacion/listar'});
   }
@@ -263,7 +270,7 @@ if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('
   let TypeUser = {
     _name: 'CSidebarNavDropdown',
     name: 'Reportes',
-    icon: 'cilStorage',
+    icon: 'cilFile',
     items: item
   }
   modules.push(TypeUser);

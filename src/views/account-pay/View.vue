@@ -4,7 +4,7 @@
       <CCol col>
         <CCard>
           <CCardHeader>
-            <strong> Modulo Cuentas por Cobrar - Ver</strong>
+            <strong> Modulo Cuentas por Pagar - Ver</strong>
           </CCardHeader>
           <CCardBody>
             <b-form id="Form">
@@ -12,61 +12,61 @@
 
                 <b-col md="6">
                   <b-form-group>
-                    <label>Cliente: </label>
-                    <b-form-input type="text" :value="account_receivable.client" disabled></b-form-input>
+                    <label>Proveedor: </label>
+                    <b-form-input type="text" :value="account_pay.provider" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="Tipo de Comprobante :">
-                    <b-form-select v-model="account_receivable.type_invoice" :options="type_invoice" disabled></b-form-select>
+                    <b-form-select v-model="account_pay.type_invoice" :options="type_invoice" disabled></b-form-select>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="Serie :">
-                    <b-form-input type="text" ref="serie" v-model="account_receivable.serie" disabled></b-form-input>
+                    <b-form-input type="text" ref="serie" v-model="account_pay.serie" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="Numero :">
-                    <b-form-input class="text-right" type="text" ref="number" v-model="account_receivable.number" disabled></b-form-input>
+                    <b-form-input class="text-right" type="text" ref="number" v-model="account_pay.number" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="Fecha Emision:">
-                    <b-form-input type="date" ref="broadcast_date" v-model="account_receivable.broadcast_date" disabled></b-form-input>
+                    <b-form-input type="date" ref="broadcast_date" v-model="account_pay.broadcast_date" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
                 <b-col md="2">
                   <b-form-group label="Fecha Vencimiento:">
-                    <b-form-input type="date" ref="expiration_date" v-model="account_receivable.expiration_date" disabled></b-form-input>
+                    <b-form-input type="date" ref="expiration_date" v-model="account_pay.expiration_date" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="Moneda:">
-                    <b-form-select ref="coin" v-model="account_receivable.coin" :options="coins" disabled></b-form-select>
+                    <b-form-select ref="coin" v-model="account_pay.coin" :options="coins" disabled></b-form-select>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="Total:">
-                    <b-form-input type="number" class="text-right" step="any" v-model="account_receivable.total" disabled></b-form-input>
+                    <b-form-input type="number" class="text-right" step="any" v-model="account_pay.total" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="Total Pagado:">
-                    <b-form-input type="number" class="text-right" step="any" v-model="account_receivable.total" disabled></b-form-input>
+                    <b-form-input type="number" class="text-right" step="any" v-model="account_pay.fee" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="deuda:">
-                    <b-form-input type="number" class="text-right" step="any" v-model="account_receivable.balance" disabled></b-form-input>
+                    <b-form-input type="number" class="text-right" step="any" v-model="account_pay.balance" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -91,13 +91,13 @@ import { mapState } from "vuex";
 
 export default {
   name: "CategoriaView",
-  props: ["id_account_receivable"],
+  props: ["id_account_pay"],
   data() {
     return {
       module: 'AccountReceivable',
       role: 5,
-      account_receivable: {
-          id_account_receivable:'',
+      account_pay: {
+          id_account_pay:'',
           id_sale:'',
           id_client:'',
           id_establishment:'',
@@ -141,10 +141,10 @@ export default {
     };
   },
   mounted() {
-    this.ViewAccountReceivable();
+    this.ViewAccountPay();
   },
   methods: {
-    ViewAccountReceivable,
+    ViewAccountPay,
 
   },
 
@@ -160,10 +160,10 @@ export default {
 
 
 //ver usuario
-function ViewAccountReceivable() {
-  let id_account_receivable = je.decrypt(this.id_account_receivable);
+function ViewAccountPay() {
+  let id_account_pay = je.decrypt(this.id_account_pay);
   let me = this;
-  let url = this.url_base + "account-receivable/view/" + id_account_receivable;
+  let url = this.url_base + "account-pay/view/" + id_account_pay;
   axios({
     method: "GET",
     url: url,
@@ -171,23 +171,24 @@ function ViewAccountReceivable() {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-          me.account_receivable.id_account_receivable = response.data.result.id_account_receivable;
-          me.account_receivable.id_sale = response.data.result.id_sale;
-          me.account_receivable.id_client = response.data.result.id_client;
-          me.account_receivable.client = response.data.result.name+' - '+response.data.result.document_number;
-          me.account_receivable.id_establishment = response.data.result.id_establishment;
-          me.account_receivable.id_user = response.data.result.id_user;
-          me.account_receivable.type_invoice = response.data.result.type_invoice;
-          me.account_receivable.serie = response.data.result.serie;
-          me.account_receivable.number = response.data.result.number;
-          me.account_receivable.coin = response.data.result.coin;
-          me.account_receivable.broadcast_date = response.data.result.broadcast_date;
-          me.account_receivable.expiration_date = response.data.result.expiration_date;
-          me.account_receivable.reason = response.data.result.reason;
-          me.account_receivable.total = response.data.result.total;
-          me.account_receivable.fee = response.data.result.fee;
-          me.account_receivable.balance = response.data.result.balance;
-          me.account_receivable.state = response.data.result.state;
+          me.account_pay.id_account_pay = response.data.result.id_account_pay;
+          me.account_pay.module = response.data.result.module;
+          me.account_pay.id_module = response.data.result.id_module;
+          me.account_pay.id_client = response.data.result.id_client;
+          me.account_pay.provider = response.data.result.name+' - '+response.data.result.document_number;
+          me.account_pay.id_establishment = response.data.result.id_establishment;
+          me.account_pay.id_user = response.data.result.id_user;
+          me.account_pay.type_invoice = response.data.result.type_invoice;
+          me.account_pay.serie = response.data.result.serie;
+          me.account_pay.number = response.data.result.number;
+          me.account_pay.coin = response.data.result.coin;
+          me.account_pay.broadcast_date = response.data.result.broadcast_date;
+          me.account_pay.expiration_date = response.data.result.expiration_date;
+          me.account_pay.reason = response.data.result.reason;
+          me.account_pay.total = response.data.result.total;
+          me.account_pay.fee = response.data.result.fee;
+          me.account_pay.balance = response.data.result.balance;
+          me.account_pay.state = response.data.result.state;
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }

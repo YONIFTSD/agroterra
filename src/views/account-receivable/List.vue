@@ -24,12 +24,7 @@
                   </b-col>
                   <b-col sm="6" md="1">
                   </b-col>
-                  <b-col sm="6" md="2">
-                    <b-form-group label=".">
-                      <b-link   v-if="Permission('AccountReceivableAdd')"  class="btn form-control btn-primary" :to="{ path: '/cuentas-por-cobrar/nuevo' }" append>NUEVO</b-link >
-                    </b-form-group>
-                  </b-col>
-                  <b-col sm="6" md="2">
+                  <b-col sm="6" md="3">
                     <b-form-group label=".">
                       <b-input-group>
                         <b-form-input v-model="search_pending" class="form-control" ></b-form-input>
@@ -40,6 +35,11 @@
                       </b-input-group>
                     </b-form-group>
                   </b-col>
+                  <b-col sm="6" md="1">
+                  <b-form-group label=".">
+                    <b-link  v-if="Permission('AccountReceivableAdd')" class="btn form-control btn-primary"  :to="{ path: '/cuentas-por-cobrar/nuevo' }" append ><i class="fas fa-file"></i></b-link>
+                  </b-form-group>
+                </b-col>
                 </b-row>
                 <div class="table-responsive mt-3 height-table">
                   <table class="table table-hover table-bordered">
@@ -73,9 +73,8 @@
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
                             <b-dropdown-item v-if="Permission('AccountReceivableEdit') && item.id_sale == 0" @click="EditAccountReceivable(item.id_account_receivable)">Editar</b-dropdown-item>
-                            <b-dropdown-item v-if="Permission('AccountReceivableEdit')" @click="ShowModalAmortization(item.id_account_receivable)">Amortizaciones</b-dropdown-item>
                             <b-dropdown-item v-if="Permission('AccountReceivableView')" @click="ViewAccountReceivable(item.id_account_receivable)" >Ver</b-dropdown-item >
-                            <b-dropdown-item v-if="Permission('AccountReceivableDelete')  && item.id_sale == 0" @click="ConfirmDeleteAccountReceivable(item.id_account_receivable)">Anular</b-dropdown-item>
+                            <b-dropdown-item v-if="Permission('AccountReceivableDelete')  && item.id_sale == 0" @click="ConfirmDeleteAccountReceivable(item.id_account_receivable)">Eliminar</b-dropdown-item>
                           </b-dropdown>
                         </td>
                       </tr>
@@ -144,10 +143,7 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
-                            <!-- <b-dropdown-item v-if="Permission('IncomeEdit')" @click="EditAccountReceivable(item.id_account_receivable)">Editar</b-dropdown-item> -->
-                            <b-dropdown-item v-if="Permission('IncomeEdit')" @click="ShowModalAmortization(item.id_account_receivable)">Amortizaciones</b-dropdown-item>
                             <b-dropdown-item v-if="Permission('IncomeView')" @click="ViewAccountReceivable(item.id_account_receivable)" >Ver</b-dropdown-item >
-                            <!-- <b-dropdown-item v-if="Permission('IncomeDelete')" @click="ConfirmDeleteAccountReceivable(item.id_account_receivable)">Anular</b-dropdown-item> -->
                           </b-dropdown>
                         </td>
                       </tr>
@@ -385,7 +381,7 @@ function ShowModalEECC() {
 // Confirmar eliminar
 function ConfirmDeleteAccountReceivable(id_account_receivable) {
   Swal.fire({
-    title: "Esta seguro de anular cuenta por cobrar?",
+    title: "Esta seguro de eliminar cuenta por cobrar?",
     text: "No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,
@@ -402,7 +398,7 @@ function ConfirmDeleteAccountReceivable(id_account_receivable) {
 // eliminar usuario
 function DeleteAccountReceivable(id_account_receivable) {
   let me = this;
-  let url = this.url_base + "account-receivable/cancel/" + id_account_receivable;
+  let url = this.url_base + "account-receivable/delete/" + id_account_receivable;
   axios({
     method: "delete",
     url: url,

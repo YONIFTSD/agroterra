@@ -93,6 +93,7 @@ export default {
   },
   mounted() {
     this.ListEstablishment();
+    
   },
   computed: {
     ...mapState(["url_base"]),

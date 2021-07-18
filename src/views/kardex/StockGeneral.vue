@@ -9,7 +9,7 @@
           <CCardBody>
             <b-row>
 
-                <b-col sm="12" md="8">
+                <b-col sm="12" md="7">
             
                 </b-col>
 
@@ -23,6 +23,11 @@
                       <b-button variant="primary" @click="ListStockGeneral"><b-icon icon="search"></b-icon></b-button>
                     </b-input-group-append>
                   </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col md="1">
+                  <b-form-group label=".">
+                    <b-button @click="ExportExcel" title="Exportar a Excel" type="button" variant="success" class="form-control"><i class="fas fa-file-excel"></i></b-button>
                   </b-form-group>
                 </b-col>
 
@@ -115,6 +120,8 @@ export default {
     CodeInvoice,
     Substr,
     SearchProvider,
+
+    ExportExcel,
   },
 
   computed: {
@@ -185,6 +192,18 @@ function ListStockGeneral() {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
     });
 }
+
+
+function ExportExcel() {
+
+
+  let search = this.search == "" ? "all" : this.search;
+  let me = this;
+  let url = this.url_base + "excel-kardex-stock-general/"+this.id_establishment +"/"+ search;
+
+  window.open(url,'_blank');
+}
+
 
 // Editar usuario
 function ListEstablishmentAndWarehouses() {
@@ -257,6 +276,7 @@ function DeleteRequirement(id_requirement) {
       Swal.fire({ icon: 'error',text: 'A ocurrido un error',timer: 2000,})
     });
 }
+
 
 // permisos
 function Permission(module_permission) {

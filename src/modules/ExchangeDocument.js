@@ -53,6 +53,9 @@ const actions = {
     mLoadDeleteBillExchange(context,index){
         context.commit('mDeleteBillExchange',index);
     },
+    mLoadResetBillExchange(context){
+        context.commit('mResetBillExchange');
+    },
     mLoadResetExchangeDocument(context){
         context.commit('mResetExchangeDocument');
     },
@@ -83,6 +86,9 @@ const mutations = {
         state.mexchange_document.applied = state.mexchange_document.applied.toFixed(2);
         state.mexchange_document.balance = parseFloat(state.mexchange_document.balance) + parseFloat(total);
         state.mexchange_document.balance = state.mexchange_document.balance.toFixed(2);
+    },
+    mResetBillExchange(state) {
+        state.bill_exchange = [];
     },
 
     mResetExchangeDocument(state) {

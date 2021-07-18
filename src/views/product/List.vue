@@ -9,8 +9,8 @@
           <CCardBody>
             <b-row>
               <b-col sm="12" md="8"></b-col>
-              <b-col sm="6" md="2">
-                <b-link v-if="Permission('ProductAdd')" class="btn form-control btn-primary" :to="{ path: '/producto/nuevo' }" append>NUEVO</b-link>
+              <b-col sm="12" md="1">
+                  <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i></b-button>
               </b-col>
               <b-col sm="6" md="2">
                 <b-input-group>
@@ -19,6 +19,9 @@
                     <b-button variant="primary" @click="ListProduct"><b-icon icon="search"></b-icon></b-button>
                   </b-input-group-append>
                 </b-input-group>
+              </b-col>
+              <b-col sm="6" md="1">
+                <b-link v-if="Permission('ProductAdd')" class="btn form-control btn-primary" :to="{ path: '/producto/nuevo' }" append><i class="fas fa-file"></i></b-link>
               </b-col>
             </b-row>
 
@@ -109,6 +112,7 @@ export default {
     ConfirmDeleteProduct,
     DeleteProduct,
     Permission,
+    ExportExcel,
   },
 
   computed: {
@@ -164,6 +168,11 @@ function ViewProduct(id_product) {
     name: "ProductView",
     params: { id_product: je.encrypt(id_product) },
   });
+}
+
+function ExportExcel() {  
+  let url = this.url_base + "excel-products";
+  window.open(url,'_blank');
 }
 
 // Confirmar eliminar

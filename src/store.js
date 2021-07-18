@@ -12,6 +12,8 @@ import Transform from './modules/Transform'
 import InitialKardex from './modules/InitialKardex'
 import ReferralGuide from './modules/ReferralGuide'
 import ExchangeDocument from './modules/ExchangeDocument'
+import SettlementPayment from './modules/SettlementPayment'
+import SettlementCollection from './modules/SettlementCollection'
 
 const modules = {
   RoomControl,
@@ -25,6 +27,8 @@ const modules = {
   InitialKardex,
   ReferralGuide,
   ExchangeDocument,
+  SettlementPayment,
+  SettlementCollection,
 }
 
 const state = {

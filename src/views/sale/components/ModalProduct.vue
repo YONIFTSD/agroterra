@@ -4,7 +4,7 @@
       <b-row>
         <b-col md="10">
           <b-form-group label="Buscar producto :">
-            <b-form-input  type="text"  ref="search_product" v-model="search_product" @keyup="SearchProducts"></b-form-input>
+            <b-form-input  type="text"  ref="email" autofocus v-model="search_product" @keyup="SearchProducts"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="2">
@@ -21,17 +21,18 @@
                 <tr>
                   <th width="5%"  rowspan="2" class="text-center align-middle">#</th>
                   <th width="8%"  rowspan="2" class="text-center align-middle">Código</th>
-                  <th width="55%"  rowspan="2" class="text-center align-middle">Nombre</th>
-                  <th width="10%"  :colspan="warehouses.length" class="text-center align-middle">{{establishment.name }}</th>
+                  <th width="45%"  rowspan="2" class="text-center align-middle">Nombre</th>
+                  <th width="13%"  :colspan="warehouses.length" class="text-center align-middle">{{establishment.name }}</th>
                   <th width="10%"  rowspan="2" class="text-center align-middle">Cantidad</th>
-                  <th width="10%"  rowspan="2" class="text-center align-middle">Acciones</th>
+                  <th width="10%"  rowspan="2" class="text-center align-middle">P. Unit.</th>
+                  <th width="7%"  rowspan="2" class="text-center align-middle">Acciones</th>
                 </tr>
                 <tr>
                   <th class="text-center" v-for="item in warehouses" :key="item.id_warehouse">{{item.name}}</th>
                 </tr>
               </thead>
               <tbody v-for="(item, it) in products" :key="item.id_product">
-                <tr>
+                <tr :class="BackgroundColor(item.internal_product,item.commissionable)">
                   <td class="text-center">{{ it + 1 }}</td>
                   <td class="text-left">{{ item.code }}</td>
                   <td class="text-left">{{ item.name + " - "+item.presentation  }}</td>
@@ -42,6 +43,9 @@
                     <input type="number" value="1" :ref="'mSDCantidad'+item.id_product" class="form-control">
                   </td>
                   <td class="text-center">
+                    <input type="number" step="any" :value="item.sale_price" :ref="'mSDPUnit'+item.id_product" class="form-control text-right">
+                  </td>
+                  <td class="text-center">
                       <button type="button" @click="AddProduct(item.id_product)" class="btn btn-info">
                         <i class="fas fa-plus-square"></i>
                       </button>
@@ -49,6 +53,9 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div class="w-100">
+            <span class="text-success">P. Comisionables</span> | <span class="text-warning">P. Internos</span>
           </div>
         </b-col>
       </b-row>
@@ -94,6 +101,9 @@ export default {
       this.role = role;
       this.ViewEstablishment();
       this.ListWarehouse();
+     
+      
+
     });
     
   },
@@ -102,6 +112,7 @@ export default {
       AddProduct,
       ViewEstablishment,
       ListWarehouse,
+      BackgroundColor,
 
         ...mapActions('Sale',['mLoadAddSaleDetail']),
       
@@ -121,6 +132,15 @@ export default {
   },
 };
 
+function BackgroundColor(internal_product,commissionable) {
+  if (commissionable == 1) {
+    return 'bg-success';
+  }
+  if (internal_product == 1) {
+    return 'bg-warning';
+  }
+  return '';
+}
 function ViewEstablishment() {
   
   let me = this;
@@ -175,6 +195,7 @@ function ListWarehouse() {
 function AddProduct(id_product) {
   
     let quantity = this.$refs['mSDCantidad'+id_product][0]['value'];
+    let unit_price = this.$refs['mSDPUnit'+id_product][0]['value'];
     let me = this;
     let url = this.url_base + "product/view-cost/" + id_product +"/"+ this.id_establishment;
 
@@ -185,8 +206,7 @@ function AddProduct(id_product) {
     })
     .then(function (response) {
       if (response.data.status == 200) {
-        let unit_price = parseFloat(response.data.result.sale_price);
-        let total_price = unit_price * parseFloat(quantity);
+        let total_price = parseFloat(unit_price) * parseFloat(quantity);
         let detail = {
           id_product: response.data.result.id_product,
           code: response.data.result.code,
@@ -196,7 +216,7 @@ function AddProduct(id_product) {
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
           quantity: quantity,
-          unit_price: unit_price.toFixed(2),
+          unit_price: parseFloat(unit_price).toFixed(2),
           total_price: total_price.toFixed(2),
         }
         

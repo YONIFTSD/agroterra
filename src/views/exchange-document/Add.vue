@@ -15,7 +15,7 @@
                     <b-col md="8">
                       <b-form-group>
                         <label>Proveedor:</label>
-                        <v-select placeholder="Seleccione un proveedor" class="w-100" :filterable="false" label="name" v-model="provider" @search="SearchProvider" :options="providers"></v-select>
+                        <v-select  @input="mLoadResetExchangeDocument" placeholder="Seleccione un proveedor" class="w-100" :filterable="false" label="name" v-model="provider" @search="SearchProvider" :options="providers"></v-select>
                         <small v-if="errors.id_provider" class="form-text text-danger" >Selccione un proveedor</small>
                       </b-form-group>
                     </b-col>
@@ -300,7 +300,7 @@ export default {
     };
   },
   mounted() {
-  
+    this.mLoadResetExchangeDocument();
   },
   methods: {
     SearchProvider,
@@ -315,7 +315,7 @@ export default {
 
     AddExchangeDocument,
     Validate,
-    ...mapActions('ExchangeDocument',['mLoadDeleteAccountPay','mLoadDeleteBillExchange']),
+    ...mapActions('ExchangeDocument',['mLoadDeleteAccountPay','mLoadDeleteBillExchange','mLoadResetExchangeDocument','mLoadResetBillExchange']),
   },
 
   computed: {
@@ -372,6 +372,7 @@ function toBack() {
   this.first = false;
   this.second = true;
   let me = this;
+  this.mLoadResetBillExchange();
   setTimeout(function(){ me.tabIndex = 1;  }, 500);
 }
 
@@ -445,6 +446,8 @@ function AddExchangeDocument(me) {
           me.exchange_document.total = (0).toFixed(2);
           me.exchange_document.state = 1;
           me.provider = null;
+          me.mLoadResetExchangeDocument();
+          me.toBack();
           Swal.fire({ icon: 'success', text: 'Se ha registrado el canje de documento', timer: 3000,})
       } else if(response.data.status == 400) {
         Swal.fire({ icon: 'success', text: response.data.message, timer: 3000,})

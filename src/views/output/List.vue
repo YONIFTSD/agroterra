@@ -78,7 +78,7 @@
                       <b-dropdown bloque size="sm" text="Acciones" right>
                         <b-dropdown-item v-if="Permission('OutputEdit') && item.state != 0"  @click="EditOutput(item.id_output)"  >Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('OutputView')"  @click="ViewOutput(item.id_output)">Ver</b-dropdown-item>
-                        <b-dropdown-item v-if="Permission('OutputEdit')  && item.state != 0" @click="ConfirmCancelOutput(item.id_output)">Anular</b-dropdown-item>
+                        <!-- <b-dropdown-item v-if="Permission('OutputEdit')  && item.state != 0" @click="ConfirmCancelOutput(item.id_output)">Anular</b-dropdown-item> -->
                         <b-dropdown-item v-if="Permission('OutputDelete')  && item.state != 0" @click="ConfirmDeleteOutput(item.id_output)">Eliminar</b-dropdown-item>
                       </b-dropdown>
                     </td>

@@ -43,14 +43,43 @@
         </b-col>
         <b-col md="3">
           <b-form-group label="Precio Final :">
-            <b-form-input @change="CalculatePriceCost" type="number" step="any" class="text-right" v-model="product_price.price_final"></b-form-input>
+            <b-form-input disabled @change="CalculatePriceCost" type="number" step="any" class="text-right" v-model="product_price.price_final"></b-form-input>
           </b-form-group>
         </b-col>
       </b-row>
 
 
       <b-row>
-        <b-col md="2"></b-col>
+        <b-col md="4">
+          <div class="table-responsive">
+              <table class="table table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th class="text-center" colspan="5">Historial de Precios</th>
+                  </tr>
+                  <tr>
+                    <th width="30%" class="text-center">Fecha</th>
+                    <th width="20%" class="text-center">Moneda</th>
+                    <th width="20%" class="text-center">T. C.</th>
+                    <th width="20%" class="text-center">Precio</th>
+                    <th width="10%" class="text-center">Acc.</th>
+                  </tr>
+                </thead>
+                <tbody v-for="(item, it) in history_prices" :key="it">
+                  <tr>
+                    <td class="text-center"> {{ item.broadcast_date }}</td>
+                    <td class="text-center"> {{ item.coin }}</td>
+                    <td class="text-right"> {{ item.exchange_rate }}</td>
+                    <td class="text-right"> {{ item.unit_price }}</td>
+                    <td class="text-center">
+                      <b-button title="Seleccionar Precio" class="btn btn-sm" type="button" @click="SelectPrice(it)" variant="primary" ><i class="fas fa-check-square"></i></b-button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+          </div>
+        
+        </b-col>
         <b-col md="4">
             <b-form-group  label-cols-sm="7" label="Gastos Fijos :" class="text-right">
               <b-form-input @change="DeterminatePriceFinal(1)" class="text-right" type="number" step="any" v-model="product_price.fixed_costs"></b-form-input>
@@ -60,6 +89,9 @@
             </b-form-group>
             <b-form-group  label-cols-sm="7" label="Utilidad Maxima % :" class="text-right">
               <b-form-input @change="DeterminatePriceFinal(1)" class="text-right" type="number" step="any" v-model="product_price.maximum_utility"></b-form-input>
+            </b-form-group>
+            <b-form-group  label-cols-sm="7" label="Precio Regular :" class="text-right">
+              <b-form-input class="text-right" type="number" step="any" v-model="product_price.regular_price"></b-form-input>
             </b-form-group>
         </b-col>
         <b-col md="4">
@@ -72,13 +104,17 @@
             <b-form-group  label-cols-sm="7" label="Precio de Venta :" class="text-right">
               <b-form-input @change="DeterminatePriceFinal(2)" class="text-right" type="number" step="any" v-model="product_price.sale_price"></b-form-input>
             </b-form-group>
+            <b-form-group  label-cols-sm="7" label="Precio Online :" class="text-right">
+              <b-form-input class="text-right" type="number" step="any" v-model="product_price.online_price"></b-form-input>
+            </b-form-group>
         </b-col>
       </b-row>
 
       <b-row>
-        <b-col md="3"> </b-col>
-        <b-col md="3"> <b-button class="form-control" @click="DeterminatePriceFinal(1)" variant="info" type="button">ACTUALIZAR</b-button> </b-col>
-        <b-col md="3"> <b-button class="form-control" variant="primary" type="submit">GUARDAR</b-button> </b-col>
+        <b-col md="8"> </b-col>
+        <!-- <b-col md="2"> <b-button class="form-control" @click="DeterminatePriceFinal(1)" variant="primary" type="button">COMPRAS</b-button> </b-col> -->
+        <b-col md="2"> <b-button class="form-control" @click="DeterminatePriceFinal(1)" variant="info" type="button">ACTUALIZAR</b-button> </b-col>
+        <b-col md="2"> <b-button class="form-control" variant="primary" type="submit">GUARDAR</b-button> </b-col>
       </b-row>
 
       </b-form>
@@ -114,6 +150,7 @@ export default {
         modalProducts:false,
         module:'ProductPrice',
         role:3,
+        history_prices: [],
         product_price: {
           id_product_price:0,
           id_establishment:0,
@@ -131,6 +168,9 @@ export default {
           real_cost:0,
           minimal_price:0,
           sale_price:0,
+
+          regular_price:0,
+          online_price:0,
          
         },
 
@@ -148,15 +188,18 @@ export default {
       this.modalProducts = true;
       this.product_price.id_product = id_product;
       this.ViewProductPrice();
+      this.ViewHistoryProductPrice();
     });
     
   },
   methods: {
       ViewProductPrice,
+      ViewHistoryProductPrice,
       CalculatePriceCost,
       DeterminatePriceFinal,
       Validate,
       SaveProductPrice,
+      SelectPrice,
   },
   computed: {
     ...mapState(["url_base"]),
@@ -196,6 +239,46 @@ function ViewProductPrice() {
     
 }
 
+function ViewHistoryProductPrice() {
+  
+  let me = this;
+  let url = this.url_base + "product/view-history-product-price/"+this.product_price.id_product;
+
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role:this.role,},
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.history_prices = response.data.result;
+      } 
+    })
+
+    
+}
+
+function SelectPrice(index) {
+  let price_product = parseFloat(this.history_prices[index].unit_price);
+  let exchange_rate_usd = parseFloat(this.history_prices[index].exchange_rate_usd);
+
+  this.product_price.purchase_price = price_product;
+  if (this.history_prices[index].coin == "PEN") {
+    this.product_price.exchange_rate = 1;
+  }else{
+    this.product_price.exchange_rate = exchange_rate_usd;
+  }
+  this.product_price.expenses = parseFloat(this.product_price.expenses);
+
+  this.product_price.price_final = (this.product_price.purchase_price * this.product_price.exchange_rate) + this.product_price.expenses;
+
+  this.product_price.purchase_price = this.product_price.purchase_price.toFixed(2);
+  this.product_price.exchange_rate = this.product_price.exchange_rate.toFixed(2);
+  this.product_price.expenses = this.product_price.expenses.toFixed(2);
+  this.product_price.price_final = this.product_price.price_final.toFixed(2);
+  this.DeterminatePriceFinal(1);
+}
+
 function CalculatePriceCost() {
 
   this.product_price.purchase_price = this.product_price.purchase_price.length == 0 ? 0 : parseFloat(this.product_price.purchase_price);
@@ -207,7 +290,7 @@ function CalculatePriceCost() {
   this.product_price.exchange_rate = this.product_price.exchange_rate.toFixed(2);
   this.product_price.expenses = this.product_price.expenses.toFixed(2);
   this.product_price.price_final = this.product_price.price_final.toFixed(2);
-
+  this.DeterminatePriceFinal(1);
 }
 
 function DeterminatePriceFinal(type) {

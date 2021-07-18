@@ -322,10 +322,10 @@ function ViewPurchaseExpenses() {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-        if (me.purchase_expenses.payment_type == "01") {
+        if (response.data.result.payment_type == "01") {
           me.purchase_expenses.way_to_pay = response.data.result.payment_type +"-"+response.data.result.payment_method;
         }
-        if (me.purchase_expenses.payment_type == "03") {
+        if (response.data.result.payment_type == "03") {
           me.purchase_expenses.way_to_pay = response.data.result.payment_type +"-"+response.data.result.payment_deadline;
         }
         me.provider = {id: response.data.result.id_provider, name: response.data.result.name + " - " + response.data.result.document_number};

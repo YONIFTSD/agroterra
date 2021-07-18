@@ -9,27 +9,21 @@
           <CCardBody>
             <b-row>
               <b-col sm="12" md="8"></b-col>
-              <b-col sm="6" md="2">
-                <b-link
-                  v-if="Permission('ClientAdd')"
-                  class="btn form-control btn-primary"
-                  :to="{ path: '/cliente/nuevo' }"
-                  append
-                  >NUEVO</b-link
-                >
+              <b-col sm="12" md="1">
+                  <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i></b-button>
               </b-col>
               <b-col sm="6" md="2">
                 <b-input-group>
-                  <b-form-input
-                    v-model="search"
-                    class="form-control"
-                  ></b-form-input>
+                  <b-form-input v-model="search" class="form-control"></b-form-input>
                   <b-input-group-append>
                     <b-button variant="primary" @click="ListClient">
                       <b-icon icon="search"></b-icon
                     ></b-button>
                   </b-input-group-append>
                 </b-input-group>
+              </b-col>
+              <b-col sm="6" md="1">
+                <b-link v-if="Permission('ClientAdd')"  class="btn form-control btn-primary" :to="{ path: '/cliente/nuevo' }" append><i class="fas fa-file"></i></b-link>
               </b-col>
             </b-row>
 
@@ -131,6 +125,7 @@ export default {
     DeleteClient,
     Permission,
     CodeDocumentType,
+    ExportExcel,
   },
 
   computed: {
@@ -190,7 +185,10 @@ function ViewClient(id_client) {
     params: { id_client: je.encrypt(id_client) },
   });
 }
-
+function ExportExcel() {  
+  let url = this.url_base + "excel-clients";
+  window.open(url,'_blank');
+}
 // Confirmar eliminar
 function ConfirmDeleteClient(id_client) {
   Swal.fire({

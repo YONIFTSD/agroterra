@@ -163,7 +163,6 @@ export default {
       coins:[
         {value: "PEN", text : "Soles"},
         {value: "USD", text : "Dolares"},
-        {value: "CLP", text : "Pesos Chilenos"},
       ],
 
       //errors

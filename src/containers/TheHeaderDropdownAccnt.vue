@@ -18,7 +18,7 @@
       <strong>Cuenta</strong>
     </CDropdownHeader>
 
-    <CDropdownItem>
+    <CDropdownItem @click="ViewProfile">
       <CIcon name="cil-user" /> Perfil
     </CDropdownItem>
 
@@ -40,7 +40,8 @@ export default {
     }
   },
   methods: {
-    Logout
+    Logout,
+    ViewProfile,
   }
 }
 
@@ -53,6 +54,9 @@ function Logout() {
     });
   window.localStorage.clear()
   this.$router.push({ name: "Login"})
+}
+function ViewProfile() {
+  this.$router.push({ name: "UserProfile"})
 }
 </script>
 

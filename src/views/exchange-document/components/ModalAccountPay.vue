@@ -156,7 +156,7 @@ function ListAccountPay() {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-        me.account_pays = response.data.result.data;
+        me.account_pays = response.data.result;
       } else {
         me.account_pays = [];
       }

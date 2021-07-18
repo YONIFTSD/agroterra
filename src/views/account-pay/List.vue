@@ -11,25 +11,15 @@
             <b-tabs content-class="mt-3">
               <b-tab title="Cuentas por Pagar - Pendientes" active>
                 <b-row>
-                  <b-col sm="12" md="5">
-                      <b-form-group label="Cliente:">
-                        <v-select @input="ListAccountPayPending" placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider_pending" @search="SearchProviderPending" :options="providers_pending"></v-select>
-                      </b-form-group>
-                    </b-col>
-                  
-                  <b-col sm="6" md="2">
-                    <b-form-group label=".">
-                      <b-button class="form-control" @click="ShowModalEECC" type="button" variant="primary">VER EECC</b-button>
-                    </b-form-group>
-                  </b-col>
-                  <b-col sm="6" md="1">
-                  </b-col>
-                  <b-col sm="6" md="2">
-                    <b-form-group label=".">
-                      <b-link   v-if="Permission('AccountReceivableAdd')"  class="btn form-control btn-primary" :to="{ path: '/cuentas-por-cobrar/nuevo' }" append>NUEVO</b-link >
+                  <b-col md="6">
+                    <b-form-group>
+                      <label>Proveedor:</label>
+                      <v-select @input="ListAccountPayPending" placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider_pending" @search="SearchProviderPending" :options="providers_pending"></v-select>
                     </b-form-group>
                   </b-col>
                   <b-col sm="6" md="2">
+                  </b-col>
+                  <b-col sm="6" md="3">
                     <b-form-group label=".">
                       <b-input-group>
                         <b-form-input v-model="search_pending" class="form-control" ></b-form-input>
@@ -40,6 +30,11 @@
                       </b-input-group>
                     </b-form-group>
                   </b-col>
+                  <b-col sm="6" md="1">
+                    <b-form-group label=".">
+                      <b-link  v-if="Permission('AccountPayAdd')" class="btn form-control btn-primary"  :to="{ path: '/cuentas-por-pagar/nuevo' }" append ><i class="fas fa-file"></i></b-link>
+                    </b-form-group>
+                  </b-col>
                 </b-row>
                 <div class="table-responsive mt-3 height-table">
                   <table class="table table-hover table-bordered">
@@ -48,7 +43,7 @@
                         <th width="5%" class="text-center">#</th>
                         <th width="9%" class="text-center">Fecha</th>
                         <th width="10%" class="text-center">Comprobante</th>
-                        <th width="40%" class="text-center">Cliente</th>
+                        <th width="40%" class="text-center">Proveedor</th>
                         <th width="5%" class="text-center">Moneda</th>
                         <th width="8%" class="text-center">Total</th>
                         <th width="8%" class="text-center">Saldo</th>
@@ -72,10 +67,9 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
-                            <b-dropdown-item v-if="Permission('AccountReceivableEdit') && item.id_sale == 0" @click="EditAccountReceivable(item.id_account_pay)">Editar</b-dropdown-item>
-                            <b-dropdown-item v-if="Permission('AccountReceivableEdit')" @click="ShowModalAmortization(item.id_account_pay)">Amortizaciones</b-dropdown-item>
-                            <b-dropdown-item v-if="Permission('AccountReceivableView')" @click="ViewAccountReceivable(item.id_account_pay)" >Ver</b-dropdown-item >
-                            <b-dropdown-item v-if="Permission('AccountReceivableDelete')  && item.id_sale == 0" @click="ConfirmDeleteAccountReceivable(item.id_account_pay)">Anular</b-dropdown-item>
+                            <b-dropdown-item v-if="Permission('AccountPayEdit') && item.id_module == 0" @click="EditAccountPay(item.id_account_pay)">Editar</b-dropdown-item>
+                            <b-dropdown-item v-if="Permission('AccountPayView')" @click="ViewAccountPay(item.id_account_pay)" >Ver</b-dropdown-item >
+                            <b-dropdown-item v-if="Permission('AccountPayDelete') && item.id_module == 0" @click="ConfirmDeleteAccountPay(item.id_account_pay)">Eliminar</b-dropdown-item>
                           </b-dropdown>
                         </td>
                       </tr>
@@ -94,12 +88,12 @@
               <b-tab title="Cuentas por Pagar - Canceladas">
                 <b-row>
                   <b-col sm="12" md="5">
-                      <b-form-group label="Cliente:">
-                        <v-select @input="ListAccountPayCancelled" placeholder="Todos" class="w-100" :filterable="false" label="full_name" v-model="client_cancelled" @search="SearchClientsCancelled" :options="clients_cancelled"></v-select>
+                      <b-form-group>
+                        <label>Proveedor:</label>
+                        <v-select @input="ListAccountPayCancelled" placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider_cancelled" @search="SearchProviderCancelled" :options="providers_cancelled"></v-select>
                       </b-form-group>
                     </b-col>
                   <b-col sm="6" md="5">
-                    <!-- <b-link v-if="Permission('IncomeAdd')"  class="btn form-control btn-primary" :to="{ path: '/ingresos/nuevo' }" append>NUEVO</b-link> -->
                   </b-col>
                   <b-col sm="6" md="2">
                     <b-form-group label=".">
@@ -120,7 +114,7 @@
                         <th width="5%" class="text-center">#</th>
                         <th width="9%" class="text-center">Fecha</th>
                         <th width="10%" class="text-center">Comprobante</th>
-                        <th width="40%" class="text-center">Cliente</th>
+                        <th width="40%" class="text-center">Proveedor</th>
                         <th width="5%" class="text-center">Moneda</th>
                         <th width="8%" class="text-center">Total</th>
                         <th width="8%" class="text-center">Saldo</th>
@@ -144,10 +138,7 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
-                            <!-- <b-dropdown-item v-if="Permission('IncomeEdit')" @click="EditAccountReceivable(item.id_account_pay)">Editar</b-dropdown-item> -->
-                            <b-dropdown-item v-if="Permission('IncomeEdit')" @click="ShowModalAmortization(item.id_account_pay)">Amortizaciones</b-dropdown-item>
-                            <b-dropdown-item v-if="Permission('IncomeView')" @click="ViewAccountReceivable(item.id_account_pay)" >Ver</b-dropdown-item >
-                            <!-- <b-dropdown-item v-if="Permission('IncomeDelete')" @click="ConfirmDeleteAccountReceivable(item.id_account_pay)">Anular</b-dropdown-item> -->
+                            <b-dropdown-item v-if="Permission('AccountPayView')" @click="ViewAccountPay(item.id_account_pay)" >Ver</b-dropdown-item >
                           </b-dropdown>
                         </td>
                       </tr>
@@ -160,6 +151,149 @@
                   </b-col>
                   <b-col md="4 text-center">
                     <p>Pagina Actual: {{ currentPage_cancelled }}</p>
+                  </b-col>
+                </b-row>
+              </b-tab>
+
+              <b-tab title="Letras de Cambio - Pendientes">
+                <b-row>
+                  <b-col sm="12" md="5">
+                      <b-form-group>
+                        <label>Proveedor:</label>
+                        <v-select @input="ListBillExchangePending" placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider_pending_bill" @search="SearchProviderPendingBill" :options="providers_pending_bill"></v-select>
+                      </b-form-group>
+                    </b-col>
+                  <b-col sm="6" md="5">
+                  </b-col>
+                  <b-col sm="6" md="2">
+                    <b-form-group label=".">
+                      <b-input-group>
+                        <b-form-input v-model="search_pending_bill" class="form-control" ></b-form-input>
+                        <b-input-group-append>
+                          <b-button variant="primary" @click="ListBillExchangePending">
+                            <b-icon icon="search"></b-icon></b-button>
+                        </b-input-group-append>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <div class="table-responsive mt-3 height-table">
+                  <table class="table table-hover table-bordered">
+                    <thead>
+                      <tr>
+                        <th width="5%" class="text-center">#</th>
+                        <th width="9%" class="text-center">F. Emision</th>
+                        <th width="9%" class="text-center">F. Venc.</th>
+                        <th width="40%" class="text-center">Proveedor</th>
+                        <th width="10%" class="text-center">Nro Letra</th>
+                        <th width="5%" class="text-center">Moneda</th>
+                        <th width="8%" class="text-center">Total</th>
+                        <th width="8%" class="text-center">Saldo</th>
+                        <th width="8%" class="text-center">Estado</th>
+                        <th width="8%" class="text-center">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody v-for="(item, it) in bill_exchange_pending_bill" :key="it">
+                      <tr>
+                        <td class="text-center">{{ it + 1 }}</td>
+                        <td class="text-center"> {{ item.broadcast_date  }}</td>
+                        <td class="text-center"> {{ item.expiration_date  }}</td>
+                        <td class="text-left"> {{ item.name + ' - '+item.document_number  }}</td>
+                        <td class="text-left"> {{ item.letter_number }}</td>
+                        <td class="text-center"> {{ item.coin  }}</td>
+                        <td class="text-right"> {{ item.total  }}</td>
+                        <td class="text-right"> {{ item.balance  }}</td>
+                        <td class="text-center">
+                          <b-badge v-if="item.state == 1" variant="warning">Pendiente</b-badge>
+                          <b-badge v-if="item.state == 2" variant="success">Cancelado</b-badge>
+                          <b-badge v-if="item.state == 0" variant="danger">Anulado</b-badge>
+                        </td>
+                        <td class="text-center">
+                          <b-dropdown bloque size="sm" text="Acciones" right>
+                            <b-dropdown-item v-if="Permission('AccountPayView')" @click="ViewAccountPay(item.id_account_pay)" >Ver</b-dropdown-item >
+                          </b-dropdown>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <b-row class="mt-4">
+                  <b-col md="8">
+                    <b-pagination v-model="currentPage_pending_bill" v-on:input="ListBillExchangePending" :total-rows="rows_pending_bill" :per-page="perPage_pending_bill" align="center"></b-pagination>
+                  </b-col>
+                  <b-col md="4 text-center">
+                    <p>Pagina Actual: {{ currentPage_pending_bill }}</p>
+                  </b-col>
+                </b-row>
+              </b-tab>
+              <b-tab title="Letras de Cambio - Cancelados">
+                <b-row>
+                  <b-col sm="12" md="5">
+                      <b-form-group>
+                        <label>Proveedor:</label>
+                        <v-select @input="ListBillExchangeCancelled" placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider_cancelled_bill" @search="SearchProviderCancelledBill" :options="providers_cancelled_bill"></v-select>
+                      </b-form-group>
+                    </b-col>
+                  <b-col sm="6" md="5">
+                  </b-col>
+                  <b-col sm="6" md="2">
+                    <b-form-group label=".">
+                      <b-input-group>
+                        <b-form-input v-model="search_cancelled_bill" class="form-control" ></b-form-input>
+                        <b-input-group-append>
+                          <b-button variant="primary" @click="ListBillExchangeCancelled">
+                            <b-icon icon="search"></b-icon></b-button>
+                        </b-input-group-append>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+                <div class="table-responsive mt-3 height-table">
+                  <table class="table table-hover table-bordered">
+                    <thead>
+                      <tr>
+                        <th width="5%" class="text-center">#</th>
+                        <th width="9%" class="text-center">F. Emision</th>
+                        <th width="9%" class="text-center">F. Venc.</th>
+                        <th width="40%" class="text-center">Proveedor</th>
+                        <th width="10%" class="text-center">Nro Letra</th>
+                        <th width="5%" class="text-center">Moneda</th>
+                        <th width="8%" class="text-center">Total</th>
+                        <th width="8%" class="text-center">Saldo</th>
+                        <th width="8%" class="text-center">Estado</th>
+                        <th width="8%" class="text-center">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody v-for="(item, it) in bill_exchange_cancelled_bill" :key="it">
+                      <tr>
+                        <td class="text-center">{{ it + 1 }}</td>
+                        <td class="text-center"> {{ item.broadcast_date  }}</td>
+                        <td class="text-center"> {{ item.expiration_date  }}</td>
+                        <td class="text-left"> {{ item.name + ' - '+item.document_number  }}</td>
+                        <td class="text-left"> {{ item.letter_number }}</td>
+                        <td class="text-center"> {{ item.coin  }}</td>
+                        <td class="text-right"> {{ item.total  }}</td>
+                        <td class="text-right"> {{ item.balance  }}</td>
+                        <td class="text-center">
+                          <b-badge v-if="item.state == 1" variant="warning">Pendiente</b-badge>
+                          <b-badge v-if="item.state == 2" variant="success">Cancelado</b-badge>
+                          <b-badge v-if="item.state == 0" variant="danger">Anulado</b-badge>
+                        </td>
+                        <td class="text-center">
+                          <b-dropdown bloque size="sm" text="Acciones" right>
+                            <b-dropdown-item v-if="Permission('AccountPayView')" @click="ViewAccountPay(item.id_account_pay)" >Ver</b-dropdown-item >
+                          </b-dropdown>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <b-row class="mt-4">
+                  <b-col md="8">
+                    <b-pagination v-model="currentPage_cancelled_bill" v-on:input="ListBillExchangeCancelled" :total-rows="rows_cancelled_bill" :per-page="perPage_cancelled_bill" align="center"></b-pagination>
+                  </b-col>
+                  <b-col md="4 text-center">
+                    <p>Pagina Actual: {{ currentPage_cancelled_bill }}</p>
                   </b-col>
                 </b-row>
               </b-tab>
@@ -209,7 +343,7 @@ export default {
   data() {
     return {
       isLoading:false,
-      module:'AccountReceivable',
+      module:'AccountPay',
 
       perPage_pending: 15,
       currentPage_pending: 1,
@@ -225,33 +359,65 @@ export default {
       rows_cancelled: 0,
       search_cancelled: "",
       accoun_pay_cancelled: [],
-      clients_cancelled: [],
-      client_cancelled:null,
+      providers_cancelled: [],
+      provider_cancelled:null,
+
+
+
+      perPage_pending_bill: 15,
+      currentPage_pending_bill: 1,
+      rows_pending_bill: 0,
+      search_pending_bill: "",
+      bill_exchange_pending_bill: [],
+      providers_pending_bill: [],
+      provider_pending_bill:null,
+
+
+      perPage_cancelled_bill: 15,
+      currentPage_cancelled_bill: 1,
+      rows_cancelled_bill: 0,
+      search_cancelled_bill: "",
+      bill_exchange_cancelled_bill: [],
+      providers_cancelled_bill: [],
+      provider_cancelled_bill:null,
+
+
     };
   },
   mounted() {
-    EventBus.$on('RefreshAccountReceivable', () => {
+    EventBus.$on('RefreshAccountPay', () => {
         this.ListAccountPayPending();
         this.ListAccountPayCancelled();
+        this.ListBillExchangePending();
+        this.ListBillExchangeCancelled();
     });
 
     this.ListAccountPayPending();
     this.ListAccountPayCancelled();
+
+    this.ListBillExchangePending();
+    this.ListBillExchangeCancelled();
   },
   methods: {
     ListAccountPayPending,
     SearchProviderPending,
  
     ListAccountPayCancelled,
-    SearchClientsCancelled,
+    SearchProviderCancelled,
+
+    ListBillExchangePending,
+    SearchProviderPendingBill,
+ 
+    ListBillExchangeCancelled,
+    SearchProviderCancelledBill,
 
     ShowModalAmortization,
     ShowModalEECC,
     CodeInvoice,
-    EditAccountReceivable,
-    ViewAccountReceivable,
-    ConfirmDeleteAccountReceivable,
-    DeleteAccountReceivable,
+    EditAccountPay,
+    ViewAccountPay,
+    ConfirmDeleteAccountPay,
+    DeleteAccountPay,
     Permission,
   },
 
@@ -271,29 +437,26 @@ export default {
 };
 
 function SearchProviderPending(search, loading) {
-  
+
   let me = this;
   let url = this.url_base + "search-providers/" + search;
-    if (search !== "") {
-      loading(true);
-      axios({
-        method: "GET",
-        url: url,
-      }).then(function (response) {
-            me.providers_pending = response.data;
-            loading(false);
-      })
-    }
+  if (search !== "") {
+    loading(true);
+    axios({
+      method: "GET",
+      url: url,
+    }).then(function (response) {
+          me.providers_pending = response.data.result;
+          loading(false);
+    })
+  }
 }
 
-
-
-//listar usuario
 function ListAccountPayPending() {
   let search = this.search_pending == "" ? "all" : this.search_pending;
-  let id_client = this.provider_pending == null ? "all": this.provider_pending.id;
+  let id_provider = this.provider_pending == null ? "all": this.provider_pending.id;
   let me = this;
-  let url = this.url_base + "account-pay/list/"+ this.id_establishment +"/1/" +id_client+"/"+ search + "?page=" + this.currentPage_pending;
+  let url = this.url_base + "account-pay/list/"+ this.id_establishment +"/1/" +id_provider+"/"+ search + "?page=" + this.currentPage_pending;
   axios({
     method: "GET",
     url: url,
@@ -313,30 +476,27 @@ function ListAccountPayPending() {
 }
 
 
-function SearchClientsCancelled(search, loading) {
+function SearchProviderCancelled(search, loading) {
   
-   let me = this;
-    let url = this.url_base + "search-clients/" + search;
-    if (search !== "") {
-      loading(true);
-      axios({
-        method: "GET",
-        url: url,
-      }).then(function (response) {
-            me.clients_cancelled = response.data;
-            loading(false);
-      })
-    }
+  let me = this;
+  let url = this.url_base + "search-providers/" + search;
+  if (search !== "") {
+    loading(true);
+    axios({
+      method: "GET",
+      url: url,
+    }).then(function (response) {
+          me.providers_cancelled = response.data.result;
+          loading(false);
+    })
+  }
 }
 
-
-
-//listar usuario
 function ListAccountPayCancelled() {
   let search = this.search_cancelled == "" ? "all" : this.search_cancelled;
-  let id_client = this.client_cancelled == null ? "all": this.client_cancelled.id;
+  let id_provider = this.provider_cancelled == null ? "all": this.provider_cancelled.id;
   let me = this;
-  let url = this.url_base + "account-receivable/list/"+ this.id_establishment +"/2/" +id_client+"/"+ search + "?page=" + this.currentPage_cancelled;
+  let url = this.url_base + "account-pay/list/"+ this.id_establishment +"/2/" +id_provider+"/"+ search + "?page=" + this.currentPage_cancelled;
   axios({
     method: "GET",
     url: url,
@@ -355,10 +515,113 @@ function ListAccountPayCancelled() {
     });
 }
 
+
+
+
+
+function SearchProviderPendingBill(search, loading) {
+
+  let me = this;
+  let url = this.url_base + "search-providers/" + search;
+  if (search !== "") {
+    loading(true);
+    axios({
+      method: "GET",
+      url: url,
+    }).then(function (response) {
+          me.providers_pending_bill = response.data.result;
+          loading(false);
+    })
+  }
+}
+
+function ListBillExchangePending() {
+  let search = this.search_pending_bill == "" ? "all" : this.search_pending_bill;
+  let id_provider = this.provider_pending_bill == null ? "all": this.provider_pending_bill.id;
+  let me = this;
+  let url = this.url_base + "bill-exchange/list/"+ this.id_establishment +"/1/" +id_provider+"/"+ search + "?page=" + this.currentPage_pending_bill;
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: 1,},
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.rows_pending_bill = response.data.result.total;
+        me.bill_exchange_pending_bill = response.data.result.data;
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      }
+    })
+    .catch((error) => {
+      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+    });
+}
+
+
+
+function SearchProviderCancelledBill(search, loading) {
+
+  let me = this;
+  let url = this.url_base + "search-providers/" + search;
+  if (search !== "") {
+    loading(true);
+    axios({
+      method: "GET",
+      url: url,
+    }).then(function (response) {
+          me.providers_cancelled_bill = response.data.result;
+          loading(false);
+    })
+  }
+}
+
+function ListBillExchangeCancelled() {
+  let search = this.search_cancelled_bill == "" ? "all" : this.search_cancelled_bill;
+  let id_provider = this.provider_cancelled_bill == null ? "all": this.provider_cancelled_bill.id;
+  let me = this;
+  let url = this.url_base + "bill-exchange/list/"+ this.id_establishment +"/2/" +id_provider+"/"+ search + "?page=" + this.currentPage_cancelled_bill;
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: 1,},
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.rows_cancelled_bill = response.data.result.total;
+        me.bill_exchange_cancelled_bill = response.data.result.data;
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      }
+    })
+    .catch((error) => {
+      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Editar usuario
-function EditAccountReceivable(id_account_pay) {
+function EditAccountPay(id_account_pay) {
   this.$router.push({
-    name: "AccountReceivableEdit",
+    name: "AccountPayEdit",
     params: { id_account_pay: je.encrypt(id_account_pay) },
   });
 }
@@ -368,9 +631,9 @@ function CodeInvoice(code) {
 }
 
 // Ver Usuario
-function ViewAccountReceivable(id_account_pay) {
+function ViewAccountPay(id_account_pay) {
   this.$router.push({
-    name: "AccountReceivableView",
+    name: "AccountPayView",
     params: { id_account_pay: je.encrypt(id_account_pay) },
   });
 }
@@ -383,9 +646,9 @@ function ShowModalEECC() {
 }
 
 // Confirmar eliminar
-function ConfirmDeleteAccountReceivable(id_account_pay) {
+function ConfirmDeleteAccountPay(id_account_pay) {
   Swal.fire({
-    title: "Esta seguro de anular cuenta por cobrar?",
+    title: "Esta seguro de eliminar cuenta por cobrar?",
     text: "No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,
@@ -394,15 +657,15 @@ function ConfirmDeleteAccountReceivable(id_account_pay) {
     confirmButtonText: "Si, Estoy de acuerdo!",
   }).then((result) => {
     if (result.value) {
-      this.DeleteAccountReceivable(id_account_pay);
+      this.DeleteAccountPay(id_account_pay);
     }
   });
 }
 
 // eliminar usuario
-function DeleteAccountReceivable(id_account_pay) {
+function DeleteAccountPay(id_account_pay) {
   let me = this;
-  let url = this.url_base + "account-receivable/cancel/" + id_account_pay;
+  let url = this.url_base + "account-pay/delete/" + id_account_pay;
   axios({
     method: "delete",
     url: url,
@@ -421,7 +684,7 @@ function DeleteAccountReceivable(id_account_pay) {
             break;
           }
         }
-        Swal.fire({ icon: 'success', text: 'Se ha anulado la cuenta por cobrar', timer: 3000,})
+        Swal.fire({ icon: 'success', text: 'Se ha eliminado la cuenta por pagar', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: response.data.message, timer: 3000,})
       }

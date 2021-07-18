@@ -25,7 +25,7 @@
                 </b-col>
                 <b-col md="2">
                   <b-form-group>
-                    <b-form-input @change="SearchBarcode" v-model="search_barcode" placeholder="Código de barras" type="text"></b-form-input>
+                    <b-form-input @change="SearchBarcode" ref="search_barcode" v-model="search_barcode" placeholder="Código de barras" type="text"></b-form-input>
                   </b-form-group>
                 </b-col>
                 <b-col md="2">
@@ -88,13 +88,6 @@
                 </b-col>
 
 
-                <b-col md="12">
-                  <b-form-group label="Observación:">
-                    <b-form-textarea rows="1"  v-model="sale.observation" max-rows="2"></b-form-textarea>
-                  </b-form-group>
-                </b-col>
-
-
                 <!-- Detalle venta -->
                 <b-col md="12">
                     <SaleDetail/>
@@ -104,13 +97,18 @@
                 
                 <!-- Detalle venta -->
 
-                <b-col md="12" class="mt-3"></b-col>
+                <b-col md="12" class="mt-2"></b-col>
 
                 <b-col md="8">
                   <b-form-group class="m-0" >
                     <b-form-input readonly v-model="total_sale.number_to_letters" ></b-form-input>
                   </b-form-group>
                   <b-row>
+                    <b-col md="6">
+                      <b-form-group label="Observación:">
+                        <b-form-textarea v-model="sale.observation"></b-form-textarea>
+                      </b-form-group>
+                    </b-col>
                     <b-col md="6">
                         <div class="table-responsive mt-3">
                           <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
@@ -370,6 +368,8 @@ export default {
     this.mLoadResetLinkages();
     this.ListWarehouses();
     this.ListSeries();
+
+    this.$refs.search_barcode.focus();
   },
   methods: {
     
@@ -580,9 +580,8 @@ function DeleteLinkeage(index) {
   this.mLoadDeleteLinkages(index);
 }
 
-function AddSale(_this) {
+function AddSale(me,print) {
   
-  let me = _this;
   me.isLoading = true;
   let url = me.url_base + "sale/add";
   me.sale.id_user = me.user.id_user;
@@ -615,7 +614,7 @@ function AddSale(_this) {
   })
     .then(function (response) {
       if (response.data.status == 201) {
-      
+        
         me.client = {id:1,full_name:'CLIENTES VARIOS - 00000000'};
         me.sale.type_operation = "01",
         me.sale.type_invoice = "03";
@@ -652,7 +651,11 @@ function AddSale(_this) {
         me.ListSeries();
         me.mLoadResetSaleDetail();
         me.mLoadResetLinkages();
-        me.DataPrint(me,response.data.result.id_sale);
+  
+        if (print == "Yes") {
+
+          me.DataPrint(me,response.data.result.id_sale);
+        }
         Swal.fire({ icon: 'success', text: 'Se ha emitido correctamente la venta', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: response.data.response, timer: 3000,})
@@ -686,19 +689,21 @@ function Validate() {
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
   let me = this;
-
   Swal.fire({
-    title: 'Esta seguro de emitir la venta?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Si, Estoy de Acuerdo!'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      AddSale(me);
-    }
-  })
+  title: 'Esta seguro de emitir la venta?',
+  icon: 'warning',
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: `Guardar e Imprimir`,
+  denyButtonText: `Guardar`,
+  denyButtonColor: '#000',
+}).then((result) => {
+  if (result.isConfirmed) {
+    AddSale(me,'Yes');
+  } else if (result.isDenied) {
+    AddSale(me,'No');
+  }
+})
 }
 
 function DataPrint(me,id_sale) {

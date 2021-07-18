@@ -10,13 +10,13 @@
             <b-row>
               <b-col md="8"></b-col>
               <b-col md="2">
-                <b-link  v-if="Permission('OrderAdd')" variant="info" class="btn form-control btn-primary" :to="{ path: '/pedido/nuevo' }"append >NUEVO</b-link>
+                <!-- <b-link  v-if="Permission('OrderAdd')" variant="info" class="btn form-control btn-primary" :to="{ path: '/pedido/nuevo' }"append >NUEVO</b-link> -->
               </b-col>
               <b-col md="2">
                 <b-input-group>
                   <b-form-input v-model="search"  class="form-control"></b-form-input>
                   <b-input-group-append>
-                    <b-button variant="info" @click="ListOrders"><b-icon icon="search"></b-icon></b-button>
+                    <b-button variant="primary" @click="ListOrders"><b-icon icon="search"></b-icon></b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-col>
