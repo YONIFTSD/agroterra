@@ -9,9 +9,13 @@
           <CCardBody>
             <b-row>
 
-                <b-col sm="12" md="7">
-            
+                <b-col md="2">
+                  <b-form-group label="Establecimiento :">
+                    <b-form-select @change="ListStockGeneral" v-model="id_establishment" :options="establishments"></b-form-select>
+                  </b-form-group>
                 </b-col>
+
+                <b-col sm="12" md="5"> </b-col>
 
      
                 
@@ -41,10 +45,10 @@
                     <th rowspan="2" width="8%" class="text-center">Codigo</th>
                     <th rowspan="2" width="40%" class="text-center">Nombre</th>
                     <th rowspan="2" width="10%" class="text-center">Categoria</th>
-                    <th :colspan="item.quantity" width="10%" class="text-center" v-for="(item, it) in establishments" :key="it">{{ item.name }}</th>
+                    <th :colspan="item.quantity" width="10%" class="text-center" v-for="(item, it) in mestablishments" :key="it">{{ item.name }}</th>
                   </tr>
                   <tr>
-                    <th class="text-center" v-for="(item, it) in warehouses" :key="it">{{ item.name }}</th>
+                    <th class="text-center" v-for="(item, it) in mwarehouses" :key="it">{{ item.name }}</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in data_table" :key="it">
@@ -96,8 +100,9 @@ export default {
       rows: 0,
       data_table: [],
       establishments:[],
-      warehouses:[],
-
+      mestablishments:[],
+      mwarehouses:[],
+      id_establishment:'all',
       search: "",
       errors:{
         to:false,
@@ -106,11 +111,13 @@ export default {
     };
   },
   mounted() {
-    this.ListEstablishmentAndWarehouses();
+    this.ListEstablishment();
+    // this.ListEstablishmentAndWarehouses();
     this.ListStockGeneral();
   },
   methods: {
     ListStockGeneral,
+    ListEstablishment,
     ListEstablishmentAndWarehouses,
     ViewRequirement,
     ConfirmDeleteRequirement,
@@ -131,13 +138,30 @@ export default {
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user.api_token;
     },
-    id_establishment: function () {
-      let establishment = window.localStorage.getItem("id_establishment");
-      establishment = JSON.parse(je.decrypt(establishment));
-      return establishment;
-    }
   },
 };
+
+function ListEstablishment() {
+
+  let me = this;
+  let url = this.url_base + "active-establishments";
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: me.token, module: me.module, role: me.role,},
+  })
+    .then(function (response) {
+      me.establishments = [{value:'all',text:'Todos'}];
+      if (response.data.status == 200) {
+        for (let index = 0; index < response.data.result.length; index++) {
+          const element = response.data.result[index];
+          me.establishments.push({value: element.id_establishment, text: element.name});
+        }
+      } else {
+        Swal.fire({ icon: 'error', text: 'A Ocurrido un error', timer: 2000,})
+      }
+    })
+}
 
 function SearchProvider(search, loading) {
   
@@ -183,7 +207,9 @@ function ListStockGeneral() {
     .then(function (response) {
       if (response.data.status == 200) {
         me.rows = response.data.result.table.total;
-        me.data_table = response.data.result.products;
+        me.data_table = response.data.result.stock;
+        me.mestablishments = response.data.result.establishments;
+        me.mwarehouses = response.data.result.warehouses;
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
@@ -216,8 +242,7 @@ function ListEstablishmentAndWarehouses() {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-        me.establishments = response.data.result.establishments;
-        me.warehouses = response.data.result.warehouses;
+       
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }

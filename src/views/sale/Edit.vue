@@ -137,13 +137,13 @@
 
                 </b-col>
 
-                <b-col md="3"></b-col>
+                <b-col md="4"></b-col>
                 <b-col md="2">
                   <b-button  type="button" @click="DataPrint(sale.id_sale)" class="form-control" variant="warning" >IMPRIMIR</b-button>
                 </b-col>
-                <b-col md="2">
+                <!-- <b-col md="2">
                   <b-button type="button" :disabled="sale.state == 6" @click="showModalSaleLow" class="form-control" variant="danger" >DAR DE BAJA</b-button>
-                </b-col>
+                </b-col> -->
                 <b-col md="2">
                   <b-button  type="submit" class="form-control" variant="primary" >GUARDAR</b-button>
                 </b-col>

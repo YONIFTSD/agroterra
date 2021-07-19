@@ -89,10 +89,11 @@
                         
                         <b-dropdown-item v-if="Permission('SaleEdit')  && (item.state == 1 || item.state == 3)" @click="EditSale(item.id_sale)">Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleView')"  @click="ViewSale(item.id_sale)">Ver</b-dropdown-item>
-                        <b-dropdown-item v-if="item.state == 1 || item.state == 3"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
-                        <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 3)" @click="ConfirmDeleteSale(item.id_sale)">Eliminar</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 3) && item.state != 6" @click="showModalSaleLow(it)">Anular</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 3) && item.state != 6" @click="ConfirmDeleteSale(item.id_sale)">Eliminar</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 3 || item.state == 5" @click="SendXML(item.id_sale)">Enviar XML</b-dropdown-item>
-                        <b-dropdown-item v-if="3 == 3" @click="modalCPESunat(item.id_sale)">VER CPE</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 4" @click="modalCPESunat(item.id_sale)">VER CPE</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 1 || item.state == 3"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
                       </b-dropdown>
                     </td>
                   </tr>
@@ -108,6 +109,32 @@
                 <p>Pagina Actual: {{ currentPage }}</p>
               </b-col>
             </b-row>
+
+
+
+            <b-modal size="lg" ref="modal-sale-low" hide-footer title="BAJA DEL COMPROBANTE">
+              <b-form @submit.prevent="ValidateSaleLow">
+                <b-row>
+                  <b-col md="12">
+                    <b-form-group label="Motivo de baja Sunat :">
+                      <b-form-input v-model="sale_low.reason"></b-form-input>
+                      <small  v-if="errors_low.reason"  class="form-text text-danger">Ingrese un motivo</small>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="12">
+                    <b-form-group label="Observación:">
+                      <b-form-textarea v-model="sale_low.observation"></b-form-textarea>
+                    </b-form-group>
+                  </b-col>
+                  <b-col md="12">
+                    <b-form-group >
+                      <b-button type="submit" class="form-control" variant="primary">DAR DE BAJA</b-button>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-form>
+            </b-modal>
+
           </CCardBody>
         </CCard>
       </CCol>
@@ -120,7 +147,7 @@
 </template>
 <style>
 .height-table-sale{
-  min-height: 220px !important;
+  min-height: 260px !important;
 }
 </style>
 <script>
@@ -166,7 +193,25 @@ export default {
       errors:{
         to:false,
         from:false,
-      }
+      },
+
+      sale_low: {
+        id_sale_low : '',
+        id_sale : '',
+        id_user : '',
+        code : '',
+        serie : '',
+        sequence : '',
+        reference_date : '',
+        low_date : '',
+        reason : '',
+        sunat_message : '',
+        observation:'',
+        state:1,
+      },
+      errors_low:{
+          reason:false,
+      },
     };
   },
   mounted() {
@@ -184,7 +229,11 @@ export default {
 
     ViewReferralGuide,
     SendXML,
-    modalCPESunat
+    modalCPESunat,
+
+    showModalSaleLow,
+    ValidateSaleLow,
+    SaleLow,
   },
 
   computed: {
@@ -193,6 +242,11 @@ export default {
       let user = window.localStorage.getItem("user");
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user.api_token;
+    },
+    user: function () {
+      let user = window.localStorage.getItem("user");
+      user = JSON.parse(JSON.parse(je.decrypt(user)));
+      return user;
     },
     id_establishment: function () {
       let id_establishment = window.localStorage.getItem("id_establishment");
@@ -355,6 +409,68 @@ function DeleteSale(id_sale) {
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
     });
+}
+
+
+function showModalSaleLow(index) {
+
+  if (this.data_table[index].type_invoice == '01' ||this.data_table[index].type_invoice == '03' ||this.data_table[index].type_invoice == '07' ||this.data_table[index].type_invoice == '08' ) {
+    if (this.data_table[index].state == 3) {
+      Swal.fire({ icon: 'error', text: 'Para dar de baja un comprobante, se requiere que el comprobante este aceptado', timer: 3000,})  
+      return false;
+    }
+    
+  }
+  this.$refs['modal-sale-low'].show();
+  this.sale_low.id_sale = this.data_table[index].id_sale;
+  this.sale_low.index =  index;
+}
+function ValidateSaleLow() {
+  this.errors_low.reason = this.sale_low.reason.length == 0 ? true :false;
+  if (this.errors_low.reason == true) { this.validate_low = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate_low = false; }
+
+  let me = this;
+
+  Swal.fire({
+    title: 'Esta seguro de dar de baja el comprobante?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, Estoy de Acuerdo!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      SaleLow(me);
+    }
+  })
+
+}
+function SaleLow(me) {
+  me.sale_low.id_user = me.user.id_user;
+  let url = me.url_base + "sale-low/add";
+  let data = me.sale_low;
+  axios({
+    method: "POST",
+    url: url,
+    data: data,
+    headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role,},
+  })
+    .then(function (response) {
+      if (response.data.status == 201) {
+        me.$refs['modal-sale-low'].hide();
+        me.sale_low.reason = '';
+        me.sale_low.observation = '';
+        me.data_table[me.sale_low.index].state = response.data.result.state;
+        Swal.fire({ icon: 'success', text: 'Se ha anulado correctamente la venta', timer: 3000,})
+      } else {
+        Swal.fire({ icon: 'error', text:  response.data.response, timer: 3000,})
+      }
+      me.isLoading = false;
+    })
+    .catch((error) => {
+      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+    });
+
 }
 
 // permisos
