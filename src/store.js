@@ -36,6 +36,7 @@ const state = {
   sidebarMinimize: true,
   // url_base: 'https://dev.sertaads.com/api/',
    url_base: 'https://agroterra.rlpfacts.com/api/',
+  //  url_base: 'https://agrofrontera.rlpfacts.com/api/',
   // url_base: 'https://agroplant.rlpfacts.com/api/',
   // url_base: 'https://kalyfarm.rlpfacts.com/api/',
   // url_base: 'https://bertha.rlpfacts.com/api/',

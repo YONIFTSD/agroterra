@@ -81,7 +81,7 @@
                       </b-col>
 
                       <!-- Detalle Entrada -->
-                      <cInputDetail/>
+                      <cInputDetail :type_operation="input.type_operation"/>
                       <small v-if="errors.input_detail" class="col-md-12 form-text text-center text-danger">Agregue productos</small>
                       <!-- Detalle Entrada -->
 
@@ -301,6 +301,14 @@ export default {
     };
   },
   mounted() {
+    EventBus.$on('DataTransference', (data) => {
+      this.input.type_invoice = data.type_invoice;
+      this.input.serie = data.serie;
+      this.input.number = data.number;
+      this.provider = data.provider;
+
+    });
+
     this.mLoadResetInputDetail();
    
     this.ListWarehouses();

@@ -75,7 +75,7 @@
                     </b-col>
 
                     <!-- Detalle Entrada -->
-                    <cInputDetail/>
+                    <cInputDetail :type_operation="input.type_operation"/>
                     <small v-if="errors.input_detail" class="col-md-12 form-text text-center text-danger">Agregue productos</small>
                     <!-- Detalle Entrada -->
 

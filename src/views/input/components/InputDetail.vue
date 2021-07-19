@@ -1,6 +1,5 @@
 <template>
   <div class="col-md-12">
-
         <div class="table-responsive mt-3">
               <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                 <thead class="">
@@ -20,10 +19,10 @@
                       <td class="align-middle text-left">{{ item.name + " - " + item.presentation}}</td>
                       <td class="align-middle text-center">{{ item.unit_measure }}</td>
                       <td class="align-middle text-center">
-                        <input type="number" @change="EditDetail(item.id_product)" :ref="'idquantity'+item.id_product" class="form-control text-center" v-model="item.quantity">
+                        <input :disabled="type_operation == '21'" type="number" @change="EditDetail(item.id_product)" :ref="'idquantity'+item.id_product" class="form-control text-center" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
-                        <button type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
+                        <button :disabled="type_operation == '21'" type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
                       </td>
 
                   </tr>
@@ -46,6 +45,7 @@ import EventBus from '@/assets/js/EventBus';
 
 export default {
   name: "InputDetail",
+  props: ["type_operation"],
   data() {
     return {
     

@@ -156,7 +156,14 @@ function AddTransfer(id_output) {
           broadcast_date: response.data.result.output.broadcast_date,
           reference: CodeInvoice(response.data.result.output.type_invoice) + " " + response.data.result.output.serie + "-"+response.data.result.output.number,
         }
-  
+        let data = {
+          type_invoice :  response.data.result.output.type_invoice,
+          serie :  response.data.result.output.serie,
+          number :  response.data.result.output.number,
+          provider : {id:response.data.result.output.id_provider, name : response.data.result.output.provider_name + " - "+ response.data.result.output.provider_document_number} ,
+        };
+        EventBus.$emit('DataTransference',data);
+
         me.mLoadAddLinkageInput(linkage);
 
         let output_detail = response.data.result.output_detail;
