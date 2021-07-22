@@ -217,7 +217,7 @@ export default {
         payment_deadline: "0",
         observation: "",
         modified_document_type: "",
-        modified_string: "",
+        modified_serie: "",
         modified_number: "",
         modified_emission_date: "",
         reason: "",
@@ -403,7 +403,7 @@ function ViewSale() {
         me.sale.payment_deadline = response.data.result.payment_deadline;
         me.sale.observation = response.data.result.observation;
         me.sale.modified_document_type = response.data.result.modified_document_type;
-        me.sale.modified_string = response.data.result.modified_string;
+        me.sale.modified_serie = response.data.result.modified_serie;
         me.sale.modified_number = response.data.result.modified_number;
         me.sale.modified_emission_date = response.data.result.modified_emission_date;
         me.sale.reason = response.data.result.reason;

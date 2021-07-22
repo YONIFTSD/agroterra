@@ -21,14 +21,14 @@
                       <td class="align-middle text-left">{{ item.name +" - "+item.presentation }}</td>
                       <td class="align-middle text-center">{{ item.unit_measure }}</td>
                       <td class="align-middle text-center">
-                        <input type="number" @change="EditDetail(item.id_product)" class="form-control text-center" v-model="item.quantity">
+                        <input :disabled="type_invoice == '07' && !(reason == '07')" type="number" @change="EditDetail(item.id_product)" class="form-control text-center" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
-                        <input type="number" step="any" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.unit_price">
+                        <input :disabled="(type_invoice == '07')" type="number" step="any" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.unit_price">
                       </td>
                       <td class="align-middle text-right">{{ item.total_price }}</td>
                       <td class="align-middle text-center">
-                        <button type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
+                        <button :disabled="type_invoice == '07' && !(reason == '07')" type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
                       </td>
 
                   </tr>
@@ -48,6 +48,8 @@ import EventBus from '@/assets/js/EventBus';
 
 export default {
   name: "SaleDetail",
+   props: ["type_invoice","reason"],
+
   data() {
     return {
 

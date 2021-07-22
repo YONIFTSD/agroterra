@@ -122,7 +122,7 @@
                                       <td class="text-right" >{{cash.counted_usd}}</td>
                                     </tr>
                                     <tr class="bg-success">
-                                      <td class="text-let" >Ingresos por cobros de creditos - Efectivo</td>
+                                      <td class="text-let" >Ingresos por cobros - Efectivo</td>
                                       <td class="text-right" >{{cash.total_credit_collection_income_pen}}</td>
                                       <td class="text-right" >{{cash.total_credit_collection_income_usd}}</td>
                                     </tr>

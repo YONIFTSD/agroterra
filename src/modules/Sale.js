@@ -70,6 +70,7 @@ const actions = {
                 break;
             }
         }
+        context.dispatch('mLoadTotalSaleDetail');
     },
 
     mLoadResetSaleDetail(context){

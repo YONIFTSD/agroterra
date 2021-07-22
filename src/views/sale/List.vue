@@ -86,13 +86,13 @@
                     </td>
                     <td class="text-center">
                       <b-dropdown bloque size="sm" text="Acciones" right>
-                        
                         <b-dropdown-item v-if="Permission('SaleEdit')  && (item.state == 1 || item.state == 3)" @click="EditSale(item.id_sale)">Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleView')"  @click="ViewSale(item.id_sale)">Ver</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('SaleEdit') && item.state == 4 && (item.type_invoice == '01' || item.type_invoice == '03' )"  @click="AddNotaCreditoDebito(item.id_sale)">Gen. Nota Cred. / Deb.</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 3) && item.state != 6" @click="showModalSaleLow(it)">Anular</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 3) && item.state != 6" @click="ConfirmDeleteSale(item.id_sale)">Eliminar</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 3 || item.state == 5" @click="SendXML(item.id_sale)">Enviar XML</b-dropdown-item>
-                        <b-dropdown-item v-if="item.state == 4" @click="modalCPESunat(item.id_sale)">VER CPE</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 4" @click="modalCPESunat(item.id_sale)">Ver CPE</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 1 || item.state == 3"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
                       </b-dropdown>
                     </td>
@@ -231,6 +231,8 @@ export default {
     SendXML,
     modalCPESunat,
 
+    AddNotaCreditoDebito,
+
     showModalSaleLow,
     ValidateSaleLow,
     SaleLow,
@@ -319,6 +321,13 @@ function EditSale(id_sale) {
 function ViewSale(id_sale) {
   this.$router.push({
     name: "SaleView",
+    params: { id_sale: je.encrypt(id_sale) },
+  });
+}
+
+function AddNotaCreditoDebito(id_sale) {
+  this.$router.push({
+    name: "SaleNotaCreditoDebito",
     params: { id_sale: je.encrypt(id_sale) },
   });
 }

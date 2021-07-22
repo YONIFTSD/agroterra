@@ -40,6 +40,13 @@
                   </b-form-group>
                 </b-col>
 
+                <b-col md="4">
+                  <b-form-group label="Banco :">
+                    <b-form-select disabled  v-model="payment.bank" :options="bank"></b-form-select>
+                    <small v-if="errors.bank" class="form-text text-danger">Ingrese un banco</small>
+                  </b-form-group>
+                </b-col>
+
                 <b-col md="2">
                   <b-form-group label="Nro Operación :">
                     <b-form-input disabled type="text"  v-model="payment.number_op"></b-form-input>
@@ -48,23 +55,16 @@
                 </b-col>
 
                 <b-col md="2">
-                  <b-form-group label="Banco :">
-                    <b-form-input disabled type="text" v-model="payment.bank"></b-form-input>
-                    <small v-if="errors.bank" class="form-text text-danger">Ingrese un banco</small>
-                  </b-form-group>
-                </b-col>
-
-
-                <b-col md="2">
                   <b-form-group label="Moneda:">
-                    <b-form-select disabled v-model="payment.coin" :options="coins" ></b-form-select>
+                    <b-form-select disabled ref="coin" v-model="payment.coin" :options="coins" ></b-form-select>
                     <small v-if="errors.coin" class="form-text text-danger">Seleccione una moneda</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="4">
-                  <b-form-group label="Observación:">
-                    <b-form-input disabled v-model="payment.observation" ></b-form-input>
+                <b-col md="2">
+                  <b-form-group label="T. Cambio:">
+                    <b-form-input disabled type="number" class="text-right" step="any" v-model="payment.exchange_rate" ></b-form-input>
+                    <small v-if="errors.exchange_rate" class="form-text text-danger">Seleccione un tipo de cambio</small>
                   </b-form-group>
                 </b-col>
 
@@ -74,6 +74,19 @@
                     <small v-if="errors.total" class="form-text text-danger">Ingrese un monto</small>
                   </b-form-group>
                 </b-col>
+
+                <b-col md="10">
+                  <b-form-group label="Observación:">
+                    <b-form-input disabled v-model="payment.observation" ></b-form-input>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
+                  <b-form-group label="Aplicado:">
+                    <b-form-input disabled type="number" class="text-right" step="any" v-model="payment.applied" ></b-form-input>
+                  </b-form-group>
+                </b-col>
+
 
                 <b-col md="3"></b-col>
                 <b-col md="6">
@@ -127,6 +140,7 @@ export default {
           payment_method:'008',
           document:'',
           coin:'PEN',
+          exchange_rate:'1.00',
           bank:'',
           number_op:'',
           observation:'',
@@ -152,6 +166,45 @@ export default {
       coins:[
         {value: "PEN", text : "Soles"},
         {value: "USD", text : "Dolares"},
+      ],
+      bank:[
+        {value :'', text:'Ninguno'},
+        {value :'001', text:'BANCO CENTRAL DE RESERVA DEL PERU'},
+        {value :'002', text:'BANCO DE CREDITO DEL PERU'},
+        {value :'003', text:'BANCO INTERNACIONAL DEL PERU'},
+        {value :'005', text:'BANCO LATINO'},
+        {value :'007', text:'BANCO CITIBANK N.A.'},
+        {value :'008', text:'BANCO STANDARD CHARTERED'},
+        {value :'009', text:'BCO.SCOTIABANK PERU SAA (ANTES WIESE SUDAMERIS)'},
+        {value :'011', text:'BANCO CONTINENTAL'},
+        {value :'018', text:'BANCO DE LA NACION'},
+        {value :'023', text:'BANCO COMERCIO'},
+        {value :'026', text:'BANCO NORBANK'},
+        {value :'037', text:'BANCO DEL PROGRESO'},
+        {value :'038', text:'BANCO INTERAMERICANO DE FINANZAS'},
+        {value :'041', text:'BANCO SUDAMERICANO'},
+        {value :'043', text:'BANCO DEL TRABAJO'},
+        {value :'044', text:'BANCO SOLVENTA'},
+        {value :'045', text:'BANCO SERBANCO'},
+        {value :'046', text:'BANK BOSTON N.A. SUCURSAL DEL PERU'},
+        {value :'047', text:'ORION CORPORACION DE CREDITO'},
+        {value :'048', text:'BANCO NUEVO PAIS'},
+        {value :'049', text:'MIBANCO'},
+        {value :'050', text:'BANQUE NATIONALE DE PARIS - ANDES S.A.'},
+        {value :'053', text:'BANCO HSBC'},
+        {value :'056', text:'BANCO SANTANDER PERU S.A.'},
+        {value :'071', text:'CORPORACION FINANCIERA DE DESARROLLO - COFIDE'},
+        {value :'083', text:'SOLUCION - FINANCIERA DE CREDITO DEL PERU'},
+        {value :'086', text:'FINANDAEWOO S.A.'},
+        {value :'087', text:'FINANCIERA C.M.R.'},
+        {value :'088', text:'VOLVO FINANCE PERU'},
+        {value :'089', text:'FINANCIERA CORDILLERA S.A.'},
+        {value :'091', text:'GENERALI PERU CIA. SEGUROS'},
+        {value :'092', text:'LA VITALICIA'},
+        {value :'093', text:'REASEGURADORA PERUANA'},
+        {value :'094', text:'SEGUROS LA FENIX PERUANA'},
+        {value :'095', text:'SECREX  CIA. SEGUROS'},
+        {value :'099', text:'OTROS'},
       ],
       //errors
       errors: {
@@ -237,6 +290,7 @@ function ViewCharge() {
           me.payment.payment_method = response.data.result.payment_method;
           me.payment.document = response.data.result.document;
           me.payment.coin = response.data.result.coin;
+          me.payment.exchange_rate = response.data.result.exchange_rate;
           me.payment.bank = response.data.result.bank;
           me.payment.number_op = response.data.result.number_op;
           me.payment.observation = response.data.result.observation;

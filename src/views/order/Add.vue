@@ -192,7 +192,7 @@ export default {
         payment_deadline: "0",
         observation: "",
         modified_document_type: "",
-        modified_string: "",
+        modified_serie: "",
         modified_number: "",
         modified_emission_date: "",
         reason: "",
@@ -441,7 +441,7 @@ function AddSale(_this) {
         me.sale.payment_deadline = "0";
         me.sale.observation = "";
         me.sale.modified_document_type = "";
-        me.sale.modified_string = "";
+        me.sale.modified_serie = "";
         me.sale.modified_number = "";
         me.sale.modified_emission_date = "";
         me.sale.reason = "";

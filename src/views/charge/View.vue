@@ -40,6 +40,13 @@
                   </b-form-group>
                 </b-col>
 
+                <b-col md="4">
+                  <b-form-group label="Banco :">
+                    <b-form-select disabled  v-model="charge.bank" :options="bank"></b-form-select>
+                    <small v-if="errors.bank" class="form-text text-danger">Ingrese un banco</small>
+                  </b-form-group>
+                </b-col>
+
                 <b-col md="2">
                   <b-form-group label="Nro Operación :">
                     <b-form-input disabled type="text"  v-model="charge.number_op"></b-form-input>
@@ -47,24 +54,18 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
-                  <b-form-group label="Banco :">
-                    <b-form-input  disabled type="text" v-model="charge.bank"></b-form-input>
-                    <small v-if="errors.bank" class="form-text text-danger">Ingrese un banco</small>
-                  </b-form-group>
-                </b-col>
 
-
-                <b-col md="2">
+                 <b-col md="2">
                   <b-form-group label="Moneda:">
-                    <b-form-select disabled v-model="charge.coin" :options="coins" ></b-form-select>
+                    <b-form-select disabled ref="coin" v-model="charge.coin" :options="coins" ></b-form-select>
                     <small v-if="errors.coin" class="form-text text-danger">Seleccione una moneda</small>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
-                  <b-form-group label="Observación:">
-                    <b-form-input disabled v-model="charge.observation" ></b-form-input>
+                  <b-form-group label="T. Cambio:">
+                    <b-form-input disabled type="number" class="text-right" step="any" v-model="charge.exchange_rate" ></b-form-input>
+                    <small v-if="errors.exchange_rate" class="form-text text-danger">Seleccione un tipo de cambio</small>
                   </b-form-group>
                 </b-col>
 
@@ -76,8 +77,20 @@
                 </b-col>
 
                 <b-col md="2">
+                  <b-form-group label="Caja:">
+                    <b-form-input disabled v-model="charge.cash_number" ></b-form-input>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="8">
+                  <b-form-group label="Observación:">
+                    <b-form-input disabled v-model="charge.observation" ></b-form-input>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
                   <b-form-group label="Aplicado:">
-                    <b-form-input type="number" disabled class="text-right" step="any" v-model="charge.applied" ></b-form-input>
+                    <b-form-input disabled type="number" class="text-right" step="any" v-model="charge.applied" ></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -133,6 +146,8 @@ export default {
           payment_method:'008',
           document:'',
           coin:'PEN',
+          exchange_rate:'1.00',
+          cash_number:'',
           bank:'',
           number_op:'',
           observation:'',
@@ -152,6 +167,45 @@ export default {
           {value :"009", text :'EFECTIVO, EN LOS DEMÁS CASOS'},
           {value :"101", text :'TRANSFERENCIAS - COMERCIO EXTERIOR'},
           {value :"102", text :'CHEQUES BANCARIOS  - COMERCIO EXTERIOR'},
+      ],
+      bank:[
+        {value :'', text:'Ninguno'},
+        {value :'001', text:'BANCO CENTRAL DE RESERVA DEL PERU'},
+        {value :'002', text:'BANCO DE CREDITO DEL PERU'},
+        {value :'003', text:'BANCO INTERNACIONAL DEL PERU'},
+        {value :'005', text:'BANCO LATINO'},
+        {value :'007', text:'BANCO CITIBANK N.A.'},
+        {value :'008', text:'BANCO STANDARD CHARTERED'},
+        {value :'009', text:'BCO.SCOTIABANK PERU SAA (ANTES WIESE SUDAMERIS)'},
+        {value :'011', text:'BANCO CONTINENTAL'},
+        {value :'018', text:'BANCO DE LA NACION'},
+        {value :'023', text:'BANCO COMERCIO'},
+        {value :'026', text:'BANCO NORBANK'},
+        {value :'037', text:'BANCO DEL PROGRESO'},
+        {value :'038', text:'BANCO INTERAMERICANO DE FINANZAS'},
+        {value :'041', text:'BANCO SUDAMERICANO'},
+        {value :'043', text:'BANCO DEL TRABAJO'},
+        {value :'044', text:'BANCO SOLVENTA'},
+        {value :'045', text:'BANCO SERBANCO'},
+        {value :'046', text:'BANK BOSTON N.A. SUCURSAL DEL PERU'},
+        {value :'047', text:'ORION CORPORACION DE CREDITO'},
+        {value :'048', text:'BANCO NUEVO PAIS'},
+        {value :'049', text:'MIBANCO'},
+        {value :'050', text:'BANQUE NATIONALE DE PARIS - ANDES S.A.'},
+        {value :'053', text:'BANCO HSBC'},
+        {value :'056', text:'BANCO SANTANDER PERU S.A.'},
+        {value :'071', text:'CORPORACION FINANCIERA DE DESARROLLO - COFIDE'},
+        {value :'083', text:'SOLUCION - FINANCIERA DE CREDITO DEL PERU'},
+        {value :'086', text:'FINANDAEWOO S.A.'},
+        {value :'087', text:'FINANCIERA C.M.R.'},
+        {value :'088', text:'VOLVO FINANCE PERU'},
+        {value :'089', text:'FINANCIERA CORDILLERA S.A.'},
+        {value :'091', text:'GENERALI PERU CIA. SEGUROS'},
+        {value :'092', text:'LA VITALICIA'},
+        {value :'093', text:'REASEGURADORA PERUANA'},
+        {value :'094', text:'SEGUROS LA FENIX PERUANA'},
+        {value :'095', text:'SECREX  CIA. SEGUROS'},
+        {value :'099', text:'OTROS'},
       ],
       clients: [],
       client:null,
@@ -243,6 +297,8 @@ function ViewCharge() {
           me.charge.payment_method = response.data.result.payment_method;
           me.charge.document = response.data.result.document;
           me.charge.coin = response.data.result.coin;
+          me.charge.exchange_rate = response.data.result.exchange_rate;
+          me.charge.cash_number = response.data.result.cash_number;
           me.charge.bank = response.data.result.bank;
           me.charge.number_op = response.data.result.number_op;
           me.charge.observation = response.data.result.observation;

@@ -569,6 +569,12 @@ function configRoutes() {
           props: true,
           beforeEnter: userGuard,
         },
+        {
+          path: "nota-credito-debito/:id_sale",
+          name: "SaleNotaCreditoDebito",
+          component: () => import("@/views/sale/AddNotaCreditoDebito"),
+          props: true,
+        },
       ],
     },
 

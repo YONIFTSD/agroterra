@@ -142,7 +142,7 @@
                     <td class="text-right">{{item.total}}</td>
                     <td class="text-center">1</td>
                     <td class="text-center">{{item.modified_document_type}}</td>
-                    <td class="text-center">{{item.modified_string}}</td>
+                    <td class="text-center">{{item.modified_serie}}</td>
                     <td class="text-center">{{item.modified_number}}</td>
                     <td class="text-center">{{item.modified_emission_date}}</td>
                   </tr>
