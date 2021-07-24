@@ -19,10 +19,10 @@
                       <td class="align-middle text-left">{{ item.name + " - " + item.presentation}}</td>
                       <td class="align-middle text-center">{{ item.unit_measure }}</td>
                       <td class="align-middle text-center">
-                        <input :disabled="type_operation == '21'" type="number" @change="EditDetail(item.id_product)" :ref="'idquantity'+item.id_product" class="form-control text-center" v-model="item.quantity">
+                        <input :disabled="type_operation == '21'" type="number" @change="EditDetail(it)" class="form-control text-center" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
-                        <button :disabled="type_operation == '21'" type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
+                        <button :disabled="type_operation == '21'" type="button" @click="DeleteDetail(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
                       </td>
 
                   </tr>
@@ -80,11 +80,17 @@ export default {
 };
 
 
-function EditDetail(id_product) {
-  this.mLoadEditInputDetail(id_product)
+function EditDetail(index) {
+  let name = this.input_detail[index].name + " - " + this.input_detail[index].presentation;
+  this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha modificado el producto ' + name, type: 'warn'})
+  this.mLoadEditInputDetail(index)
+  
 }
 
-function DeleteDetail(id_product) {
-this.mLoadDeleteInputDetail(id_product)
+function DeleteDetail(index) {
+  let name = this.input_detail[index].name + " - " + this.input_detail[index].presentation;
+  this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha eliminado el producto ' + name, type: 'warn'})
+  this.mLoadDeleteInputDetail(index)
+
 }
 </script>

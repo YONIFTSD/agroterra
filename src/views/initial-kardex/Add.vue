@@ -66,7 +66,21 @@
                           <b-form-select id="per-page-select" v-model="perPage" :options="pageOptions"></b-form-select>
                         </b-form-group>
                       </b-col>
-                      <b-col md="7">
+                      <b-col md="2">
+                        <b-form-group label="Exportar">
+                          <b-button class="form-control" @click="ExportExcel" variant="primary">Exportar</b-button>
+                        </b-form-group>
+                      </b-col>
+                      
+                      <b-col md="5">
+                        <b-form-group label="Importar" >
+                          <b-input-group>
+                            <b-form-file @change="UploadFile" accept=".xlsx" v-model="file_excel" placeholder="Seleccione el inventario en excel..." drop-placeholder="Suelta la imagen aquí..."></b-form-file>
+                            <b-input-group-append>
+                              <b-button type="button" @click="UploadExcel"  variant="success">Cargar Excel</b-button>
+                            </b-input-group-append>
+                          </b-input-group>
+                        </b-form-group>
                       </b-col>
                       <b-col md="3">
                         <b-form-group label="Buscar" >
@@ -190,6 +204,8 @@ export default {
       isLoading:false,
       module: 'InitialKardex',
       role: 2,
+      file_excel:null,
+      file_excel_name:'',
       initial_kardex: {
         id_initial_kardex: "",
         id_user: "",
@@ -268,6 +284,9 @@ export default {
     AddKardexInitial,
     Validate,
 
+    ExportExcel,
+    UploadFile,
+    UploadExcel,
 
 
     ...mapActions('InitialKardex',['mLoadAddInitialKardexDetail','mLoadResetInitialKardexDetail']),
@@ -300,6 +319,55 @@ export default {
     }
   },
 };
+
+function ExportExcel() {
+  
+  if (this.initial_kardex.broadcast_date.length == 0) {
+    Swal.fire({ icon: 'warning', text: 'Seleccione un fecha', timer: 2000,})
+    return false;
+  }
+  if (this.initial_kardex.id_warehouse.length == 0) {
+    Swal.fire({ icon: 'warning', text: 'Seleccione un almacen', timer: 2000,})
+    return false;
+  }
+  let url = this.url_base + "/excel-initial-kardex/"+this.initial_kardex.id_warehouse+"/"+this.initial_kardex.broadcast_date;
+  window.open(url,'_blank');
+
+}
+
+function UploadFile(e) {
+  this.file_excel_name = e.target.files[0];
+}
+
+function UploadExcel() {
+  this.isLoading = true;
+  let me = this;
+  let url = me.url_base + "initial-kardex/upload-excel";
+  let data = new FormData();
+  data.append("file_excel", this.file_excel_name);
+  axios({
+    method: "POST",
+    url: url,
+    data: data,
+    headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: 2,},
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.file_excel = null;
+        me.totalRows = response.data.result.length;
+        me.initial_kardex_detail = response.data.result;
+        Swal.fire({ icon: 'success', text: 'Se ha Importado los el inventario', timer: 3000,})
+        me.isLoading = false;
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+        me.isLoading = false;
+      }
+    })
+    .catch((error) => {
+      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
+    });
+}
 
 function ListWarehouses() {
   let me = this;

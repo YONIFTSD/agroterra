@@ -47,6 +47,7 @@
         </b-col>
       </b-row>
     </b-modal>
+  
   </div>
 </template>
 <style>
@@ -109,12 +110,15 @@ export default {
 
 function AddProduct(id_product) {
   
+
   let quantity = this.$refs['mIDCantidad'+id_product][0]['value'];
   let data = {
     id_product: id_product,
     quantity: quantity,
   }
   EventBus.$emit('ControlStockAddProduct',data);
+  this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado el stock del producto', type: 'success'});
+  
 }
 
 
@@ -124,7 +128,7 @@ function GetProductByBarcode() {
   }
   let me  = this;
   let url = this.url_base + "get-product-by-barcode/"+this.barcode;
-
+this.barcode = '';
   axios({
     method: "GET",
     url: url,
@@ -138,6 +142,7 @@ function GetProductByBarcode() {
         }
         EventBus.$emit('ControlStockAddProduct',data);
         me.barcode = '';
+        me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado el stock del producto', type: 'success'});
       }
     })
 }

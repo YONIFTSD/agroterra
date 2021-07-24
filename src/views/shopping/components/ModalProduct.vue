@@ -152,6 +152,7 @@ function AddProduct(id_product) {
         }
 
         me.mLoadAddShoppingDetail(detail);
+        me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado el producto '+ detail.name + ' - ' + detail.presentation, type: 'success'});
       } else {
         
       }

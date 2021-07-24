@@ -10,18 +10,22 @@
             <b-form id="Form" @submit.prevent="Validate">
               <b-row>
        
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group>
                     <b-form-select disabled v-model="sale.id_warehouse" :options="warehouses"></b-form-select>
                     <small  v-if="errors.id_warehouse"  class="form-text text-danger">Seleccione un almacen</small>
                   </b-form-group>
                 </b-col>
 
-               
-
+                <b-col md="2">
+                  <b-form-group label="">
+                    <b-form-select disabled v-model="sale.coin" :options="coins"></b-form-select>
+                    <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
+                  </b-form-group>
+                </b-col>
     
                 <b-col md="6"></b-col>
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group>
                     <b-button disabled class="form-control btn btn-info" @click="modalProducts">Agregar Productos</b-button>
                   </b-form-group>
@@ -34,24 +38,30 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group label="Serie :">
                     <b-form-input class="text-center" disabled type="text" ref="serie"  v-model="sale.serie"></b-form-input>
                     <small v-if="errors.id_serie"  class="form-text text-danger" >Seleccione una serie</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group label="Numero :">
                     <b-form-input class="text-center" disabled type="text" ref="number"  v-model="sale.number"></b-form-input>
                     <small v-if="errors.number" class="form-text text-danger">Ingrese un numero de 8 digitos</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group label="Fecha Emision:">
                     <b-form-input disabled class="text-center" type="date" ref="broadcast_date" v-model="sale.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="3">
+                  <b-form-group label="Forma de Pago :">
+                    <b-form-select disabled v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
                   </b-form-group>
                 </b-col>
 
@@ -65,18 +75,16 @@
                   </b-form-group>
                 </b-col>
 
-                 <b-col md="3">
-                  <b-form-group label="Moneda :">
-                    <b-form-select disabled v-model="sale.coin" :options="coins"></b-form-select>
-                    <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
+                <b-col md="6">
+                  <b-form-group label="Dirección :">
+                    <b-form-input  disabled type="text" ref="address"  v-model="sale.address"></b-form-input>
                   </b-form-group>
                 </b-col>
 
-                 <b-col md="3">
-                  <b-form-group label="Forma de Pago :">
-                    <b-form-select disabled v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
-                  </b-form-group>
-                </b-col>
+
+                 
+
+                 
 
 
                 
@@ -119,11 +127,7 @@
                     <b-form-input readonly v-model="sale.number_to_letters" ></b-form-input>
                   </b-form-group>
                   <b-row>
-                    <b-col md="6">
-                      <b-form-group label="Observación:">
-                        <b-form-textarea disabled rows="1"  v-model="sale.observation" max-rows="2"></b-form-textarea>
-                      </b-form-group>
-                    </b-col>
+                    
                     <b-col md="6">
                         <div class="table-responsive mt-3">
                           <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
@@ -136,11 +140,16 @@
                             <tbody v-for="(item, it) in sale.linkages" :key="it">
                               <tr>
                                   <td class="align-middle text-center">{{ item.broadcast_date }}</td>
-                                  <td class="align-middle text-center">{{ item.reference }}</td>
+                                  <td class="align-middle text-center">{{ item.reference + " " + (sale.reason != "" ? " - "+CodeReasor(sale.type_invoice,sale.reason) : "")}}</td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
+                    </b-col>
+                    <b-col md="6">
+                      <b-form-group label="Observación:">
+                        <b-form-textarea disabled rows="1"  v-model="sale.observation" max-rows="2"></b-form-textarea>
+                      </b-form-group>
                     </b-col>
                   </b-row>
                 </b-col>
@@ -203,7 +212,7 @@ var moment = require("moment");
 import EventBus from '@/assets/js/EventBus';
 import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
-
+import CodeToName from "@/assets/js/CodeToName";
 
 // components
 import ModalClients from './../components/ModalClient'
@@ -237,6 +246,7 @@ export default {
         broadcast_time: "",
         expiration_date: moment(new Date()).local().format("YYYY-MM-DD"),
         coin: "PEN",
+        address: "",
         way_to_pay: "01-008",
         payment_type: "01",
         payment_method: "008",
@@ -313,7 +323,7 @@ export default {
 
     modalProducts,
     modalClients,
-
+    CodeReasor,
     ViewSale,
     EditSale,
     Validate,
@@ -344,6 +354,9 @@ export default {
   },
 };
 
+function CodeReasor(type_invoice,code) {
+  return CodeToName.NameReasonNCD(type_invoice,code);
+}
 
 function SearchClients(search, loading) {
   
@@ -422,6 +435,7 @@ function ViewSale() {
         me.sale.broadcast_time = response.data.result.broadcast_time;
         me.sale.expiration_date = response.data.result.expiration_date;
         me.sale.coin = response.data.result.coin;
+        me.sale.address = response.data.result.address;
         if (response.data.result.payment_type == "01") {
           me.sale.way_to_pay = response.data.result.payment_type+'-'+response.data.result.payment_method;
         }else{

@@ -20,10 +20,10 @@
                       <td class="align-middle text-left">{{ item.name + " - "+item.presentation }}</td>
                       <td class="align-middle text-center">{{ item.unit_measure }}</td>
                       <td class="align-middle text-center">
-                        <input type="number" @change="EditDetail(item.id_product)" :ref="'idquantity'+item.id_product" class="form-control text-center" v-model="item.quantity">
+                        <input type="number" @change="EditDetail(it)" class="form-control text-center" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
-                        <button type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
+                        <button type="button" @click="DeleteDetail(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
                       </td>
                   </tr>
                 </tbody>
@@ -79,11 +79,15 @@ export default {
 };
 
 
-function EditDetail(id_product) {
-  this.mLoadEditOutputDetail(id_product)
+function EditDetail(index) {
+  let name = this.output_detail[index].name + " - " + this.output_detail[index].presentation;
+  this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha modificado el producto ' + name, type: 'warn'})
+  this.mLoadEditOutputDetail(index)
 }
 
-function DeleteDetail(id_product) {
-this.mLoadDeleteOutputDetail(id_product)
+function DeleteDetail(index) {
+   let name = this.output_detail[index].name + " - " + this.output_detail[index].presentation;
+  this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha eliminado el producto ' + name, type: 'warn'})
+this.mLoadDeleteOutputDetail(index)
 }
 </script>

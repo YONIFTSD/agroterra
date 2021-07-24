@@ -168,4 +168,38 @@ var NameMethodPayment = (function() {
 })();
 
 
-export default {NameDocumentType,CodeInvoice,NameInvoice,NameOperationType,NameMethodPayment}
+var NameReasonNCD = (function() {
+
+    return function NameReasonNCD(type_invoice,code) {
+        var name = '';
+       
+        if (type_invoice == "07") {
+            switch (code) {
+                case '01' : name = "Anulación de la operación"; break;
+                case '02' : name = "Anulación por error en el RUC"; break;
+                case '03' : name = "Corrección por error en la descripción"; break;
+                case '04' : name = "Descuento global"; break;
+                case '05' : name = "Descuento por ítem"; break;
+                case '06' : name = "Devolución total"; break;
+                case '07' : name = "Devolución por ítem"; break;
+                case '08' : name = "Bonificación"; break;
+                case '09' : name = "Disminución en el valor"; break;
+                case '10' : name = "Otros Conceptos "; break;
+                default: name = ''; break;
+            }
+            return name;
+        }
+        if (type_invoice == "08") {
+            switch (code) {
+                case '01' : name = "Intereses por mora"; break;
+                case '02' : name = "Aumento en el valor"; break;
+                case '03' : name = "Penalidades/ otros conceptos"; break;
+                default: name = ''; break;
+            }
+            return name;
+        }
+    };
+})();
+
+
+export default {NameDocumentType,CodeInvoice,NameInvoice,NameOperationType,NameMethodPayment,NameReasonNCD}

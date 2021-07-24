@@ -131,6 +131,7 @@ function AddProduct(id_product) {
         }
         
         me.mLoadAddInputDetail(detail);
+        me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado producto '+detail.name + ' - '+detail.presentation, type: 'success'})
 
         
       } else {

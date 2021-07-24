@@ -85,10 +85,28 @@ export default {
 
 
 function EditDetail(id_product) {
+  let name = '';
+  for (let index = 0; index < this.sale_detail.length; index++) {
+    const element = this.sale_detail[index];
+    if (element.id_product == id_product) {
+      name = element.name + ' - ' +element.presentation;
+      break;
+    }
+  }
+  this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha modificado el producto ' + name, type: 'warn'})
   this.mLoadEditSaleDetail(id_product)
 }
 
 function DeleteDetail(id_product) {
-this.mLoadDeleteSaleDetail(id_product)
+  let name = '';
+  for (let index = 0; index < this.sale_detail.length; index++) {
+    const element = this.sale_detail[index];
+    if (element.id_product == id_product) {
+      name = element.name + ' - ' +element.presentation;
+      break;
+    }
+  }
+  this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha eliminado el producto ' + name, type: 'warn'})
+  this.mLoadDeleteSaleDetail(id_product)
 }
 </script>

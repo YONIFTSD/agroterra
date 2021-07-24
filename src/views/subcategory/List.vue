@@ -46,8 +46,6 @@
                     </td>
                     <td class="text-center">
                       <b-dropdown bloque size="sm" text="Acciones" right>
-                        
-                        <b-dropdown-item v-if="Permission('CategoryEdit')" @click="ModalCategoriesShow(item.id_category)" >Subcategorias</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('CategoryEdit')" @click="EditCategory(item.id_category)" >Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('CategoryView')" @click="ViewCategory(item.id_category)" >Ver</b-dropdown-item >
                         <b-dropdown-item v-if="Permission('CategoryDelete')"  @click="ConfirmDeleteCategory(item.id_category)" >Eliminar</b-dropdown-item>
@@ -76,8 +74,6 @@
         </CCard>
       </CCol>
     </CRow>
-
-    <ModalSubcategories/>
   </div>
 </template>
 
@@ -86,14 +82,9 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
-import ModalSubcategories from './components/ModalSubcategories'
-import EventBus from "@/assets/js/EventBus";
 
 export default {
   name: "UsuarioList",
-  components:{
-    ModalSubcategories
-  },
   data() {
     return {
       module:'Category',
@@ -114,7 +105,6 @@ export default {
     ConfirmDeleteCategory,
     DeleteCategory,
     Permission,
-    ModalCategoriesShow,
   },
 
   computed: {
@@ -167,9 +157,6 @@ function ViewCategory(id_category) {
   });
 }
 
-function ModalCategoriesShow(id_category) {
-  EventBus.$emit('ModalAmortizationsShow',id_category);
-}
 // Confirmar eliminar
 function ConfirmDeleteCategory(id_category) {
   Swal.fire({

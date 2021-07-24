@@ -127,7 +127,7 @@ if(user_permissions.indexOf('ProductList') > -1 || user_permissions.indexOf('Cat
   if (user_permissions.indexOf('CategoryList') > -1) {
     item.push({ name: 'Categorias', to: '/categoria/listar'});
   }
-  if (user_permissions.indexOf('CategoryList') > -1) {
+  if (user_permissions.indexOf('BrandList') > -1) {
     item.push({ name: 'Marcas', to: '/marca/listar'});
   }
 

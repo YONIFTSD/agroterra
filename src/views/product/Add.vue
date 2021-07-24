@@ -23,21 +23,27 @@
                 <b-col md="9">
 
                   <b-row>
-                    <b-col md="4">
+                    <b-col md="3">
                       <b-form-group label="Categoria :">
-                        <b-form-select v-model="product.id_category" :options="categories"></b-form-select>
+                        <b-form-select @change="ListSubcategories" v-model="product.id_category" :options="categories"></b-form-select>
                         <small v-if="errors.id_category" class="form-text text-danger">Seleccione una categoria</small>
                       </b-form-group>
                     </b-col>
 
-                    <b-col md="4">
+                    <b-col md="3">
+                      <b-form-group label="Subcategoria :">
+                        <b-form-select v-model="product.id_subcategory" :options="subcategories"></b-form-select>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="3">
                       <b-form-group label="Marca :">
                         <b-form-select v-model="product.id_brand" :options="brands"></b-form-select>
                         <small v-if="errors.id_brand" class="form-text text-danger">Seleccione una marca</small>
                       </b-form-group>
                     </b-col>
 
-                    <b-col md="4">
+                    <b-col md="3">
                       <b-form-group label="Codigo:">
                         <b-form-input readonly type="text" class="text-center" ref="code" v-model="product.code"></b-form-input>
                         <small v-if="errors.code" class="form-text text-danger" >Ingrese un código</small>
@@ -204,6 +210,7 @@ export default {
       role: 2,
       product: {
         id_category: "",
+        id_subcategory: "",
         id_brand: "",
         id_provider: "",
         code: "",
@@ -231,6 +238,9 @@ export default {
       mprovider :{id:1, name:'Proveedor varios'},
       providers: [],
       categories: [],
+      subcategories:[
+        {value:'',text:'Ninguna'}
+      ],
       brands: [],
       photo: null,
       //errors
@@ -253,6 +263,7 @@ export default {
   methods: {
     onFileChange,
     ListCategories,
+    ListSubcategories,
     ListBrands,
     GetCorrelative,
     AddProduct,
@@ -367,6 +378,34 @@ function ListBrands() {
     });
 }
 
+function ListSubcategories() {
+  if (this.product.id_category.length == 0) {
+    this.subcategories = [{value:'',text:'Ninguna'}];
+    this.product.id_subcategory = '';
+    return false;
+  }
+  let me = this;
+  let url = this.url_base + "active-subcategories/"+this.product.id_category;
+  axios({
+    method: "GET",
+    url: url,
+    headers: {
+      token: this.token,
+    },
+  })
+    .then(function (response) {
+      me.subcategories = [{value:'',text:'Ninguna'}];
+      if (response.data.status == 200) {
+        for (let index = 0; index < response.data.result.length; index++) {
+          const element = response.data.result[index];
+           me.subcategories.push({value:element.id_subcategory,text:element.name});
+        }
+      }
+    })
+}
+
+
+
 function AddProduct(_this) {
  
 
@@ -375,6 +414,7 @@ function AddProduct(_this) {
 
   let data = new FormData();
   data.append("id_category", this.product.id_category);
+  data.append("id_subcategory", this.product.id_subcategory);
   data.append("id_brand", this.product.id_brand);
   data.append("id_provider", me.mprovider.id);
   data.append("code", this.product.code);
@@ -410,6 +450,7 @@ function AddProduct(_this) {
     .then(function (response) {
       if (response.data.status == 201) {
         me.product.id_category = "";
+        me.product.id_subcategory = "";
         me.product.id_brand = "";
         me.mprovider = {id:1, name:'Proveedor varios'};
         me.product.code = "";

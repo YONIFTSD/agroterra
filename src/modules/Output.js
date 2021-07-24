@@ -26,25 +26,15 @@ const actions = {
         
     },
 
-    mLoadEditOutputDetail(context,id_product){
+    mLoadEditOutputDetail(context,index){
         let detail = context.state.output_detail;
-        for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_product == id_product) {
-                detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity) ;
-                break;
-            }
-        }
+        detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity) ;
+          
     },
 
-    mLoadDeleteOutputDetail(context,id_product){
-        let detail = context.state.output_detail;
-
-        for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_product == id_product) {
-                context.commit('mDeleteOutputDetail',index);
-                break;
-            }
-        }
+    mLoadDeleteOutputDetail(context,index){
+        context.commit('mDeleteOutputDetail',index);
+         
     },
 
     mLoadResetOutputDetail(context){

@@ -76,9 +76,9 @@
                     </td>
                     <td class="text-center">
                       <b-dropdown bloque size="sm" text="Acciones" right>
-                        <b-dropdown-item v-if="Permission('PurchaseExpensesEdit')" @click="EditPurchaseExpenses(item.id_purchase_expenses)">Editar</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('PurchaseExpensesEdit') && item.state == 1" @click="EditPurchaseExpenses(item.id_purchase_expenses)">Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('PurchaseExpensesView')" @click="ViewPurchaseExpenses(item.id_purchase_expenses)" >Ver</b-dropdown-item>
-                        <b-dropdown-item v-if="Permission('PurchaseExpensesDelete')" @click="ConfirmDeletePurchaseExpenses(item.id_purchase_expenses)">Eliminar</b-dropdown-item >
+                        <b-dropdown-item v-if="Permission('PurchaseExpensesDelete')  && item.state == 1" @click="ConfirmDeletePurchaseExpenses(item.id_purchase_expenses)">Eliminar</b-dropdown-item >
                       </b-dropdown>
                     </td>
                   </tr>

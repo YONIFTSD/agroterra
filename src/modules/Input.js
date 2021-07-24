@@ -26,25 +26,13 @@ const actions = {
         
     },
 
-    mLoadEditInputDetail(context,id_product){
+    mLoadEditInputDetail(context,index){
         let detail = context.state.input_detail;
-        for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_product == id_product) {
-                detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity) ;
-                break;
-            }
-        }
+        detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity) ;
     },
 
-    mLoadDeleteInputDetail(context,id_product){
-        let detail = context.state.input_detail;
-
-        for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_product == id_product) {
-                context.commit('mDeleteInputDetail',index);
-                break;
-            }
-        }
+    mLoadDeleteInputDetail(context,index){
+        context.commit('mDeleteInputDetail',index);
     },
 
     mLoadResetInputDetail(context){

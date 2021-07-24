@@ -5,7 +5,7 @@ import router from './router'
 import CoreuiVue from '@coreui/vue'
 import { iconsSet as icons } from './assets/icons/icons.js'
 import store from './store'
-
+import Notifications from 'vue-notification'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 import "@fortawesome/fontawesome-free/css/all.css";
@@ -16,7 +16,7 @@ import "@fortawesome/fontawesome-free/js/all.js";
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
-
+Vue.use(Notifications)
 
 //zoomm
 

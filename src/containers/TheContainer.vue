@@ -14,6 +14,7 @@
       </div>
       <TheFooter/>
     </CWrapper>
+    <notifications group="alert" animation-name="v-fade-left" position="top left" :speed="500" />
   </div>
 </template>
 

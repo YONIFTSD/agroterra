@@ -1123,7 +1123,7 @@ function configRoutes() {
         
         {
           path: "existencias",
-          name: "StockGeneralList",
+          name: "KardexExistenceList",
           component: () => import("@/views/kardex/KardexExistence"),
           beforeEnter: userGuard,
         },

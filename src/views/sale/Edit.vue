@@ -10,15 +10,22 @@
             <b-form id="Form" @submit.prevent="Validate">
               <b-row>
        
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group>
                     <b-form-select v-model="sale.id_warehouse" :options="warehouses"></b-form-select>
                     <small  v-if="errors.id_warehouse"  class="form-text text-danger">Seleccione un almacen</small>
                   </b-form-group>
                 </b-col>
 
+                <b-col md="2">
+                  <b-form-group>
+                    <b-form-select v-model="sale.coin" :options="coins"></b-form-select>
+                    <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
+                  </b-form-group>
+                </b-col>
+
                 <b-col md="6"></b-col>
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group>
                     <b-button class="form-control btn btn-info" @click="modalProducts">Agregar Productos</b-button>
                   </b-form-group>
@@ -31,24 +38,30 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group label="Serie :">
                     <b-form-input class="text-center" disabled type="text" ref="serie"  v-model="sale.serie"></b-form-input>
                     <small v-if="errors.id_serie"  class="form-text text-danger" >Seleccione una serie</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group label="Numero :">
                     <b-form-input class="text-center" disabled type="text" ref="number"  v-model="sale.number"></b-form-input>
                     <small v-if="errors.number" class="form-text text-danger">Ingrese un numero de 8 digitos</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
+                <b-col md="2">
                   <b-form-group label="Fecha Emision:">
                     <b-form-input disabled class="text-center" type="date" ref="broadcast_date" v-model="sale.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="3">
+                  <b-form-group label="Forma de Pago :">
+                    <b-form-select v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
                   </b-form-group>
                 </b-col>
 
@@ -57,23 +70,21 @@
                 <b-col md="6">
                   <b-form-group>
                     <label>Cliente: <span @click="modalClients" class="text-info link">Nuevo</span></label>
-                    <v-select placeholder="Seleccione un cliente" class="w-100" :filterable="false" label="full_name" v-model="client" @search="SearchClients" :options="clients"></v-select>
+                    <v-select @input="AddressClient" placeholder="Seleccione un cliente" class="w-100" :filterable="false" label="full_name" v-model="client" @search="SearchClients" :options="clients"></v-select>
                     <small v-if="errors.id_client" class="form-text text-danger" >Selccione un cliente</small>
                   </b-form-group>
                 </b-col>
 
-                 <b-col md="3">
-                  <b-form-group label="Moneda :">
-                    <b-form-select v-model="sale.coin" :options="coins"></b-form-select>
-                    <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
+                <b-col md="6">
+                  <b-form-group label="Dirección :">
+                    <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
+                    <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
 
-                 <b-col md="3">
-                  <b-form-group label="Forma de Pago :">
-                    <b-form-select v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
-                  </b-form-group>
-                </b-col>
+                 
+
+                 
 
 
                 
@@ -96,27 +107,27 @@
                   </b-form-group>
                   <b-row>
                     <b-col md="6">
-                      <b-form-group label="Observación:">
-                        <b-form-textarea rows="1"  v-model="sale.observation" max-rows="2"></b-form-textarea>
-                      </b-form-group>
-                    </b-col>
-                    <b-col md="6">
                         <div class="table-responsive mt-3">
                           <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                             <thead>
                               <tr>
                                 <th width="25%" class="text-center">Fecha</th>
-                                <th width="75%" class="text-center">Refenrencia</th>
+                                <th width="75%" class="text-center">Referencia</th>
                               </tr>
                             </thead>
                             <tbody v-for="(item, it) in sale.linkages" :key="it">
                               <tr>
                                   <td class="align-middle text-center">{{ item.broadcast_date }}</td>
-                                  <td class="align-middle text-center">{{ item.reference }}</td>
+                                  <td class="align-middle text-center">{{ item.reference + " " + (sale.reason != "" ? " - "+CodeReasor(sale.type_invoice,sale.reason) : "")}}</td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
+                    </b-col>
+                    <b-col md="6">
+                      <b-form-group label="Observación:">
+                        <b-form-textarea rows="1"  v-model="sale.observation" max-rows="2"></b-form-textarea>
+                      </b-form-group>
                     </b-col>
                   </b-row>
                 </b-col>
@@ -202,7 +213,7 @@ var moment = require("moment");
 import EventBus from '@/assets/js/EventBus';
 import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
-
+import CodeToName from "@/assets/js/CodeToName";
 
 // components
 import ModalClients from './../components/ModalClient'
@@ -240,6 +251,7 @@ export default {
         expiration_date: moment(new Date()).local().format("YYYY-MM-DD"),
         web_pay: 0,
         coin: "PEN",
+        address: "",
         way_to_pay: "01-008",
         payment_type: "01",
         payment_method: "008",
@@ -286,6 +298,8 @@ export default {
       type_invoice:[
         {value: "01", text : "Factura"},
         {value: "03", text : "Boleta de Venta"},
+        {value: "07", text : "Nota de Crédito"},
+        {value: "08", text : "Nota de Dédito"},
         {value: "NV", text : "Nota de Venta"},
       ],
       coins:[
@@ -334,6 +348,7 @@ export default {
     
     SearchClients,
     ListWarehouses,
+    AddressClient,
 
     modalProducts,
     modalClients,
@@ -341,6 +356,8 @@ export default {
     ViewSale,
     EditSale,
     Validate,
+
+     CodeReasor,
 
     showModalSaleLow,
     ValidateSaleLow,
@@ -372,6 +389,29 @@ export default {
     }
   },
 };
+
+function CodeReasor(type_invoice,code) {
+  return CodeToName.NameReasonNCD(type_invoice,code);
+}
+
+function AddressClient() {
+  if (this.client == null) {
+    this.sale.address = '';
+    return false;
+  }
+  let me = this;
+  let url = this.url_base + "client/view/"+this.client.id;
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: this.role, },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.sale.address = response.data.result.address;
+      } 
+    })
+}
 
 function showModalSaleLow() {
   if (this.sale.type_invoice == '01' || this.sale.type_invoice == '03' || this.sale.type_invoice == '07' || this.sale.type_invoice == '08' ) {
@@ -510,6 +550,7 @@ function ViewSale() {
         me.sale.expiration_date = response.data.result.expiration_date;
         me.sale.web_pay = response.data.result.web_pay;
         me.sale.coin = response.data.result.coin;
+        me.sale.address = response.data.result.address;
         if (response.data.result.payment_type == "01") {
           me.sale.way_to_pay = response.data.result.payment_type+'-'+response.data.result.payment_method;
         }else{

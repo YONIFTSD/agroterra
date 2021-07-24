@@ -110,10 +110,28 @@ export default {
 
 
 function EditDetail(id_product) {
+  let name = '';
+  for (let index = 0; index < this.shopping_detail.length; index++) {
+    const element = this.shopping_detail[index];
+    if (element.id_product == id_product) {
+      name = element.name + ' - ' +element.presentation;
+      break;
+    }
+  }
+  this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha modificado el producto ' + name, type: 'warn'})
   this.mLoadEditShoppingDetail(id_product)
 }
 
 function DeleteDetail(id_product) {
-this.mLoadDeleteShoppingDetail(id_product)
+  let name = '';
+  for (let index = 0; index < this.shopping_detail.length; index++) {
+    const element = this.shopping_detail[index];
+    if (element.id_product == id_product) {
+      name = element.name + ' - ' +element.presentation;
+      break;
+    }
+  }
+  this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha eliminado el producto ' + name, type: 'warn'})
+  this.mLoadDeleteShoppingDetail(id_product)
 }
 </script>

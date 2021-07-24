@@ -178,7 +178,7 @@ function AddProduct(id_product) {
         }
         
         me.mLoadAddRequirementDetail(detail);
-
+        
         
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})

@@ -129,10 +129,7 @@ export default {
       this.totalRows = filteredItems.length
       this.currentPage = 1
     },
-    EditDetail,
-    DeleteDetail,
-    ...mapActions('InitialKardex',['mLoadEditInitialKardexDetail']),
-    ...mapActions('InitialKardex',['mLoadDeleteInitialKardexDetail']),
+
     
   },
   computed: {
@@ -159,11 +156,5 @@ export default {
 };
 
 
-function EditDetail(index) {
-  this.mLoadEditRequirementDetail(index)
-}
 
-function DeleteDetail(index) {
-this.mLoadDeleteRequirementDetail(index)
-}
 </script>

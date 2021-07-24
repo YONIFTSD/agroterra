@@ -221,7 +221,7 @@ function AddProduct(id_product) {
         }
         
         me.mLoadAddSaleDetail(detail);
-
+        me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado el producto '+detail.name + ' - '+detail.presentation , type: 'success'});
         
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})

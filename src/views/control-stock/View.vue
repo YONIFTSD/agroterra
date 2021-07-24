@@ -70,7 +70,7 @@
                         <span>{{ row.item.code }}</span>
                       </template>
                       <template #cell(name)="row">
-                        <span class="text-left">{{ row.item.name }}</span>
+                        <span class="text-left">{{ row.item.name  }}</span>
                       </template>
                       <template #cell(stock)="row">
                         <span class="text-left">{{ row.item.stock }}</span>
