@@ -331,7 +331,7 @@ export default {
       proration_type: [
         { value: '',text:'Seleccione una opción'},
         { value: '1',text:'Costeo por Bulto'},
-        // { value: '2',text:'Peso Bruto'},
+        { value: '2',text:'Peso Bruto'},
         { value: '3',text:'Unidades'},
         { value: '4',text:'Valor del producto'},
       ],
@@ -564,6 +564,8 @@ function ViewShopping() {
                 coin : details[index].coin,
                 exchange_rate : details[index].exchange_rate,
                 quantity : details[index].quantity,
+                gross_weight : details[index].gross_weight,
+                
 
                 net_unit_value : (parseFloat(details[index].exchange_rate) * parseFloat(details[index].net_unit_value)).toFixed(2),
                 unit_igv : (parseFloat(details[index].exchange_rate) * parseFloat(details[index].unit_igv)).toFixed(2),

@@ -4,7 +4,7 @@
       <CCol col>
         <CCard>
           <CCardHeader>
-            <strong> Modulo Portadas - Nuevo</strong>
+            <strong> Modulo Promociones - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
             <b-form id="Form" @submit.prevent="Validate">
@@ -13,14 +13,14 @@
           
                 <b-col md="3">
                   <b-form-group label="Titulo:">
-                    <b-form-input type="text" ref="name" v-model="cover_page.title"></b-form-input>
+                    <b-form-input type="text" ref="name" v-model="promotion.title"></b-form-input>
                     <small v-if="errors.title" class="form-text text-danger">Ingrese un titulo</small>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="3">
                   <b-form-group label="Url:">
-                    <b-form-input type="text" ref="name" v-model="cover_page.url"></b-form-input>
+                    <b-form-input type="text" ref="name" v-model="promotion.url"></b-form-input>
                     <small v-if="errors.url" class="form-text text-danger">Ingrese una url</small>
                   </b-form-group>
                 </b-col>
@@ -34,7 +34,7 @@
       
                 <b-col md="2">
                   <b-form-group label="Estado :" label-for="input-1">
-                    <select ref="state" v-model="cover_page.state" class="form-control">
+                    <select ref="state" v-model="promotion.state" class="form-control">
                       <option value="1">Activo</option>
                       <option value="0">Inactivo</option>
                     </select>
@@ -75,7 +75,7 @@ export default {
   data() {
     return {
       module: 'WebPage',
-      cover_page: {
+      promotion: {
         name: "",
         url: '',
         photo: "",
@@ -108,19 +108,19 @@ export default {
   },
 };
 function onFileChange(e) {
-  this.cover_page.photo = e.target.files[0];
+  this.promotion.photo = e.target.files[0];
 }
 
 function AddCoverPage(_this) {
 
   let me = _this;
-  let url = me.url_base + "cover-page/add";
+  let url = me.url_base + "promotion/add";
   let data = new FormData();
 
-  data.append("title", me.cover_page.title);
-  data.append("url", me.cover_page.url);
-  data.append("photo", me.cover_page.photo);
-  data.append("state", me.cover_page.state);
+  data.append("title", me.promotion.title);
+  data.append("url", me.promotion.url);
+  data.append("photo", me.promotion.photo);
+  data.append("state", me.promotion.state);
 
   axios({
     method: "POST",
@@ -135,12 +135,12 @@ function AddCoverPage(_this) {
   })
     .then(function (response) {
       if (response.data.status == 201) {
-        me.cover_page.title = "";
-        me.cover_page.url = "";
-        me.cover_page.photo = "";
-        me.cover_page.state = 1;
+        me.promotion.title = "";
+        me.promotion.url = "";
+        me.promotion.photo = "";
+        me.promotion.state = 1;
         me.photo = null;
-        Swal.fire({ icon: 'success', text: 'Se ha registrado la nueva portada', timer: 3000,})
+        Swal.fire({ icon: 'success', text: 'Se ha registrado la nueva promocion', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
@@ -152,9 +152,9 @@ function AddCoverPage(_this) {
 
 function Validate() {
 
-  this.errors.title = this.cover_page.title.length == 0 ? true : false;
+  this.errors.title = this.promotion.title.length == 0 ? true : false;
   this.errors.photo = this.photo == null ? true : false;
-  this.errors.state = this.cover_page.state.length == 0 ? true : false;
+  this.errors.state = this.promotion.state.length == 0 ? true : false;
   
   if (this.errors.title) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.photo) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
@@ -165,7 +165,7 @@ function Validate() {
 
   if (!this.validate) {
     Swal.fire({
-      title: "Esta seguro de registrar la portada?",
+      title: "Esta seguro de registrar la promoción?",
       text: "",
       icon: "warning",
       showCancelButton: true,

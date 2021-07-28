@@ -86,7 +86,7 @@ export default {
   },
   data() {
     return {
-      module: 'CoverPage',
+      module: 'WebPage',
       cover_page: {
         id_cover_page: "",
         name: "",

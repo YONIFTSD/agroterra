@@ -579,6 +579,41 @@ function configRoutes() {
     },
 
     {
+      path: "/canje-venta",
+      redirect: "/canje-venta/listar",
+      name: "CanjeVenta",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "RedeemedSaleList",
+          component: () => import("@/views/redeemed-sale/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "RedeemedSaleAdd",
+          component: () => import("@/views/redeemed-sale/Add"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "editar/:id_redeemed_sale",
+          name: "RedeemedSaleEdit",
+          component: () => import("@/views/redeemed-sale/Edit"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ver/:id_redeemed_sale",
+          name: "RedeemedSaleView",
+          component: () => import("@/views/redeemed-sale/View"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+      ],
+    },
+
+    {
       path: "/caja",
       redirect: "/caja/listar",
       name: "Caja",
@@ -891,40 +926,7 @@ function configRoutes() {
       ],
     },
 
-    {
-      path: "/portadas",
-      redirect: "/portadas/listar",
-      name: "Portadas",
-      component: TheContainer,
-      children: [
-        {
-          path: "listar",
-          name: "CoverPageList",
-          component: () => import("@/views/cover-page/List"),
-          beforeEnter: userGuard,
-        },
-        {
-          path: "nuevo",
-          name: "CoverPageAdd",
-          component: () => import("@/views/cover-page/Add"),
-          beforeEnter: userGuard,
-        },
-        {
-          path: "editar/:id_cover_page",
-          name: "CoverPageEdit",
-          component: () => import("@/views/cover-page/Edit"),
-          props: true,
-          beforeEnter: userGuard,
-        },
-        {
-          path: "ver/:id_cover_page",
-          name: "CoverPageView",
-          component: () => import("@/views/cover-page/View"),
-          props: true,
-          beforeEnter: userGuard,
-        },
-      ],
-    },
+   
 
     {
       path: "/mantenimiento",
@@ -1355,6 +1357,120 @@ function configRoutes() {
         },
       ],
     },
+
+
+
+
+    {
+      path: "/portadas",
+      redirect: "/portadas/listar",
+      name: "Portadas",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "CoverPageList",
+          component: () => import("@/views/cover-page/List"),
+        },
+        {
+          path: "nuevo",
+          name: "CoverPageAdd",
+          component: () => import("@/views/cover-page/Add"),
+        },
+        {
+          path: "editar/:id_cover_page",
+          name: "CoverPageEdit",
+          component: () => import("@/views/cover-page/Edit"),
+          props: true,
+        },
+        {
+          path: "ver/:id_cover_page",
+          name: "CoverPageView",
+          component: () => import("@/views/cover-page/View"),
+          props: true,
+        },
+      ],
+    },
+
+    {
+      path: "/promociones",
+      redirect: "/promociones/listar",
+      name: "Promociones",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "PromotionList",
+          component: () => import("@/views/promotion/List"),
+        },
+        {
+          path: "nuevo",
+          name: "PromotionAdd",
+          component: () => import("@/views/promotion/Add"),
+        },
+        {
+          path: "editar/:id_promotion",
+          name: "PromotionEdit",
+          component: () => import("@/views/promotion/Edit"),
+          props: true,
+        },
+        {
+          path: "ver/:id_promotion",
+          name: "PromotionView",
+          component: () => import("@/views/promotion/View"),
+          props: true,
+        },
+      ],
+    },
+
+
+    {
+      path: "/comentarios",
+      redirect: "/comentarios/listar",
+      name: "Comentarios",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "CommentaryList",
+          component: () => import("@/views/commentary/List"),
+        },
+        {
+          path: "ver/:id_commentary",
+          name: "CommentaryView",
+          component: () => import("@/views/commentary/View"),
+          props: true,
+        },
+      ],
+    },
+
+    {
+      path: "/suscripciones",
+      redirect: "/suscripciones/listar",
+      name: "Suscripciones",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "SubscriptionList",
+          component: () => import("@/views/subscription/List"),
+        },
+        {
+          path: "ver/:id_subscription",
+          name: "SubscriptionView",
+          component: () => import("@/views/subscription/View"),
+          props: true,
+        },
+      ],
+    },
+
+
+
+
+
+
+
+
 
 
   ];

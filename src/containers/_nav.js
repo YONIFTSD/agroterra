@@ -10,7 +10,7 @@ var modules = [{
   icon: 'cilHome',
 }];
 
-if(user_permissions.indexOf('SaleList') > -1 || user_permissions.indexOf('OrderList') > -1 ){
+if(user_permissions.indexOf('SaleList') > -1 || user_permissions.indexOf('OrderList') > -1  || user_permissions.indexOf('RedeemedSaleList') > -1 ){
   let me = this;
   let item = [];
   if (user_permissions.indexOf('SaleList') > -1) {
@@ -19,7 +19,9 @@ if(user_permissions.indexOf('SaleList') > -1 || user_permissions.indexOf('OrderL
   if (user_permissions.indexOf('OrderList') > -1) {
     item.push({ name: 'Pedidos', to: '/pedidos/listar' });
   }
-  
+  if (user_permissions.indexOf('RedeemedSaleList') > -1) {
+    item.push({ name: 'Canje de Ventas', to: '/canje-venta/listar' });
+  }
   let TypeUser = {
     _name: 'CSidebarNavDropdown',
     name: 'Ventas',
@@ -306,6 +308,25 @@ if(user_permissions.indexOf('UserList') > -1 || user_permissions.indexOf('UserTy
   let TypeUser = {
     _name: 'CSidebarNavDropdown',
     name: 'Mantenimiento',
+    icon: 'cilCog',
+    items: item
+  }
+  modules.push(TypeUser);
+}
+
+
+
+if(user_permissions.indexOf('WebPageList') > -1){
+  let me = this;
+  let item = [];
+  item.push({ name: 'Portada',to: '/portadas/listar'});
+  item.push({ name: 'Promociones',to: '/promociones/listar'});
+  item.push({ name: 'Comentarios',to: '/comentarios/listar'});
+  item.push({ name: 'Suscripciones',to: '/suscripciones/listar'});
+
+  let TypeUser = {
+    _name: 'CSidebarNavDropdown',
+    name: 'Pagina Web',
     icon: 'cilCog',
     items: item
   }

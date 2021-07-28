@@ -130,6 +130,46 @@ const actions = {
                 context.commit('mCostingDetail',detail);
             }
 
+            if (proration_type == 2) {
+                let gross_weight = 0;
+                for (let index = 0; index < detail.length; index++) {
+                    gross_weight += parseFloat(detail[index].gross_weight);
+                }
+                let distribution_factor = parseFloat(base_expense) / parseFloat(gross_weight);
+                console.log(distribution_factor);
+                for (let index = 0; index < detail.length; index++) {
+                  detail[index].total_freight_value = parseFloat(detail[index].gross_weight) * parseFloat(distribution_factor);
+                  detail[index].unit_freight_value = distribution_factor;
+                  detail[index].total_cost = parseFloat(detail[index].net_total_value) + parseFloat(detail[index].total_freight_value);
+                  detail[index].unit_cost = parseFloat(detail[index].total_cost) / parseFloat(detail[index].quantity);
+                  
+                  if (detail[index].igv == '10') {
+                    detail[index].total_cost_igv = parseFloat(detail[index].total_cost) * parseFloat(0.18);
+                    detail[index].total_cost_final = parseFloat(detail[index].total_cost) + parseFloat(detail[index].total_cost_igv);
+                    detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
+                    detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
+                  }else{
+                    detail[index].total_cost_igv = parseFloat(detail[index].unit_freight_value) * parseFloat(0.18);
+                    detail[index].total_cost_final = parseFloat(detail[index].total_cost) + parseFloat(detail[index].total_cost_igv);
+                    detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
+                    detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
+                  }
+
+                  detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(2);
+                  detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(2);
+                  detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(2);
+                  detail[index].unit_cost_igv = parseFloat(detail[index].unit_cost_igv).toFixed(2);
+                  detail[index].unit_cost_final = parseFloat(detail[index].unit_cost_final).toFixed(2);
+                  detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(2);
+                  detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(2);
+                  detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(2);
+                  
+
+                }
+                console.log(detail)
+                context.commit('mCostingDetail',detail);
+            }
+
             if (proration_type == 3) {
                 let quantities = 0;
                 for (let index = 0; index < detail.length; index++) {
