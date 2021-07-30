@@ -84,9 +84,9 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
-                            <b-dropdown-item v-if="Permission('PaymentEdit')" @click="EditPayment(item.id_payment)">Editar</b-dropdown-item>
+                            <b-dropdown-item v-if="Permission('PaymentEdit') && item.id_credit_debit_note == 0" @click="EditPayment(item.id_payment)">Editar</b-dropdown-item>
                             <b-dropdown-item v-if="Permission('PaymentView')" @click="ViewPayment(item.id_payment)" >Ver</b-dropdown-item >
-                            <b-dropdown-item v-if="Permission('PaymentDelete')" @click="ConfirmDeletePayment(item.id_payment)">Eliminar</b-dropdown-item>
+                            <b-dropdown-item v-if="Permission('PaymentDelete') && item.id_credit_debit_note == 0" @click="ConfirmDeletePayment(item.id_payment)">Eliminar</b-dropdown-item>
                           </b-dropdown>
                         </td>
                       </tr>

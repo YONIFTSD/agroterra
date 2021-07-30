@@ -14,6 +14,7 @@ import ReferralGuide from './modules/ReferralGuide'
 import ExchangeDocument from './modules/ExchangeDocument'
 import SettlementPayment from './modules/SettlementPayment'
 import SettlementCollection from './modules/SettlementCollection'
+import CreditDebitNote from './modules/CreditDebitNote'
 
 const modules = {
   RoomControl,
@@ -29,6 +30,7 @@ const modules = {
   ExchangeDocument,
   SettlementPayment,
   SettlementCollection,
+  CreditDebitNote,
 }
 
 const state = {

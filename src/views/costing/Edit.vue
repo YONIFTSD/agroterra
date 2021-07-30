@@ -83,7 +83,6 @@
                 <!-- Detalle Entrada -->
                 <b-col md="12" class="mt-3"></b-col>
 
-
                 <b-col md="6">
                    <b-row>
                      <b-col md="12">
@@ -165,9 +164,10 @@
 
                 <b-col md="12" class="mt-3"></b-col>
 
-                <b-col md="3"></b-col>
+                <b-col md="2"></b-col>
                 <b-col md="2"><b-button type="button" @click="Proration" class="form-control text-white" variant="info" >PRORRATEAR</b-button></b-col>
                 <b-col md="2"><b-button type="button" @click="modalPurchaseExpensesShow" class="form-control text-white" variant="success" >GASTOS</b-button></b-col>
+                <b-col md="2"><b-button type="button" @click="modalCreditDebitNoteShow" variant="warning" class="form-control text-white"  >N. CRÉDITO/DÉBITO</b-button></b-col>
                 <b-col md="2"><b-button type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button></b-col>
 
               </b-row>
@@ -179,6 +179,7 @@
 
     <!-- Modal Products -->
     <ModalPurchaseExpenses />
+    <ModalCreditDebitNote />
     <!-- Modal Clients -->
     <ModalProviders />
     <!-- Modal Clients -->
@@ -208,6 +209,7 @@ import converter from "@/assets/js/NumberToLetters";
 // components
 import ModalProviders from '@/views/components/ModalProvider'
 import ModalPurchaseExpenses from './components/ModalPurchaseExpenses'
+import ModalCreditDebitNote from './components/ModalCreditDebitNote'
 import mShoppingDetail from './components/ShoppingDetail'
 import LoadingComponent from './../pages/Loading'
 import ModalExchangeRate from '@/views/components/ModalExchangeRate'
@@ -222,12 +224,13 @@ export default {
       mShoppingDetail,
       ModalProviders,
       LoadingComponent,
-      ModalExchangeRate
+      ModalExchangeRate,
+      ModalCreditDebitNote,
   },
   data() {
     return {
       isLoading:false,
-      module: 'Shopping',
+      module: 'Costing',
       role: 3,
 
       shopping: {
@@ -376,6 +379,7 @@ export default {
     ViewShopping,
     SearchProvider,
     modalPurchaseExpensesShow,
+    modalCreditDebitNoteShow,
     modalProviders,
     modalExachangeRate,
     NumberPadStart,
@@ -618,6 +622,15 @@ function modalPurchaseExpensesShow() {
   EventBus.$emit('ModalPurchaseExpensesShow',this.role);
 }
 
+function modalCreditDebitNoteShow() {
+  let data = {
+    role : this.role,
+    provider : this.provider,
+  }
+  EventBus.$emit('ModalCreditDebitNoteShow',data);
+}
+
+
 function modalProviders() {
   EventBus.$emit('ModalProvidersShow');
 }
@@ -666,6 +679,9 @@ function EditCosting(mthis) {
   })
     .then(function (response) {
       if (response.data.status == 200) {
+        me.$router.push({
+          name: "CostingList",
+        });
         Swal.fire({ icon: 'success', text: 'Se ha costeado la compra',  timer: 2000, })
       } else {
         Swal.fire({  icon: 'error',  title: 'Oops...',  text: response.data.response,})

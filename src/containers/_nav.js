@@ -162,9 +162,9 @@ if(user_permissions.indexOf('ShoppingList') > -1 || user_permissions.indexOf('Co
     item.push({ name: 'Gastos', to: '/gastos-compra/listar'});
   }
 
-  // if (user_permissions.indexOf('CreditDebitNoteList') > -1) {
-  //   item.push({ name: 'Nota de Crédito/Débito', to: '/nota-compra/listar'});
-  // }
+  if (user_permissions.indexOf('CreditDebitNoteList') > -1) {
+    item.push({ name: 'Nota de Crédito/Débito', to: '/nota-compra/listar'});
+  }
 
   let TypeUser = {
     _name: 'CSidebarNavDropdown',
@@ -252,7 +252,8 @@ if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('Cont
 }
 
 
-if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('ReportSaleDetailList') > -1 || user_permissions.indexOf('ReportShoppingList') > -1 || user_permissions.indexOf('ReportShoppingDetailList') > -1){
+if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('ReportSaleDetailList') > -1 || 
+  user_permissions.indexOf('ReportShoppingList') > -1 || user_permissions.indexOf('ReportShoppingDetailList') > -1){
   let me = this;
   let item = [];
   if (user_permissions.indexOf('ReportSaleList') > -1) {
@@ -266,6 +267,9 @@ if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('
   }
   if (user_permissions.indexOf('ReportShoppingDetailList') > -1) {
     item.push({ name: 'Detalle de Compra', to: '/reporte/compra-detallado'});
+  }
+  if (user_permissions.indexOf('ReportCommissionableProductsList') > -1) {
+    item.push({ name: 'Prod. Comisionables', to: '/reporte/productos-comisionables'});
   }
 
 
@@ -298,10 +302,6 @@ if(user_permissions.indexOf('UserList') > -1 || user_permissions.indexOf('UserTy
     item.push({ name: 'Establecimiento',to: '/establecimiento/listar'});
   }
 
-  // if (user_permissions.indexOf('CoverPageList') > -1) {
-  //   item.push({ name: 'Portada',to: '/portadas/listar'});
-  // }
-
   if (user_permissions.indexOf('BusinessList') > -1) {
     item.push({name: 'Empresa',to: '/empresa/editar'});
   }
@@ -327,7 +327,7 @@ if(user_permissions.indexOf('WebPageList') > -1){
   let TypeUser = {
     _name: 'CSidebarNavDropdown',
     name: 'Pagina Web',
-    icon: 'cilCog',
+    icon: 'cilStar',
     items: item
   }
   modules.push(TypeUser);

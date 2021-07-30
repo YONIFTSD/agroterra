@@ -1,26 +1,26 @@
 <template>
   <div>
-    <b-modal size="xl" hide-footer v-model="modalPurchaseExpenses" class="w-100" title="Gastos de Compra">
+    <b-modal size="xl" hide-footer v-model="modalCreditDebitNote" class="w-100" title="Nota de Crédito/Débito de Compra">
 
 
       <b-row>
               <b-col sm="12" md="6">
                 <b-form-group>
                   <label>Proveedor: </label>
-                  <v-select @input="ListPurchaseExpenses" placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider" @search="SearchProvider" :options="providers"></v-select>
+                  <v-select disabled @input="ListCreditDebitNote" placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider" @search="SearchProvider" :options="providers"></v-select>
                 </b-form-group>
               </b-col>
 
               <b-col sm="12" md="2">
                 <b-form-group label="Desde :">
-                  <b-form-input @change="ListPurchaseExpenses" class="text-center" :max="to" type="date"  ref="to" v-model="from"></b-form-input>
+                  <b-form-input @change="ListCreditDebitNote" class="text-center" :max="to" type="date"  ref="to" v-model="from"></b-form-input>
                   <small v-if="errors.from" class="form-text text-danger" >Selccione una fecha</small>
                 </b-form-group>
               </b-col>
 
               <b-col sm="12" md="2">
                 <b-form-group label="Hasta :">
-                  <b-form-input @change="ListPurchaseExpenses" class="text-center" :min="from" type="date"  ref="from" v-model="to"></b-form-input>
+                  <b-form-input @change="ListCreditDebitNote" class="text-center" :min="from" type="date"  ref="from" v-model="to"></b-form-input>
                   <small v-if="errors.to" class="form-text text-danger" >Selccione una fecha</small>
                 </b-form-group>
               </b-col>
@@ -30,7 +30,7 @@
                   <b-input-group>
                   <b-form-input v-model="search" class="form-control"></b-form-input>
                   <b-input-group-append>
-                    <b-button variant="primary" @click="ListPurchaseExpenses"><b-icon icon="search"></b-icon></b-button>
+                    <b-button variant="primary" @click="ListCreditDebitNote"><b-icon icon="search"></b-icon></b-button>
                   </b-input-group-append>
                 </b-input-group>
                 </b-form-group>
@@ -66,10 +66,10 @@
                     <td class="text-right"> {{ item.igv  }}</td>
                     <td class="text-right"> {{ item.total  }}</td>
                     <td class="text-center">
-                    <input type="number" step="any" :value="AmountPEN(item.exchange_rate,item.total)" :ref="'mPETotal'+item.id_purchase_expenses" class="form-control text-right">
+                    <input type="number" step="any" :value="AmountPEN(item.exchange_rate,item.total)" :ref="'mPETotal'+item.id_credit_debit_note" class="form-control text-right">
                   </td>
                     <td class="text-center">
-                      <button type="button" @click="AddPurchaseExpenses(item.id_purchase_expenses)" class="btn btn-info">
+                      <button type="button" @click="AddPurchaseExpenses(item.id_credit_debit_note)" class="btn btn-info">
                         <i class="fas fa-plus-square"></i>
                       </button>
                     </td>
@@ -80,7 +80,7 @@
 
             <b-row class="mt-4">
               <b-col md="8">
-                <b-pagination v-model="currentPage"  v-on:input="ListPurchaseExpenses" :total-rows="rows" :per-page="perPage" align="center"></b-pagination>
+                <b-pagination v-model="currentPage"  v-on:input="ListCreditDebitNote" :total-rows="rows" :per-page="perPage" align="center"></b-pagination>
               </b-col>
               <b-col md="4 text-center"><p>Pagina Actual: {{ currentPage }}</p></b-col>
             </b-row>
@@ -116,7 +116,7 @@ export default {
   },
   data() {
     return {
-        modalPurchaseExpenses: false,
+        modalCreditDebitNote: false,
         role: 0,
         module:'Costing',
         perPage: 15,
@@ -138,15 +138,17 @@ export default {
     };
   },
   mounted () {
-    EventBus.$on('ModalPurchaseExpensesShow', (role) => {
-      this.modalPurchaseExpenses = true;
-      this.role = role;
-      this.ListPurchaseExpenses();
+    EventBus.$on('ModalCreditDebitNoteShow', (data) => {
+      console.log(data);
+      this.modalCreditDebitNote = true;
+      this.role = data.role;
+      this.provider = data.provider;
+      this.ListCreditDebitNote();
     });
     
   },
   methods: {
-      ListPurchaseExpenses,
+      ListCreditDebitNote,
       CodeInvoice,
       SearchProvider,
       AmountPEN,
@@ -198,7 +200,7 @@ function CodeInvoice(code) {
   return CodeToName.CodeInvoice(code);
 }
 //listar usuario
-function ListPurchaseExpenses() {
+function ListCreditDebitNote() {
   this.errors.from = false;
   this.errors.to = false;
 
@@ -208,7 +210,7 @@ function ListPurchaseExpenses() {
   let search = this.search == "" ? "all" : this.search;
 
   let me = this;
-  let url = this.url_base + "purchase-expenses/list/" + id_provider + "/" + this.from + "/" + this.to + "/" + this.id_establishment + "/" + search + "?page=" + this.currentPage;
+  let url = this.url_base + "credit-debit-note/list/" + id_provider + "/" + this.from + "/" + this.to + "/" + this.id_establishment + "/" + search + "?page=" + this.currentPage;
 
   axios({
     method: "GET",
@@ -229,12 +231,12 @@ function ListPurchaseExpenses() {
 }
 
 
-function AddPurchaseExpenses(id_purchase_expenses) {
+function AddPurchaseExpenses(id_credit_debit_note) {
   
-  let total = this.$refs['mPETotal'+id_purchase_expenses][0]['value'];
+  let total = this.$refs['mPETotal'+id_credit_debit_note][0]['value'];
 
   let me = this;
-  let url = this.url_base + "purchase-expenses/view/"+id_purchase_expenses;
+  let url = this.url_base + "credit-debit-note/view/"+id_credit_debit_note;
 
   axios({
     method: "GET",
@@ -246,14 +248,14 @@ function AddPurchaseExpenses(id_purchase_expenses) {
       if (response.data.status == 200) {
         
         let detail = {
-          reason : 'Gastos',
-          module: 'PurchaseExpense',
-          id_module : response.data.result.id_purchase_expenses,
-          type_invoice : response.data.result.type_invoice,
-          serie : response.data.result.serie,
-          number : response.data.result.number,
-          broadcast_date : response.data.result.broadcast_date,
-          coin : response.data.result.coin,
+          reason : 'Nota de Crédito/Débito',
+          module: 'CreditDebitNote',
+          id_module : response.data.result.credit_debit_note.id_credit_debit_note,
+          type_invoice : response.data.result.credit_debit_note.type_invoice,
+          serie : response.data.result.credit_debit_note.serie,
+          number : response.data.result.credit_debit_note.number,
+          broadcast_date : response.data.result.credit_debit_note.broadcast_date,
+          coin : response.data.result.credit_debit_note.coin,
           total : parseFloat(total).toFixed(2),
         }
 

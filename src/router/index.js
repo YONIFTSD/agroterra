@@ -537,6 +537,42 @@ function configRoutes() {
       ],
     },
 
+
+    {
+      path: "/nota-compra",
+      redirect: "/nota-compra/listar",
+      name: "NotaCompra",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "CreditDebitNoteList",
+          component: () => import("@/views/credit-debit-note/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "CreditDebitNoteAdd",
+          component: () => import("@/views/credit-debit-note/Add"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "editar/:id_credit_debit_note",
+          name: "CreditDebitNoteEdit",
+          component: () => import("@/views/credit-debit-note/Edit"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ver/:id_credit_debit_note",
+          name: "CreditDebitNoteView",
+          component: () => import("@/views/credit-debit-note/View"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+      ],
+    },
+
     {
       path: "/venta",
       redirect: "/venta/listar",
@@ -1352,6 +1388,13 @@ function configRoutes() {
           path: "compra-detallado",
           name: "ReportShoppingDetailList",
           component: () => import("@/views/report/ShoppingDetail"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "productos-comisionables",
+          name: "ReportCommissionableProductsList",
+          component: () => import("@/views/report/CommissionableProducts"),
           props: true,
           beforeEnter: userGuard,
         },

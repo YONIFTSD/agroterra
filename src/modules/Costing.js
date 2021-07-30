@@ -291,7 +291,7 @@ const actions = {
         let validate = true;
         let detail = context.state.expenses;
         for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_purchase_expenses == expenses.id_purchase_expenses) {
+            if (detail[index].module == expenses.module && detail[index].id_module == expenses.id_module) {
                 validate = false;
                 break;
             }
@@ -317,7 +317,19 @@ const actions = {
         let detail = context.state.expenses;
         let total = 0;
         for (let index = 0; index < detail.length; index++) {
-            total += parseFloat(detail[index].total);
+            if (detail[index].module == "PurchaseExpense") {
+                total += parseFloat(detail[index].total);
+            }
+            if (detail[index].module == "CreditDebitNote") {
+                if (detail[index].type_invoice == "07") {
+                    total -= parseFloat(detail[index].total);  
+                }
+                if (detail[index].type_invoice == "08") {
+                    total += parseFloat(detail[index].total);  
+                }
+                
+            }
+            
         }
         context.commit('mInvoiceExpensesValueCosting',total);
         context.dispatch('mLoadTotalsCostingDetail');
