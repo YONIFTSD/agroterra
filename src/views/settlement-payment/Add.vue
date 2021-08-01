@@ -207,7 +207,7 @@
                     </b-col>
                     <b-col md="2">
                       <b-form-group class="mt-2">
-                        <b-button  variant="dark" class="form-control" type="submit">GUARDAR</b-button>
+                        <b-button  variant="dark" class="form-control" type="submit"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -219,7 +219,7 @@
 
                 <!-- <b-col md="3"></b-col>
                 <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                  <b-button type="submit" class="form-control btn-primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col> -->
               </b-row>
             </b-form>

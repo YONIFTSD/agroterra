@@ -78,7 +78,7 @@
                       <b-col md="5"></b-col>
                       <b-col md="2">
                         <b-form-group class="mt-2">
-                          <b-button @click="toNext" variant="primary" class="form-control" type="button">SIGUIENTE <i class="fas fa-arrow-circle-right"></i></b-button>
+                          <b-button @click="toNext" variant="primary" class="form-control" type="button">Siguiente <i class="fas fa-arrow-circle-right"></i></b-button>
                         </b-form-group>
                       </b-col>
 
@@ -195,17 +195,17 @@
                     <b-col md="3"></b-col>
                     <b-col md="2">
                       <b-form-group class="mt-2">
-                        <b-button @click="toBack" variant="primary" class="form-control" type="button"><i class="fas fa-arrow-alt-circle-left"></i> REGRESAR</b-button>
+                        <b-button @click="toBack" variant="primary" class="form-control" type="button"><i class="fas fa-arrow-alt-circle-left"></i> Regresar</b-button>
                       </b-form-group>
                     </b-col>
                     <b-col md="2">
                       <b-form-group class="mt-2">
-                        <b-button variant="info" @click="ModalBillExchangeShow" class="form-control" type="button">AGREGAR LETRA</b-button>
+                        <b-button variant="info" @click="ModalBillExchangeShow" class="form-control" type="button">Letras</b-button>
                       </b-form-group>
                     </b-col>
                     <b-col md="2">
                       <b-form-group class="mt-2">
-                        <b-button  variant="dark" class="form-control" type="submit">GUARDAR</b-button>
+                        <b-button  variant="dark" class="form-control" type="submit"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                       </b-form-group>
                     </b-col>
                   </b-row>
@@ -217,7 +217,7 @@
 
                 <!-- <b-col md="3"></b-col>
                 <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                  <b-button type="submit" class="form-control btn-primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col> -->
               </b-row>
             </b-form>
@@ -230,6 +230,8 @@
     <ModalProviders />
     <ModalAccountPay />
     <ModalBillExchange />
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -252,6 +254,7 @@ import CodeToName from "@/assets/js/CodeToName";
 import ModalProviders from './../components/ModalProvider'
 import ModalAccountPay from './components/ModalAccountPay'
 import ModalBillExchange from './components/ModalBillExchange'
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "UsuarioAdd",
@@ -260,9 +263,12 @@ export default {
       ModalProviders,
       ModalAccountPay,
       ModalBillExchange,
+      Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'AccountReceivable',
       role: 2,
       tabIndex: 0,
@@ -428,7 +434,7 @@ function AddExchangeDocument(me) {
   me.exchange_document.total = me.mexchange_document.total;
   let url = me.url_base + "exchange-document/add";
   let data = me.exchange_document;
-
+  me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -454,9 +460,11 @@ function AddExchangeDocument(me) {
       }else{
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

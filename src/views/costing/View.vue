@@ -200,11 +200,9 @@
 
                 <b-col md="12" class="mt-3"></b-col>
 
-                <b-col md="4"></b-col>
-
-                
-                <b-col md="4">
-                  <b-link class="btn form-control btn-primary" :to="{ path: '/costeo/listar' }" append >REGRESAR</b-link>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-link class="btn form-control btn-primary" :to="{ path: '/costeo/listar' }" append >Regresar</b-link>
                   </b-col>
 
               </b-row>
@@ -507,6 +505,7 @@ function ViewShopping() {
   let id_shopping = je.decrypt(this.id_shopping);
   let me = this;
   let url = this.url_base + "shopping/view/" + id_shopping;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -568,6 +567,7 @@ function ViewShopping() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
 }
 

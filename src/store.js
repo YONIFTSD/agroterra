@@ -35,7 +35,7 @@ const modules = {
 
 const state = {
   sidebarShow: 'responsive',
-  sidebarMinimize: true,
+  sidebarMinimize: false,
   // url_base: 'https://dev.sertaads.com/api/',
    url_base: 'https://agroterra.reyfact.com/api/',
   //  url_base: 'https://agrofrontera.reyfact.com/api/',

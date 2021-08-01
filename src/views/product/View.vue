@@ -166,9 +166,9 @@
 
                         
 
-                        <b-col md="3"></b-col>
-                        <b-col md="6">
-                          
+                        <b-col md="5"></b-col>
+                        <b-col md="2">
+                  
                           <b-link  class="btn form-control btn-primary" :to="{ path: '/producto/listar' }" append >REGRESAR</b-link>
                         </b-col>
 
@@ -183,6 +183,8 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -195,15 +197,18 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "ProductEdit",
   props: ["id_product"],
   components:{
       vSelect,
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: "Product",
       role: 3,
      product: {
@@ -383,7 +388,7 @@ function ViewProduct() {
   let id_product = je.decrypt(this.id_product);
   let me = this;
   let url = this.url_base + "product/view/" + id_product;
-
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -426,9 +431,12 @@ function ViewProduct() {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

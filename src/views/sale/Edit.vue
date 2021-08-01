@@ -27,7 +27,7 @@
                 <b-col md="6"></b-col>
                 <b-col md="2">
                   <b-form-group>
-                    <b-button class="form-control btn btn-info" @click="modalProducts">Agregar Productos</b-button>
+                    <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
              
@@ -156,7 +156,7 @@
                   <b-button type="button" :disabled="sale.state == 6" @click="showModalSaleLow" class="form-control" variant="danger" >DAR DE BAJA</b-button>
                 </b-col> -->
                 <b-col md="2">
-                  <b-button  type="submit" class="form-control" variant="primary" >GUARDAR</b-button>
+                  <b-button  type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -195,6 +195,9 @@
       </b-form>
     </b-modal>
 
+
+    <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -230,6 +233,7 @@ export default {
       SaleDetail,
       ModalClients,
       LoadingComponent,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
@@ -638,6 +642,7 @@ function EditSale(_this) {
   })
     .then(function (response) {
       if (response.data.status == 200) {
+        EventBus.$emit('RefreshModalProducts');
         Swal.fire({ icon: 'success', text: 'Se ha modificado correctamente la venta', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text:  response.data.response, timer: 3000,})

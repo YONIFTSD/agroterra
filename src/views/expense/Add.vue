@@ -40,10 +40,17 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
-                  <b-form-group label="Fecha Emision:">
-                    <b-form-input type="date" readonly ref="broadcast_date" v-model="expense.broadcast_date"></b-form-input>
+                <b-col md="2">
+                  <b-form-group label="Fecha Registro:">
+                    <b-form-input type="date" class="text-center" readonly ref="broadcast_date" v-model="expense.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
+                  <b-form-group label="Fecha Emision:">
+                    <b-form-input type="date" class="text-center" ref="date" v-model="expense.date"></b-form-input>
+                    <small v-if="errors.date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>
                 </b-col>
 
@@ -54,7 +61,7 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="5">
+                <b-col md="4">
                   <b-form-group label="Observación:">
                     <b-form-input type="text" v-model="expense.observation"></b-form-input>
                   </b-form-group>
@@ -70,9 +77,9 @@
 
         
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -83,6 +90,8 @@
 
 
     <ModalProviders />
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -102,15 +111,18 @@ import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // components
 import ModalProviders from '@/views/components/ModalProvider'
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "UsuarioAdd",
   components:{
       vSelect,
       ModalProviders,
+      Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'Expense',
       role: 2,
       expense: {
@@ -120,6 +132,7 @@ export default {
           serie:'',
           number:'',
           broadcast_date:moment(new Date()).local().format("YYYY-MM-DD"),
+          date:moment(new Date()).local().format("YYYY-MM-DD"),
           coin:'PEN',
           observation:'',
           total:(0).toFixed(2),
@@ -235,6 +248,7 @@ function AddExpense(me) {
   me.expense.id_provider = me.provider.id;
   let url = me.url_base + "expense/add";
   let data = me.expense;
+  me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -254,20 +268,23 @@ function AddExpense(me) {
           me.expense.serie = '';
           me.expense.number = '';
           me.expense.broadcast_date = moment(new Date()).local().format("YYYY-MM-DD");
+          me.expense.date = moment(new Date()).local().format("YYYY-MM-DD");
           me.expense.coin = 'PEN';
           me.expense.observation = '';
           me.expense.total = (0).toFixed(2);
           me.expense.state = 1;
           me.provider = null;
-        Swal.fire("Sistema", "Se ha registrado el ingreso", "success");
+        Swal.fire({ icon: 'success', text: 'Se ha registrado el egreso', timer: 3000,})
       } else if(response.data.status == 400) {
-        Swal.fire("Sistema", "El comprobante ya fue registrado previamente", "warning");
+        Swal.fire({ icon: 'error', text: 'El comprobante ya fue registrado previamente', timer: 3000,})
       }else{
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 
@@ -279,6 +296,7 @@ function Validate() {
   this.errors.serie = this.expense.serie.length != 4 ? true : false;
   this.errors.number = this.expense.number.length != 8 ? true : false;
   this.errors.broadcast_date = this.expense.broadcast_date.length == 0 ? true : false;
+  this.errors.date = this.expense.date.length == 0 ? true : false;
   this.errors.coin = this.expense.coin.length == 0 ? true : false;
   this.errors.total = this.expense.total.length == 0 ? true : false;
   
@@ -288,6 +306,7 @@ function Validate() {
   if (this.errors.serie == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.number == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.broadcast_date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 

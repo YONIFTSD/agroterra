@@ -210,7 +210,7 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
-                            <b-dropdown-item v-if="Permission('AccountPayView')" @click="ViewAccountPay(item.id_account_pay)" >Ver</b-dropdown-item >
+                            <b-dropdown-item v-if="Permission('AccountPayView')" @click="ShowModalBillExchange(item.id_bill_exchange)" >Ver</b-dropdown-item >
                           </b-dropdown>
                         </td>
                       </tr>
@@ -281,7 +281,7 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
-                            <b-dropdown-item v-if="Permission('AccountPayView')" @click="ViewAccountPay(item.id_account_pay)" >Ver</b-dropdown-item >
+                            <b-dropdown-item v-if="Permission('AccountPayView')" @click="ShowModalBillExchange(item.id_bill_exchange)" >Ver</b-dropdown-item >
                           </b-dropdown>
                         </td>
                       </tr>
@@ -313,7 +313,7 @@
     </CRow>
 
     <LoadingComponent :is-visible="isLoading"/>
-    <ModalAmortization />
+    <ModalBillExchange />
     <ModalEECCClient />
   </div>
 </template>
@@ -330,14 +330,14 @@ import { mapState } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 import CodeToName from "@/assets/js/CodeToName";
 import LoadingComponent from './../pages/Loading'
-import ModalAmortization from './components/ModalAmortization'
+import ModalBillExchange from './components/ModalBillExchange'
 import ModalEECCClient from './components/ModalEECCClient'
 export default {
   name: "UsuarioList",
   components:{
     vSelect,
     LoadingComponent,
-    ModalAmortization,
+    ModalBillExchange,
     ModalEECCClient,
   },
   data() {
@@ -411,7 +411,7 @@ export default {
     ListBillExchangeCancelled,
     SearchProviderCancelledBill,
 
-    ShowModalAmortization,
+    ShowModalBillExchange,
     ShowModalEECC,
     CodeInvoice,
     EditAccountPay,
@@ -638,8 +638,8 @@ function ViewAccountPay(id_account_pay) {
   });
 }
 
-function ShowModalAmortization(id_account_pay) {
-  EventBus.$emit('ModalAmortizationsShow',id_account_pay);
+function ShowModalBillExchange(id_bill_exchange) {
+  EventBus.$emit('ModalBillExchangeShow',id_bill_exchange);
 }
 function ShowModalEECC() {
   EventBus.$emit('ModalEECCShow');  

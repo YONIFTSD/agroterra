@@ -165,10 +165,10 @@
                 <b-col md="12" class="mt-3"></b-col>
 
                 <b-col md="2"></b-col>
-                <b-col md="2"><b-button type="button" @click="Proration" class="form-control text-white" variant="info" >PRORRATEAR</b-button></b-col>
-                <b-col md="2"><b-button type="button" @click="modalPurchaseExpensesShow" class="form-control text-white" variant="success" >GASTOS</b-button></b-col>
-                <b-col md="2"><b-button type="button" @click="modalCreditDebitNoteShow" variant="warning" class="form-control text-white"  >N. CRÉDITO/DÉBITO</b-button></b-col>
-                <b-col md="2"><b-button type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button></b-col>
+                <b-col md="2"><b-button type="button" @click="Proration" class="form-control text-white" variant="info" >Prorratear</b-button></b-col>
+                <b-col md="2"><b-button type="button" @click="modalPurchaseExpensesShow" class="form-control text-white" variant="success" >Gastos</b-button></b-col>
+                <b-col md="2"><b-button type="button" @click="modalCreditDebitNoteShow" variant="warning" class="form-control text-white"  >N. Crédito/Débito</b-button></b-col>
+                <b-col md="2"><b-button type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button></b-col>
 
               </b-row>
             </b-form>
@@ -185,7 +185,7 @@
     <!-- Modal Clients -->
     <ModalExchangeRate/>
     <LoadingComponent :is-visible="isLoading"/>
-    
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -226,6 +226,7 @@ export default {
       LoadingComponent,
       ModalExchangeRate,
       ModalCreditDebitNote,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
@@ -474,6 +475,7 @@ function ViewShopping() {
   let id_shopping = je.decrypt(this.id_shopping);
   let me = this;
   let url = this.url_base + "shopping/view/" + id_shopping;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -598,6 +600,7 @@ function ViewShopping() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
 }
 
@@ -653,7 +656,6 @@ function UpperCase() {
 function EditCosting(mthis) {
 
   let me = mthis;
-  me.isLoading = true;
   let url = me.url_base + "shopping/costing";
 
   me.shopping.linkages_cost = me.expenses;
@@ -669,7 +671,7 @@ function EditCosting(mthis) {
   me.shopping.total_final = me.total_costing.total_final;
   me.shopping.shopping_detail = me.costing_detail;
   me.shopping.state = 2;
-
+  me.isLoading = true;
   let data = me.shopping;
   axios({
     method: "put",

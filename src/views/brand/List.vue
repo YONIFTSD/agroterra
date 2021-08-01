@@ -9,10 +9,8 @@
           <CCardBody>
             <b-row>
               <b-col sm="12" md="8"></b-col>
-              <b-col sm="6" md="2">
-                <b-link   v-if="Permission('BrandAdd')"  class="btn form-control btn-primary" :to="{ path: '/marca/nuevo' }" append>NUEVO</b-link >
-              </b-col>
-              <b-col sm="6" md="2">
+              
+              <b-col sm="6" md="3">
                 <b-input-group>
                   <b-form-input v-model="search" class="form-control"></b-form-input>
                   <b-input-group-append>
@@ -21,6 +19,9 @@
                     ></b-button>
                   </b-input-group-append>
                 </b-input-group>
+              </b-col>
+              <b-col sm="6" md="1">
+                <b-link   v-if="Permission('BrandAdd')"  class="btn form-control btn-primary" :to="{ path: '/marca/nuevo' }" append><i class="fas fa-file"></i></b-link >
               </b-col>
             </b-row>
 

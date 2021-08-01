@@ -41,9 +41,9 @@
                 </b-col>
       
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control btn-primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -51,6 +51,9 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -65,14 +68,18 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "UsuarioAdd",
   components:{
       vSelect,
+      Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'Brand',
       brand: {
         name: "",
@@ -139,6 +146,7 @@ function AddBrand(_this) {
   data.append("description", me.brand.description);
   data.append("photo", me.brand.photo);
   data.append("state", me.brand.state);
+  me.isLoading = true;
 
   axios({
     method: "POST",
@@ -158,9 +166,12 @@ function AddBrand(_this) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

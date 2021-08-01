@@ -22,7 +22,7 @@
                     <b-input-group>
                       <b-form-input v-model="client.document_number" class="form-control" ></b-form-input>
                       <b-input-group-append>
-                        <b-button variant="info"  @click="SearchClient"><b-icon icon="search"></b-icon></b-button>
+                        <b-button variant="primary"  @click="SearchClient"><b-icon icon="search"></b-icon></b-button>
                       </b-input-group-append>
                     </b-input-group>
                     <small v-if="errors.document_number" class="form-text text-danger" >{{error_document_number}}</small>
@@ -100,9 +100,9 @@
            
 
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control" variant="primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -110,6 +110,9 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -124,16 +127,21 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
 import ApiQuery from "@/assets/js/APIQuery";
+import LoadingComponent from './../pages/Loading'
+
 export default {
   name: "ClientEdit",
   props: ["id_client"],
   components:{
     vSelect,
+    Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   
   data() {
     return {
       module:'Client',
+      isLoading: false,
       client: {
         id_client: "",
         document_type: "1",
@@ -213,6 +221,7 @@ export default {
 function ListCountries() {
  let url = this.url_base + "list-countries";
  let me = this;
+ me.isLoading = true;
  axios({
     method: "GET",
     url: url,
@@ -345,9 +354,11 @@ function ViewClient(me) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

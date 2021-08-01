@@ -35,9 +35,15 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
-                  <b-form-group label="Fecha Emision:">
+                <b-col md="2">
+                  <b-form-group label="Fecha Registro:">
                     <b-form-input type="date" ref="broadcast_date" v-model="expense.broadcast_date" disabled></b-form-input>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
+                  <b-form-group label="Fecha Emision:">
+                    <b-form-input type="date" class="text-center" disabled ref="date" v-model="expense.date"></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -47,7 +53,7 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="5">
+                <b-col md="4">
                   <b-form-group label="Observación:">
                     <b-form-input type="text" v-model="expense.observation" disabled></b-form-input>
                   </b-form-group>
@@ -59,8 +65,8 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
+                <b-col md="5"></b-col>
+                <b-col md="2">
                   <b-link class="btn form-control btn-primary" :to="{ path: '/egresos/listar' }" append >REGRESAR</b-link>
                 </b-col>
               </b-row>
@@ -69,6 +75,7 @@
         </CCard>
       </CCol>
     </CRow>
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -77,12 +84,16 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "CategoriaView",
   props: ["id_expense"],
+  components:{
+      LoadingComponent,
+  },
   data() {
     return {
+      isLoading: false,
       module: 'Expense',
       role: 5,
       expense: {
@@ -93,6 +104,7 @@ export default {
           serie:'',
           number:'',
           broadcast_date:'',
+          date:'',
           coin:'¿',
           observation:'',
           total:(0).toFixed(2),
@@ -150,7 +162,7 @@ function ViewExpense() {
   let id_expense = je.decrypt(this.id_expense);
   let me = this;
   let url = this.url_base + "expense/view/" + id_expense;
-
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -168,6 +180,7 @@ function ViewExpense() {
         me.expense.serie = response.data.result.serie;
         me.expense.number = response.data.result.number;
         me.expense.broadcast_date = response.data.result.broadcast_date;
+        me.expense.date = response.data.result.date;
         me.expense.coin = response.data.result.coin;
         me.expense.total = response.data.result.total;
         me.expense.observation = response.data.result.observation;
@@ -178,9 +191,11 @@ function ViewExpense() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

@@ -164,9 +164,9 @@
     
         
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-link class="btn form-control btn-primary" :to="{ path: '/nota-compra/listar' }" append >REGRESAR</b-link>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-link class="btn form-control btn-primary" :to="{ path: '/nota-compra/listar' }" append >Regresar</b-link>
                 </b-col>
               </b-row>
             </b-form>
@@ -354,6 +354,7 @@ function ViewCreditDebitNote() {
    let id_credit_debit_note = je.decrypt(this.id_credit_debit_note);
   let me = this;
   let url = me.url_base + "credit-debit-note/view/"+id_credit_debit_note;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -396,10 +397,12 @@ function ViewCreditDebitNote() {
       }else{
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       console.log(error)
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
     
 }

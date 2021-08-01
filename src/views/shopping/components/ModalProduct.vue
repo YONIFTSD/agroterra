@@ -9,6 +9,7 @@
               ref="search_product"
               v-model="search_product"
               @keyup="SearchProducts"
+              autofocus
             ></b-form-input>
             
           </b-form-group>
@@ -37,7 +38,7 @@
                     <input type="number" value="1" :ref="'mIDCantidad'+item.id_product" class="form-control">
                   </td>
                   <td class="text-center">
-                      <button type="button" @click="AddProduct(item.id_product)" class="btn btn-info">
+                      <button type="button" @click="AddProduct(item.id_product)" class="btn btn-primary">
                         <i class="fas fa-plus-square"></i>
                       </button>
                   </td>

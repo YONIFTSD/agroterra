@@ -107,9 +107,9 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -121,6 +121,8 @@
 
     <ModalProviders />
     <ModalExchangeRate />
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -141,6 +143,7 @@ import EventBus from "@/assets/js/EventBus";
 // components
 import ModalProviders from '@/views/components/ModalProvider'
 import ModalExchangeRate from '@/views/components/ModalExchangeRate'
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "UsuarioAdd",
@@ -148,9 +151,12 @@ export default {
       vSelect,
       ModalProviders,
       ModalExchangeRate,
+      Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading:false,
       module: 'PurchaseExpenses',
       role: 2,
       purchase_expenses: {
@@ -168,8 +174,8 @@ export default {
           payment_type:'',
           payment_method:'',
           payment_deadline:'',
-          detraction:'',
-          cost:'',
+          detraction:'0',
+          cost:'1',
           observation:'',
           taxed:(0).toFixed(2),
           not_taxed:(0).toFixed(2),
@@ -329,7 +335,7 @@ function AddPurchaseExpenses(_this) {
   me.purchase_expenses.id_user = me.user.id_user;
   me.purchase_expenses.id_provider = me.provider.id;
   let data = me.purchase_expenses;
-
+  me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -368,9 +374,11 @@ function AddPurchaseExpenses(_this) {
       }else{
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

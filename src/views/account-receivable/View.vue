@@ -70,8 +70,8 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
+                <b-col md="5"></b-col>
+                <b-col md="2">
                   <b-link class="btn form-control btn-primary" :to="{ path: '/cuentas-por-cobrar/listar' }" append >REGRESAR</b-link>
                 </b-col>
               </b-row>
@@ -80,6 +80,7 @@
         </CCard>
       </CCol>
     </CRow>
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -88,12 +89,16 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "CategoriaView",
   props: ["id_account_receivable"],
+  components:{
+      LoadingComponent,
+  },
   data() {
     return {
+      isLoading: false,
       module: 'AccountReceivable',
       role: 5,
       account_receivable: {
@@ -163,6 +168,7 @@ export default {
 function ViewAccountReceivable() {
   let id_account_receivable = je.decrypt(this.id_account_receivable);
   let me = this;
+  me.isLoading = true;
   let url = this.url_base + "account-receivable/view/" + id_account_receivable;
   axios({
     method: "GET",
@@ -191,9 +197,11 @@ function ViewAccountReceivable() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

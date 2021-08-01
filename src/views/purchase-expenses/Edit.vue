@@ -107,9 +107,9 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control btn-primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -121,6 +121,8 @@
 
     <ModalProviders />
     <ModalExchangeRate />
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -140,6 +142,7 @@ import EventBus from "@/assets/js/EventBus";
 // components
 import ModalProviders from '@/views/components/ModalProvider'
 import ModalExchangeRate from '@/views/components/ModalExchangeRate'
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "IncomeEdit",
@@ -148,9 +151,12 @@ export default {
       vSelect,
       ModalProviders,
       ModalExchangeRate,
+      Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading:false,
       module: 'PurchaseExpenses',
       role: 3,
       purchase_expenses: {
@@ -314,7 +320,7 @@ function ViewPurchaseExpenses() {
   let id_purchase_expenses = je.decrypt(this.id_purchase_expenses);
   let me = this;
   let url = this.url_base + "purchase-expenses/view/" + id_purchase_expenses;
-
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -356,9 +362,11 @@ function ViewPurchaseExpenses() {
       }else{
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire("Sistema", "A Ocurrido un error", "error");
+      me.isLoading = false;
     });
 }
 
@@ -370,7 +378,7 @@ function EditPurchaseExpenses(_this) {
   let url = me.url_base + "purchase-expenses/edit";
   me.purchase_expenses.id_provider = me.provider.id;
   let data = me.purchase_expenses;
-
+me.isLoading = true;
   axios({
     method: "PUT",
     url: url,
@@ -385,9 +393,11 @@ function EditPurchaseExpenses(_this) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

@@ -94,8 +94,8 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
+                <b-col md="5"></b-col>
+                <b-col md="2">
                   <b-link class="btn form-control btn-primary" :to="{ path: '/cliente/listar' }" append >REGRESAR</b-link>
                 </b-col>
               </b-row>
@@ -104,6 +104,8 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -117,16 +119,18 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "ClienteView",
   props: ["id_client"],
   components:{
     vSelect,
+    LoadingComponent,
   },
   data() {
     return {
-
+      isLoading: false,
       module:'Client',
       client: {
         id_client: "",
@@ -203,6 +207,7 @@ export default {
 function ListCountries() {
  let url = this.url_base + "list-countries";
  let me = this;
+ me.isLoading = true;
  axios({
     method: "GET",
     url: url,
@@ -296,9 +301,11 @@ function ViewClient(me) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

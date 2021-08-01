@@ -94,8 +94,8 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="4"></b-col>
-                <b-col md="4">
+                <b-col md="5"></b-col>
+                <b-col md="2">
                   <b-link variant="primary" class="form-control btn btn-primary" :to="{ path: '/registro-de-cobros/listar' }" append >REGRESAR</b-link>
                 </b-col>
               </b-row>
@@ -107,6 +107,7 @@
 
 
     <ModalClients />
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -126,16 +127,18 @@ import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // components
 import ModalClients from './../components/ModalClient'
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "UsuarioAdd",
   components:{
       vSelect,
       ModalClients,
+      LoadingComponent,
   },
    props: ["id_charge"],
   data() {
     return {
+      isLoading: false,
       module: 'Charge',
       role: 2,
       charge: {
@@ -283,6 +286,7 @@ function ViewCharge() {
   let me = this;
   let id_charge = je.decrypt(this.id_charge);
   let url = me.url_base + "charge/view/"+id_charge;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -310,9 +314,11 @@ function ViewCharge() {
       }else{
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 function EditCharge(me) {

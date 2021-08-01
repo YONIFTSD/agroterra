@@ -28,7 +28,7 @@
 
                       <b-col md="3">
                         <b-form-group label=".">
-                          <b-button class="form-control btn" variant="primary" @click="modalProducts" >Agregar Productos</b-button>
+                          <b-button class="form-control btn" variant="primary" @click="modalProducts" ><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                         </b-form-group>
                       </b-col>
 
@@ -162,10 +162,10 @@
 
               <b-row  class="justify-content-md-center mt-3">
                 <b-col md="3">
-                  <b-button type="button" @click="modalTransfers" class="form-control text-white" variant="dark" >TRANFERENCIAS</b-button>
+                  <b-button type="button" @click="modalTransfers" class="form-control text-white" variant="dark" >Transferencias</b-button>
                 </b-col>
                 <b-col md="3">
-                  <b-button type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                  <b-button type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -182,6 +182,8 @@
     <ModalProviders />
     <!-- Modal Clients -->
     <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
     
   </div>
 </template>
@@ -216,6 +218,7 @@ export default {
       ModalProviders,
       vSelect,
       LoadingComponent,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {

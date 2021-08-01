@@ -27,7 +27,7 @@
 
                 <b-col md="3">
                    <b-form-group label=".">
-                    <b-button :disabled="shopping.linkages.length > 0" class="form-control btn" variant="primary" @click="modalProducts" >Agregar Productos</b-button>
+                    <b-button :disabled="shopping.linkages.length > 0" class="form-control btn" variant="primary" @click="modalProducts" ><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                    </b-form-group>
                 </b-col>
 
@@ -162,9 +162,9 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="4"></b-col>
-                <b-col md="4">
-                  <b-button type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
 
               </b-row>
@@ -181,7 +181,8 @@
     <!-- Modal Clients -->
     <ModalExchangeRate/>
     <LoadingComponent :is-visible="isLoading"/>
-    
+    <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -218,7 +219,8 @@ export default {
       mShoppingDetail,
       ModalProviders,
       LoadingComponent,
-      ModalExchangeRate
+      ModalExchangeRate,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
@@ -452,6 +454,7 @@ function ViewShopping() {
   let id_shopping = je.decrypt(this.id_shopping);
   let me = this;
   let url = this.url_base + "shopping/view/" + id_shopping;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -538,6 +541,8 @@ function ViewShopping() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+
+      me.isLoading = false;
     })
 }
 

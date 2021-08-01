@@ -46,7 +46,7 @@
 
                           <b-col md="2">
                             <b-form-group label=".">
-                              <b-button class="form-control" variant="primary" @click="modalProducts">Agregar Productos</b-button>
+                              <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                             </b-form-group>
                           </b-col>
 
@@ -139,9 +139,9 @@
               </b-tabs>
 
               <b-row>
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button  type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button  type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
 
@@ -161,6 +161,7 @@
     <ModalDrive />
     <ModalProviders />
     <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -201,6 +202,7 @@ export default {
       LoadingComponent,
       ModalCar,
       ModalDrive,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
@@ -336,6 +338,7 @@ function ViewReferralGuide() {
   let id_referral_guide = je.decrypt(this.id_referral_guide);
   let url = this.url_base + "referral-guide/view/"+id_referral_guide;
   let me = this;
+  me.isLoading = true;
   axios({
       method: "GET",
       url: url,
@@ -399,6 +402,8 @@ function ViewReferralGuide() {
         }
 
       }
+
+      me.isLoading = false;
       
     })
 }

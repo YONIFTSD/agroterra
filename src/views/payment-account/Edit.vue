@@ -166,7 +166,7 @@
 
                 <b-col md="4"></b-col>
                 <b-col md="4">
-                  <b-button type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                  <b-button type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
 
               </b-row>

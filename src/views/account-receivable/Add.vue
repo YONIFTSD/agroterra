@@ -78,9 +78,9 @@
 
         
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -91,6 +91,8 @@
 
 
     <ModalClients />
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -110,15 +112,18 @@ import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // components
 import ModalClients from './../components/ModalClient'
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "UsuarioAdd",
   components:{
       vSelect,
       ModalClients,
+       Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'AccountReceivable',
       role: 2,
       account_receivable: {
@@ -248,7 +253,7 @@ function modalClients() {
 }
 
 function AddAccountReceivable(me) {
-
+  me.isLoading = true;
   me.account_receivable.id_user = me.user.id_user;
   me.account_receivable.id_establishment = me.id_establishment;
   me.account_receivable.balance = me.account_receivable.total;
@@ -288,9 +293,11 @@ function AddAccountReceivable(me) {
       }else{
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

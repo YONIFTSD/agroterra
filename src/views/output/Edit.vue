@@ -24,7 +24,7 @@
 
                 <b-col md="3">
                    <b-form-group label=".">
-                    <b-button class="form-control btn" variant="primary" @click="modalProducts" >Agregar Productos</b-button>
+                    <b-button class="form-control btn" variant="primary" @click="modalProducts" ><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                    </b-form-group>
                 </b-col>
 
@@ -119,7 +119,7 @@
                 <b-col md="4"></b-col>
 
                 <b-col md="4">
-                  <b-button type="submit" class="form-control bg-primary text-white"  variant="primary">GUARDAR</b-button>
+                  <b-button type="submit" class="form-control bg-primary text-white"  variant="primary"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -134,6 +134,8 @@
 
 
     <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -165,6 +167,7 @@ export default {
       cOutputDetail,
       vSelect,
       LoadingComponent,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
@@ -306,6 +309,7 @@ function ViewOutput() {
   let id_output = je.decrypt(this.id_output);
   let me = this;
   let url = this.url_base+"/output/view/"+id_output;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -348,9 +352,11 @@ function ViewOutput() {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

@@ -33,8 +33,8 @@
                 </b-col>
       
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
+                <b-col md="5"></b-col>
+                <b-col md="2">
                   <b-link
                     class="btn form-control btn-primary"
                     :to="{ path: '/marca/listar' }"
@@ -48,6 +48,7 @@
         </CCard>
       </CCol>
     </CRow>
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -62,15 +63,18 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "CategoryEdit",
   props: ["id_brand"],
   components:{
       vSelect,
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'Brand',
       brand: {
         id_brand: "",
@@ -113,7 +117,7 @@ function ViewBrand() {
   let id_brand = je.decrypt(this.id_brand);
   let me = this;
   let url = this.url_base + "brand/view/" + id_brand;
-
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -135,9 +139,11 @@ function ViewBrand() {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = true;
     });
 }
 

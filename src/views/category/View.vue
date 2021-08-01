@@ -41,8 +41,8 @@
                       </b-col>
             
 
-                      <b-col md="3"></b-col>
-                      <b-col md="6">
+                      <b-col md="5"></b-col>
+                      <b-col md="2">
                         <b-link class="btn form-control btn-primary" :to="{ path: '/categoria/listar' }" append>REGRESAR</b-link>
                       </b-col>
 
@@ -57,6 +57,8 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -65,12 +67,16 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "CategoriaView",
   props: ["id_category"],
+  components:{
+    LoadingComponent,
+  },
   data() {
     return {
+      isLoading: false,
       module:'Category',
       category: {
         id_category: "",
@@ -113,7 +119,7 @@ function ViewCategory() {
   let id_category = je.decrypt(this.id_category);
   let me = this;
   let url = this.url_base + "category/view/" + id_category;
-
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -133,9 +139,11 @@ function ViewCategory() {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

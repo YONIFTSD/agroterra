@@ -22,6 +22,9 @@
                     <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                       <thead class="">
                         <tr>
+                          <th class="text-center" colspan="6">Cuentas por cobrar</th>
+                        </tr>
+                        <tr>
                           <th width="5%" class="text-center">#</th>
                           <th width="20%" class="text-center">Fecha Emisión</th>
                           <th width="20%" class="text-center">Fecha Venc.</th>
@@ -50,6 +53,9 @@
                     <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                       <thead class="">
                         <tr>
+                          <th class="text-center" colspan="7">Registro de Cobros</th>
+                        </tr>
+                        <tr>
                           <th width="5%" class="text-center">#</th>
                           <th width="15%" class="text-center">Fecha Emision</th>
                           <th width="15%" class="text-center">Documento</th>
@@ -77,6 +83,8 @@
             </b-form>
 
     </b-modal>
+
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 <style>
@@ -93,11 +101,16 @@ import { mapState,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 import CodeToName from "@/assets/js/CodeToName";
 var moment = require("moment");
+import LoadingComponent from './../../pages/Loading'
 
 export default {
   name: "ModalsProduct",
+  components:{
+      LoadingComponent,
+  },
   data() {
     return {
+        isLoading: false,
         modal_settlement_collection:false,
         module: 'SettlementCollection',
         id_settlement_collection :'',
@@ -154,6 +167,7 @@ function CodeInvoice(code) {
 function ViewSettlementPayment() {
   let me = this;
   let url = this.url_base + "settlement-collection/view/" + this.id_settlement_collection;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -177,9 +191,11 @@ function ViewSettlementPayment() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

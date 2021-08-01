@@ -101,11 +101,10 @@ export default {
       this.role = role;
       this.ViewEstablishment();
       this.ListWarehouse();
-     
-      
-
     });
-    
+    EventBus.$on('RefreshModalProducts', () => {
+      this.SearchProducts();
+    });
   },
   methods: {
       SearchProducts,

@@ -27,7 +27,7 @@
                 <b-col md="6"></b-col>
                 <b-col md="2">
                   <b-form-group>
-                    <b-button class="form-control btn btn-info" @click="modalProducts">Agregar Productos</b-button>
+                    <b-button class="form-control btn btn-info" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
              
@@ -156,7 +156,7 @@
                   <b-button type="button" :disabled="sale.state == 6" @click="showModalSaleLow" class="form-control" variant="danger" >DAR DE BAJA</b-button>
                 </b-col> -->
                 <b-col md="2">
-                  <b-button  type="submit" class="form-control" variant="primary" >GUARDAR</b-button>
+                  <b-button  type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>

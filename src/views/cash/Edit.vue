@@ -157,7 +157,7 @@
                               <b-button type="button" @click="ExportExcel" class="form-control btn btn-primary" variant="success">EXCEL</b-button>
                           </b-col>
                           <b-col md="2">
-                              <b-button type="submit" class="form-control btn btn-primary" variant="primary">GUARDAR</b-button>
+                              <b-button type="submit" class="form-control btn btn-primary" variant="primary"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                           </b-col>
                       </b-row>
                 </b-form>

@@ -116,8 +116,8 @@
                 </b-col>
         
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
+                <b-col md="5"></b-col>
+                <b-col md="2">
                   <b-link
                     class="btn form-control btn-primary"
                     :to="{ path: '/proveedor/listar' }"
@@ -131,6 +131,8 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -144,15 +146,18 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "ProviderView",
   props: ["id_provider"],
   components:{
     vSelect,
+    LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module:'Provider',
       provider: {
         id_provider: "",
@@ -200,6 +205,7 @@ function ListUbigeos() {
  this.ubigee = [];
   let url = this.url_base + "list-ubigee";
   let me = this;
+  me.isLoading = true;
   axios({
       method: "GET",
       url: url,
@@ -229,6 +235,7 @@ function ViewProvider(me) {
     },
   })
     .then(function (response) {
+      
       if (response.data.status == 200) {
         me.provider.id_provider = response.data.result.id_provider;
         me.provider.document_type = response.data.result.document_type;
@@ -248,9 +255,11 @@ function ViewProvider(me) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

@@ -26,7 +26,7 @@
 
                 <b-col md="3">
                    <b-form-group label=".">
-                    <b-button class="form-control btn" :disabled="linkages.length > 0" variant="primary" @click="modalProducts" >Agregar Productos</b-button>
+                    <b-button class="form-control btn" :disabled="linkages.length > 0" variant="primary" @click="modalProducts" ><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                    </b-form-group>
                 </b-col>
 
@@ -170,8 +170,8 @@
     
 
                 <b-col md="3"></b-col>
-                <b-col md="3"><b-button type="button" class="form-control text-white" @click="modalInputShow" variant="info" >ENTRADAS</b-button></b-col>
-                <b-col md="3"><b-button type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button></b-col>
+                <b-col md="3"><b-button type="button" class="form-control text-white" @click="modalInputShow" variant="info" >Entradas</b-button></b-col>
+                <b-col md="3"><b-button type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button></b-col>
 
               </b-row>
             </b-form>
@@ -189,6 +189,8 @@
     <!-- Modal input -->
     <ModalInputs/>
     <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -223,9 +225,10 @@ export default {
       ModalProducts,
       mShoppingDetail,
       ModalProviders,
-      LoadingComponent,
       ModalExchangeRate,
       ModalInputs,
+      Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
@@ -251,7 +254,7 @@ export default {
         payment_type:'01',
         payment_method:'008',
         payment_deadline:'',
-        affection_for_detraction: '',
+        affection_for_detraction: '0',
         unit_value: '0',
         observation:'',
         expenses:(0).toFixed(2),
@@ -626,7 +629,7 @@ function GetExchangeRateByDate() {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-        me.shopping.exchange_rate = response.data.result.shopping;
+        me.shopping.exchange_rate = response.data.result.sale;
       } else {
         me.shopping.exchange_rate = '';
         me.modalExachangeRate();

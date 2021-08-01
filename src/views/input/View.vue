@@ -26,7 +26,7 @@
 
                     <b-col md="3">
                       <b-form-group label=".">
-                        <b-button disabled class="form-control btn" variant="primary" @click="modalProducts" >Agregar Productos</b-button>
+                        <b-button disabled class="form-control btn" variant="primary" @click="modalProducts" ><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                       </b-form-group>
                     </b-col>
 
@@ -177,7 +177,7 @@
     <!-- Modal Products -->
     <ModalProducts />
     <!-- Modal Products -->
-
+    <LoadingComponent :is-visible="isLoading"/>
 
     
   </div>
@@ -201,7 +201,7 @@ import { mapState,mapActions } from "vuex";
 // components
 import ModalProducts from './components/ModalProduct'
 import cInputDetail from './components/InputDetail'
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "InputEdit",
   props: ["id_input"],
@@ -209,9 +209,11 @@ export default {
       ModalProducts,
       cInputDetail,
       vSelect,
+      LoadingComponent
   },
   data() {
     return {
+      isLoading:false,
       module: 'Input',
       role: 3,
       input: {
@@ -323,6 +325,7 @@ function ViewInput() {
   let id_input = je.decrypt(this.id_input);
   let me = this;
   let url = this.url_base+"/input/view/"+id_input;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -368,9 +371,11 @@ function ViewInput() {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

@@ -45,7 +45,7 @@
               </b-col>
               <b-col md="2">
                   <b-form-group label=".">
-                    <b-button v-if="warehouse.id_warehouse == null" type="button" @click="AddWarehouse" variant="primary" class="btn form-control">GUARDAR</b-button>
+                    <b-button v-if="warehouse.id_warehouse == null" type="button" @click="AddWarehouse" variant="primary" class="btn form-control"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                     <b-button v-if="warehouse.id_warehouse != null" type="button" @click="EditWarehouse" variant="primary" class="btn form-control">EDITAR</b-button>
                   </b-form-group>
               </b-col>

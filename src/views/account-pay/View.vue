@@ -70,9 +70,9 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-link class="btn form-control btn-primary" :to="{ path: '/cuentas-por-cobrar/listar' }" append >REGRESAR</b-link>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-link class="btn btn-primary form-control" :to="{ path: '/cuentas-por-pagar/listar' }" append >REGRESAR</b-link>
                 </b-col>
               </b-row>
             </b-form>
@@ -88,12 +88,17 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "CategoriaView",
+  components:{
+    LoadingComponent,
+  },
   props: ["id_account_pay"],
   data() {
     return {
+      isLoading: false,
       module: 'AccountReceivable',
       role: 5,
       account_pay: {
@@ -163,6 +168,7 @@ export default {
 function ViewAccountPay() {
   let id_account_pay = je.decrypt(this.id_account_pay);
   let me = this;
+  me.isLoading = true;
   let url = this.url_base + "account-pay/view/" + id_account_pay;
   axios({
     method: "GET",
@@ -192,9 +198,11 @@ function ViewAccountPay() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

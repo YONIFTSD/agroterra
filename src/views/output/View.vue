@@ -24,7 +24,7 @@
 
                 <b-col md="3">
                    <b-form-group label=".">
-                    <b-button disabled class="form-control btn" variant="primary" @click="modalProducts" >Agregar Productos</b-button>
+                    <b-button disabled class="form-control btn" variant="primary" @click="modalProducts" ><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                    </b-form-group>
                 </b-col>
 

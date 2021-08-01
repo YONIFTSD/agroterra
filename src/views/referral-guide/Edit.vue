@@ -46,7 +46,7 @@
 
                           <b-col md="2">
                             <b-form-group label=".">
-                              <b-button class="form-control" variant="primary" @click="modalProducts">Agregar Productos</b-button>
+                              <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                             </b-form-group>
                           </b-col>
 
@@ -141,7 +141,7 @@
               <b-row>
                 <b-col md="3"></b-col>
                 <b-col md="6">
-                  <b-button  type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                  <b-button  type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
 

@@ -114,7 +114,7 @@
         <b-col md="8"> </b-col>
         <!-- <b-col md="2"> <b-button class="form-control" @click="DeterminatePriceFinal(1)" variant="primary" type="button">COMPRAS</b-button> </b-col> -->
         <b-col md="2"> <b-button class="form-control" @click="DeterminatePriceFinal(1)" variant="info" type="button">ACTUALIZAR</b-button> </b-col>
-        <b-col md="2"> <b-button class="form-control" variant="primary" type="submit">GUARDAR</b-button> </b-col>
+        <b-col md="2"> <b-button class="form-control" variant="primary" type="submit"><i class="fas fa-save"></i> Guardar (F4)</b-button> </b-col>
       </b-row>
 
       </b-form>

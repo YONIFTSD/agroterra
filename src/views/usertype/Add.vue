@@ -50,7 +50,7 @@
                 <b-col md="12"></b-col>
                 <b-col md="3"></b-col>
                 <b-col md="6">
-                  <b-button  type="submit" class="form-control bg-primary" variant="primary">GUARDAR</b-button>
+                  <b-button  type="submit" class="form-control bg-primary" variant="primary"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>

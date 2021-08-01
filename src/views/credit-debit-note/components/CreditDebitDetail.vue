@@ -34,7 +34,7 @@
                       <td class="align-middle text-right">{{ item.total_value }}</td>
                       <td class="align-middle text-right">{{ item.total_price }}</td>
                       <td class="align-middle text-center">
-                        <button type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>  
+                        <button type="button" @click="DeleteDetail(it)" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>  
                       </td>
 
                   </tr>

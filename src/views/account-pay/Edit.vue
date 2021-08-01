@@ -78,9 +78,9 @@
 
         
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -91,6 +91,8 @@
 
 
     <ModalProviders />
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -110,16 +112,19 @@ import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // components
 import ModalProviders from './../components/ModalProvider'
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "UsuarioAdd",
   props: ["id_account_pay"],
   components:{
       vSelect,
       ModalProviders,
+      Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'AccountReceivable',
       role: 3,
       account_pay: {
@@ -221,6 +226,7 @@ function ViewAccountReceivable() {
   let id_account_pay = je.decrypt(this.id_account_pay);
   let me = this;
   let url = this.url_base + "account-pay/view/" + id_account_pay;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -250,9 +256,11 @@ function ViewAccountReceivable() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 
@@ -291,7 +299,7 @@ function modalProvider() {
 }
 
 function EditAccountPay(me) {
-
+  me.isLoading = true;
   me.account_pay.id_user = me.user.id_user;
   me.account_pay.id_establishment = me.id_establishment;
   me.account_pay.balance = me.account_pay.total;
@@ -313,9 +321,11 @@ function EditAccountPay(me) {
       }else{
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

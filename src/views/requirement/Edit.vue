@@ -55,7 +55,7 @@
 
                  <b-col md="2">
                   <b-form-group label=".">
-                    <b-button class="form-control" variant="primary" @click="modalProducts">Agregar Productos</b-button>
+                    <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
 
@@ -74,9 +74,9 @@
        
          
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button  type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button  type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -92,7 +92,9 @@
     <!-- Modal Clients -->
     <ModalClients />
     <!-- Modal Clients -->
-
+<LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
     
   </div>
 </template>
@@ -118,7 +120,7 @@ import { mapState,mapActions } from "vuex";
 import ModalClients from './../components/ModalClient'
 import ModalProducts from './components/ModalProduct'
 import RequirementDetail from './components/RequirementDetail'
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "UsuarioAdd",
   props: ["id_requirement"],
@@ -127,9 +129,12 @@ export default {
       ModalProducts,
       RequirementDetail,
       ModalClients,
+      LoadingComponent,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
+      isLoading: false,
       module: 'Sale',
       role: 3,
       requirement: {
@@ -202,6 +207,7 @@ function ViewRequirement() {
   let id_requirement = je.decrypt(this.id_requirement);
   let me = this;
   let url = this.url_base + "requirement/view/" + id_requirement;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -237,6 +243,8 @@ function ViewRequirement() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+
+      me.isLoading = false;
     })
 }
 
@@ -277,6 +285,7 @@ function EditRequirement(_this) {
   let url = me.url_base + "requirement/edit";
   me.requirement.requirement_detail = me.requirement_detail;
   let data = me.requirement;
+  me.isLoading = true;
   axios({
     method: "PUT",
     url: url,
@@ -289,8 +298,10 @@ function EditRequirement(_this) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
+      me.isLoading = false;
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
     });
 }

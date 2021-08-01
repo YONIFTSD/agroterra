@@ -107,9 +107,9 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-link class="btn form-control btn-primary" :to="{ path: '/gastos-compra/listar' }" append >REGRESAR</b-link>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-link class="btn form-control btn-primary" :to="{ path: '/gastos-compra/listar' }" append >Regresar</b-link>
                 </b-col>
               </b-row>
             </b-form>
@@ -121,6 +121,7 @@
 
     <ModalProviders />
     <ModalExchangeRate />
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -140,6 +141,7 @@ import EventBus from "@/assets/js/EventBus";
 // components
 import ModalProviders from '@/views/components/ModalProvider'
 import ModalExchangeRate from '@/views/components/ModalExchangeRate'
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "IncomeEdit",
@@ -148,9 +150,11 @@ export default {
       vSelect,
       ModalProviders,
       ModalExchangeRate,
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading:false,
       module: 'PurchaseExpenses',
       role: 3,
       purchase_expenses: {
@@ -314,7 +318,7 @@ function ViewPurchaseExpenses() {
   let id_purchase_expenses = je.decrypt(this.id_purchase_expenses);
   let me = this;
   let url = this.url_base + "purchase-expenses/view/" + id_purchase_expenses;
-
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -356,9 +360,11 @@ function ViewPurchaseExpenses() {
       }else{
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire("Sistema", "A Ocurrido un error", "error");
+      me.isLoading = false;
     });
 }
 

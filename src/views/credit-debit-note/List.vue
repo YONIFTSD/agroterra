@@ -70,7 +70,8 @@
                     <td class="text-right"> {{ item.coin  }}</td>
                     <td class="text-right"> {{ item.total  }}</td>
                     <td class="text-center">
-                        <b-badge v-if="item.state == 1" variant="success">Activo</b-badge>
+                        <b-badge v-if="item.state == 1" variant="primary">Pendiente</b-badge>
+                        <b-badge v-if="item.state == 2" variant="success">Realizado</b-badge>
                         <b-badge v-if="item.state == 0" variant="danger">Anulado</b-badge>
                     </td>
                     <td class="text-center">

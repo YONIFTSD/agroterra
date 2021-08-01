@@ -55,7 +55,7 @@
 
                  <b-col md="2">
                   <b-form-group label=".">
-                    <b-button class="form-control" variant="primary" @click="modalProducts">Agregar Productos</b-button>
+                    <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
 
@@ -90,8 +90,8 @@
                 <b-col md="12" class="mt-3"></b-col>
 
        
-                <b-col md="4"></b-col>
-                <b-col md="4">
+                <b-col md="5"></b-col>
+                <b-col md="2">
                   <b-link class="btn form-control btn-primary" :to="{ path: '/requerimiento/listar' }" append>REGRESAR</b-link >
                 </b-col>
 
@@ -110,7 +110,7 @@
     <!-- Modal Clients -->
     <ModalClients />
     <!-- Modal Clients -->
-
+    <LoadingComponent :is-visible="isLoading"/>
     
   </div>
 </template>
@@ -136,7 +136,7 @@ import { mapState,mapActions } from "vuex";
 import ModalClients from './../components/ModalClient'
 import ModalProducts from './components/ModalProduct'
 import RequirementDetail from './components/RequirementDetail'
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "UsuarioAdd",
   props: ["id_requirement"],
@@ -145,9 +145,11 @@ export default {
       ModalProducts,
       RequirementDetail,
       ModalClients,
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'Sale',
       role: 3,
       requirement: {
@@ -220,6 +222,7 @@ function ViewRequirement() {
   let id_requirement = je.decrypt(this.id_requirement);
   let me = this;
   let url = this.url_base + "requirement/view/" + id_requirement;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -242,6 +245,8 @@ function ViewRequirement() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+
+      me.isLoading = false;
     })
 }
 

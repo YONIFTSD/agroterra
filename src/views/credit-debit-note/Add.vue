@@ -57,7 +57,7 @@
 
                 <b-col md="2">
                   <b-form-group label=".">
-                    <b-button @click="modalShoppingShow" class="form-control" type="button" variant="primary" >COMPRAS</b-button>
+                    <b-button @click="modalShoppingShow" class="form-control" type="button" variant="primary" >Compras</b-button>
                   </b-form-group>
                 </b-col>
 
@@ -144,9 +144,9 @@
     
         
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -158,6 +158,7 @@
 
     <ModalShopping />
     <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -186,6 +187,7 @@ export default {
       ModalShopping,
       LoadingComponent,
       CreditDebitDetail,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
@@ -427,6 +429,7 @@ function AddCreditDebitNote(me) {
   me.credit_debit.total = me.total_credit_debit.total;
   let url = me.url_base + "credit-debit-note/add";
   let data = me.credit_debit;
+  me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -469,9 +472,11 @@ function AddCreditDebitNote(me) {
       }else{
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

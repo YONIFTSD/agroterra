@@ -78,9 +78,9 @@
 
         
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -91,6 +91,8 @@
 
 
     <ModalClients />
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -110,20 +112,24 @@ import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // components
 import ModalClients from './../components/ModalClient'
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "UsuarioAdd",
-  props: ["id_account_pay"],
+  props: ["id_account_receivable"],
   components:{
       vSelect,
       ModalClients,
+      Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'AccountReceivable',
       role: 3,
       account_receivable: {
-          id_account_pay:'',
+          id_account_receivable:'',
           id_sale:'',
           id_client:'',
           id_establishment:'',
@@ -218,9 +224,10 @@ export default {
 
 function ViewAccountReceivable() {
 
-  let id_account_pay = je.decrypt(this.id_account_pay);
+  let id_account_receivable = je.decrypt(this.id_account_receivable);
   let me = this;
-  let url = this.url_base + "account-receivable/view/" + id_account_pay;
+  me.isLoading = true;
+  let url = this.url_base + "account-receivable/view/" + id_account_receivable;
   axios({
     method: "GET",
     url: url,
@@ -230,7 +237,7 @@ function ViewAccountReceivable() {
       if (response.data.status == 200) {
 
           me.client = {id: response.data.result.id_client, full_name : response.data.result.name+' - '+response.data.result.document_number };
-          me.account_receivable.id_account_pay = response.data.result.id_account_pay;
+          me.account_receivable.id_account_receivable = response.data.result.id_account_receivable;
           me.account_receivable.id_sale = response.data.result.id_sale;
           me.account_receivable.id_client = response.data.result.id_client;
           me.account_receivable.client = response.data.result.name+' - '+response.data.result.document_number;
@@ -250,9 +257,11 @@ function ViewAccountReceivable() {
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

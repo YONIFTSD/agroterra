@@ -216,7 +216,7 @@ function DeleteProduct(id_product) {
         }
         Swal.fire({ icon: 'success', text: 'El producto ha sido elimimado', timer: 3000,})
       } else {
-        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+        Swal.fire({ icon: 'error', text: response.data.message, timer: 3000,})
       }
     })
     .catch((error) => {

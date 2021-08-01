@@ -55,7 +55,7 @@
 
                  <b-col md="2">
                   <b-form-group label=".">
-                    <b-button class="form-control" variant="primary" @click="modalProducts">Agregar Productos</b-button>
+                    <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
 
@@ -74,9 +74,9 @@
        
          
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button  type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button  type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -92,8 +92,9 @@
     <!-- Modal Clients -->
     <ModalClients />
     <!-- Modal Clients -->
-
-    
+<LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -118,7 +119,7 @@ import { mapState,mapActions } from "vuex";
 import ModalClients from './../components/ModalClient'
 import ModalProducts from './components/ModalProduct'
 import RequirementDetail from './components/RequirementDetail'
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "UsuarioAdd",
   components:{
@@ -126,9 +127,12 @@ export default {
       ModalProducts,
       RequirementDetail,
       ModalClients,
+      LoadingComponent,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
+      isLoading: false,
       module: 'Sale',
       role: 2,
       requirement: {
@@ -283,6 +287,8 @@ function AddRequirement(_this) {
   me.requirement.id_establishment = me.id_establishment;
   me.requirement.requirement_detail = me.requirement_detail;
   let data = me.requirement;
+  me.isLoading = true;
+
   axios({
     method: "POST",
     url: url,
@@ -307,9 +313,11 @@ function AddRequirement(_this) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

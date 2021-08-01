@@ -45,7 +45,7 @@
         
                 <b-col md="4">
                   <b-form-group label=".">
-                    <b-button v-if="subcategory.id_subcategory.length == 0" type="submit" variant="primary" class="form-control">GUARDAR</b-button>
+                    <b-button v-if="subcategory.id_subcategory.length == 0" type="submit" variant="primary" class="form-control"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                     <b-button v-if="subcategory.id_subcategory.length != 0" type="submit" variant="primary" class="form-control">ACTUALIZAR</b-button>
                   </b-form-group>
                 </b-col>

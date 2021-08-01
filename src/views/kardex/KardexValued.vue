@@ -129,6 +129,8 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -143,17 +145,20 @@ const je = require("json-encrypt");
 import { mapState } from "vuex";
 var moment = require("moment");
 import CodeToName from "@/assets/js/CodeToName";
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "SalidaList",
   components:{
       vSelect,
+      LoadingComponent,
   },
   data() {
     return {
       module: 'KardexPsysical',
       role:1,
       kardex_valued: [],
+      isLoading:false,
    
 
 
@@ -347,6 +352,7 @@ function SearchKardexMovement(_this) {
  let url = me.url_base + "kardex/valued";
  me.kardex.id_product = me.product.id;
  let data = me.kardex;
+ me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -362,6 +368,7 @@ function SearchKardexMovement(_this) {
     if (response.data.status == 200) {
       me.kardex_valued = response.data.result;
     } 
+    me.isLoading = false;
   })
 }
 

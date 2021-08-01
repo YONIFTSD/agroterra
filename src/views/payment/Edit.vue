@@ -87,9 +87,9 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control" variant="primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -100,6 +100,8 @@
 
 
     <ModalProviders />
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -119,16 +121,20 @@ import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // components
 import ModalProviders from './../components/ModalProvider'
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "UsuarioAdd",
   components:{
       vSelect,
       ModalProviders,
+       Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
    props: ["id_payment"],
   data() {
     return {
+      isLoading: false,
       module: 'Payment',
       role: 2,
       payment: {
@@ -219,10 +225,10 @@ export default {
     };
   },
   mounted() {
-    this.ViewCharge();
+    this.ViewPayment();
   },
   methods: {
-    ViewCharge,
+    ViewPayment,
     SearchProviders,
     modalProviders,
     EditPayment,
@@ -271,10 +277,11 @@ function modalProviders() {
   EventBus.$emit('ModalProvidersShow');
 }
 
-function ViewCharge() {
+function ViewPayment() {
   let me = this;
   let id_payment = je.decrypt(this.id_payment);
   let url = me.url_base + "payment/view/"+id_payment;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -301,9 +308,11 @@ function ViewCharge() {
       }else{
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 function EditPayment(me) {
@@ -313,7 +322,7 @@ function EditPayment(me) {
   me.payment.id_provider = me.provider.id;
   let url = me.url_base + "payment/edit";
   let data = me.payment;
-
+  me.isLoading = true;
   axios({
     method: "PUT",
     url: url,
@@ -328,9 +337,11 @@ function EditPayment(me) {
       }else{
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

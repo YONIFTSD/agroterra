@@ -40,7 +40,7 @@
 
           <b-col md="2">
             <b-form-group label=".">
-              <b-button type="submit" class="form-control" variant="primary">GUARDAR</b-button>
+              <b-button type="submit" class="form-control" variant="primary"><i class="fas fa-save"></i> Guardar (F4)</b-button>
             </b-form-group>
           </b-col>
 

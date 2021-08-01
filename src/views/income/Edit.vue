@@ -39,10 +39,17 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
-                  <b-form-group label="Fecha Emision:">
+                <b-col md="2">
+                  <b-form-group label="Fecha Registro:">
                     <b-form-input type="date" readonly ref="broadcast_date" v-model="income.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
+                  <b-form-group label="Fecha Emision:">
+                    <b-form-input type="date"  ref="date" v-model="income.date"></b-form-input>
+                    <small v-if="errors.date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>
                 </b-col>
 
@@ -53,7 +60,7 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="5">
+                <b-col md="4">
                   <b-form-group label="Observación:">
                     <b-form-input type="text" v-model="income.observation"></b-form-input>
                   </b-form-group>
@@ -66,11 +73,9 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button type="submit" class="form-control btn-primary"
-                    >GUARDAR</b-button
-                  >
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control btn-primary"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -78,6 +83,9 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -96,12 +104,18 @@ import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // components
 import ModalProviders from '@/views/components/ModalProvider'
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "IncomeEdit",
   props: ["id_income"],
+  components:{
+      Keypress: () => import('vue-keypress'),
+      LoadingComponent,
+  },
   data() {
     return {
+      isLoading: false,
       module: 'Income',
       role: 3,
       income: {
@@ -112,6 +126,7 @@ export default {
           serie:'',
           number:'',
           broadcast_date:'',
+          date:'',
           coin:'¿',
           observation:'',
           total:(0).toFixed(2),
@@ -196,7 +211,7 @@ function ViewIncome() {
   let id_income = je.decrypt(this.id_income);
   let me = this;
   let url = this.url_base + "income/view/" + id_income;
-
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -214,6 +229,7 @@ function ViewIncome() {
         me.income.serie = response.data.result.serie;
         me.income.number = response.data.result.number;
         me.income.broadcast_date = response.data.result.broadcast_date;
+        me.income.date = response.data.result.date;
         me.income.coin = response.data.result.coin;
         me.income.total = response.data.result.total;
         me.income.observation = response.data.result.observation;
@@ -224,9 +240,11 @@ function ViewIncome() {
       }else{
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire("Sistema", "A Ocurrido un error", "error");
+      me.isLoading = false;
     });
 }
 
@@ -262,6 +280,7 @@ function Validate() {
   this.errors.serie = this.income.serie.length != 4 ? true : false;
   this.errors.number = this.income.number.length != 8 ? true : false;
   this.errors.broadcast_date = this.income.broadcast_date.length == 0 ? true : false;
+  this.errors.date = this.income.date.length == 0 ? true : false;
   this.errors.coin = this.income.coin.length == 0 ? true : false;
   this.errors.total = this.income.total.length == 0 ? true : false;
   
@@ -271,6 +290,7 @@ function Validate() {
   if (this.errors.serie == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.number == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.broadcast_date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   

@@ -309,12 +309,12 @@ function Validate() {
 
   this.errors.date = this.exchange_rate.date == 0 ? true : false;
   this.errors.coin = this.exchange_rate.coin == 0 ? true : false;
-  this.errors.shopping = this.exchange_rate.shopping == 0 ? true : false;
+  // this.errors.shopping = this.exchange_rate.shopping == 0 ? true : false;
   this.errors.sale = this.exchange_rate.sale == 0 ? true : false;
 
   if (this.errors.date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.errors.shopping == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  // if (this.errors.shopping == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.sale == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
   if (this.validate) {

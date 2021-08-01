@@ -37,7 +37,7 @@
                 </b-col>
                 <b-col md="2">
                   <b-form-group>
-                    <b-button class="form-control" variant="primary" @click="modalProducts">Agregar Productos</b-button>
+                    <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
              
@@ -163,10 +163,13 @@
 
                 </b-col>
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button  type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button  type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
+
+            
+
               </b-row>
             </b-form>
           </CCardBody>
@@ -174,15 +177,20 @@
       </CCol>
     </CRow>
 
-    <!-- Modal Products -->
-    <ModalProducts />
-    <!-- Modal Products -->
-    <!-- Modal Clients -->
-    <ModalClients />
-    <!-- Modal Clients -->
-    <ModalOrders/>
-    <LoadingComponent :is-visible="isLoading"/>
+    
 
+    <b-modal hide-title hide-footer ref="modal-confirm-sale">
+      <b-form @submit.prevent="AddSale">
+        <b-row>
+          <b-col class="text-center" md="12">
+              <div class="w-100"><i  class="fas fa-question-circle fa-5x"></i></div>
+              <p class="my-4 h3">Esta seguro de emitir la venta?</p>
+          </b-col>
+          <b-col md="6"> <b-form-select autofocus class="text-form-control" :options="quantity_vouchers" v-model="print_voucher"></b-form-select></b-col>
+          <b-col md="6"><b-button  ref="buttonconfirmsale" type="submit" variant="primary" class="form-control">Si, Estoy de Acuerdo !</b-button></b-col>
+        </b-row>
+      </b-form>
+    </b-modal>
 
     <b-modal size="md" id="modal_fees_collected" hide-footer v-model="modal_fees_collected" class="w-100" title="CUOTAS">
       <b-form @submit.prevent="AddFeedCollected">
@@ -231,9 +239,19 @@
 
       </b-form>
     </b-modal>
+
+<!-- Modal Products -->
+    <ModalProducts />
+    <!-- Modal Products -->
+    <!-- Modal Clients -->
+    <ModalClients />
+    <!-- Modal Clients -->
+    <ModalOrders/>
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
-
 <style>
 
 </style>
@@ -267,9 +285,16 @@ export default {
       ModalClients,
       ModalOrders,
       LoadingComponent,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
+      quantity_vouchers:[
+        {value:0, text:'No imprimir'},
+        {value:1, text:'Imp. 1 Comprobante'},
+        {value:2, text:'Imp. 2 Comprobantes'},
+      ],
+      print_voucher: 1,
       isLoading: false,
       module: 'Sale',
       role: 2,
@@ -404,12 +429,16 @@ export default {
     DataPrint,
     Print,
 
+    modalConfirmSale,
+
     BntFeesCollected,
     ModalFeedCollected,
     AddFeedCollected,
     DeleteFeedCollected,
 
     DeleteLinkeage,
+    Teclado,
+ 
     ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages','mLoadAddSaleDetail']),
   },
 
@@ -451,6 +480,9 @@ function AddressClient() {
         me.sale.address = response.data.result.address;
       } 
     })
+}
+function Teclado() {
+  alert("f2")
 }
 
 function SearchClients(search, loading) {
@@ -613,8 +645,8 @@ function DeleteLinkeage(index) {
   this.mLoadDeleteLinkages(index);
 }
 
-function AddSale(me,print) {
-  
+function AddSale() {
+  let me = this;
   me.isLoading = true;
   let url = me.url_base + "sale/add";
   me.sale.id_user = me.user.id_user;
@@ -632,7 +664,7 @@ function AddSale(me,print) {
   me.sale.sale_detail = me.sale_detail;
   me.sale.fees_collected = me.fees_collected;
 
-
+  
   let data = me.sale;
   axios({
     method: "POST",
@@ -684,20 +716,27 @@ function AddSale(me,print) {
         me.ListSeries();
         me.mLoadResetSaleDetail();
         me.mLoadResetLinkages();
+        EventBus.$emit('RefreshModalProducts');
   
-        if (print == "Yes") {
-
+        if (me.print_voucher == 1) {
           me.DataPrint(me,response.data.result.id_sale);
         }
+        if (me.print_voucher == 2) {
+          me.DataPrint(me,response.data.result.id_sale);
+          me.DataPrint(me,response.data.result.id_sale);
+        }
+        me.$refs['modal-confirm-sale'].hide()
         Swal.fire({ icon: 'success', text: 'Se ha emitido correctamente la venta', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: response.data.response, timer: 3000,})
+        me.$refs['modal-confirm-sale'].hide()
       }
       me.isLoading = false;
     })
     .catch((error) => {
       me.isLoading = false;
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.$refs['modal-confirm-sale'].hide()
     });
 }
 
@@ -707,9 +746,6 @@ function Validate() {
   this.errors.id_warehouse = this.sale.id_warehouse.length == 0 ? true : false;
   this.errors.broadcast_date = this.sale.broadcast_date.length == 0 ? true : false;
   this.errors.id_client = this.client == null ? true : false;
-  if (this.sale.type_invoice == '01') {
-      this.errors.address = this.sale.address.length == 0 ? true : false;
-  }
   this.errors.coin = this.sale.coin.length == 0 ? true : false;
   this.errors.way_to_pay = this.sale.way_to_pay.length == 0 ? true : false;
   this.errors.sale_detail = this.sale_detail.length == 0 ? true : false;
@@ -719,28 +755,39 @@ function Validate() {
   if (this.errors.id_warehouse == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.broadcast_date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.id_client == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.errors.address == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.way_to_pay == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.sale_detail == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
-  let me = this;
-    Swal.fire({
-    title: 'Esta seguro de emitir la venta?',
-    icon: 'warning',
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: `Guardar e Imprimir`,
-    denyButtonText: `Guardar`,
-    denyButtonColor: '#000',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      AddSale(me,'Yes');
-    } else if (result.isDenied) {
-      AddSale(me,'No');
-    }
-  })
+  this.modalConfirmSale();
+
+  // let me = this;
+  //   Swal.fire({
+  //   title: 'Esta seguro de emitir la venta?',
+  //   icon: 'warning',
+  //   showDenyButton: true,
+  //   showCancelButton: true,
+  //   confirmButtonText: `Guardar e Imprimir`,
+  //   denyButtonText: `Guardar`,
+  //   denyButtonColor: '#000',
+  //   input: 'select',
+  //   inputOptions: {
+  //     '0' : 'Sin comprobantes',
+  //     '1' : 'Ice cream'
+  //   },
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+  //     AddSale(me,'Yes');
+
+  //   } else if (result.isDenied) {
+  //     AddSale(me,'No');
+  //   }
+  // })
+}
+
+function modalConfirmSale() {
+  this.$refs['modal-confirm-sale'].show();
 }
 
 function DataPrint(me,id_sale) {

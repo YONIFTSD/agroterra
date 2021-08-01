@@ -23,7 +23,7 @@
                   <td class="text-center">{{ it + 1 }}</td>
                   <td class="text-center">{{ item.broadcast_date }}</td>
                   <td class="text-center">{{ item.expiration_date }}</td>
-                  <td class="text-center">{{ item.type_invoice + ' - '+ item.serie + ' - '+ item.number }}</td>
+                  <td class="text-center">{{ CodeInvoice(item.type_invoice) + ' - '+ item.serie + ' - '+ item.number }}</td>
                   <td class="text-center">{{ item.coin }}</td>
                   <td class="text-right">{{ item.total }}</td>
                   <td class="text-right">{{ item.balance }}</td>
@@ -57,7 +57,7 @@ const je = require("json-encrypt");
 import { mapState,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // import Notifications from 'vue-notification/dist/ssr.js';
-
+import CodeToName from "@/assets/js/CodeToName";
 
 export default {
   name: "ModalsProduct",
@@ -87,6 +87,7 @@ export default {
   methods: {
       ListAccountPay,
       AddAccountPay,
+      CodeInvoice,
       ...mapActions('ExchangeDocument',['mLoadAddAccountPay']),
   },
   computed: {
@@ -104,6 +105,9 @@ export default {
   },
 };
 
+function CodeInvoice(code) {
+  return CodeToName.CodeInvoice(code);
+}
 function AddAccountPay(id_account_pay) {
   
     let total = this.$refs['mAmount'+id_account_pay][0]['value'];

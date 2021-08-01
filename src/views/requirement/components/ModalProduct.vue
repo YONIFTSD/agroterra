@@ -4,8 +4,7 @@
       <b-row>
         <b-col md="12">
           <b-form-group label="Buscar producto :">
-            <b-form-input type="text" ref="search_product" v-model="search_product" @keyup="SearchProducts"></b-form-input>
-            
+            <b-form-input autofocus type="search" ref="search_product" v-model="search_product" @keyup="SearchProducts"></b-form-input>
           </b-form-group>
         </b-col>
         <b-col md="12">

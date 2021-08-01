@@ -75,14 +75,9 @@
        
 
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button
-                    type="submit"
-                    class="form-control bg-primary text-white"
-                    variant="primary"
-                    >GUARDAR</b-button
-                  >
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button  type="submit" class="form-control" variant="primary"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -90,6 +85,9 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -102,15 +100,19 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
+import LoadingComponent from './../pages/Loading'
 
 export default {
   name: "ProviderEdit",
   props: ["id_provider"],
   components:{
     vSelect,
+    Keypress: () => import('vue-keypress'),
+    LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'Provider',
       provider: {
         id_provider: "",
@@ -161,6 +163,7 @@ function ListUbigeos() {
  this.ubigee = [];
   let url = this.url_base + "list-ubigee";
   let me = this;
+  me.isLoading = true;
   axios({
       method: "GET",
       url: url,
@@ -249,9 +252,11 @@ function ViewProvider(me) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

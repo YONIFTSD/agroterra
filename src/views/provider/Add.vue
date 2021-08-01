@@ -25,7 +25,7 @@
                     <b-input-group>
                       <b-form-input v-model="provider.document_number" class="form-control"></b-form-input>
                       <b-input-group-append>
-                        <b-button variant="info" @click="SearchProvider">
+                        <b-button variant="primary" @click="SearchProvider">
                           <b-icon icon="search"></b-icon
                         ></b-button>
                       </b-input-group-append>
@@ -74,9 +74,9 @@
                 </b-col>
           
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button  type="submit" class="form-control text-white" variant="primary">GUARDAR</b-button>
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button  type="submit" class="form-control" variant="primary"><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -84,6 +84,9 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -97,14 +100,17 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "UsuarioAdd",
   components:{
     vSelect,
+    Keypress: () => import('vue-keypress'),
+    LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'Provider',
       provider: {
         document_type: "6",
@@ -213,7 +219,7 @@ function AddProveedor(_this) {
   
   let url = me.url_base + "provider/add";
   let data = me.provider;
-
+  me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -242,10 +248,12 @@ function AddProveedor(_this) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
-    
+
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 

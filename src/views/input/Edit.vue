@@ -28,7 +28,7 @@
 
                     <b-col md="3">
                       <b-form-group label=".">
-                        <b-button class="form-control btn" variant="primary" @click="modalProducts" >Agregar Productos</b-button>
+                        <b-button class="form-control btn" variant="primary" @click="modalProducts" ><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                       </b-form-group>
                     </b-col>
 
@@ -154,7 +154,7 @@
 
               <b-row  class="justify-content-md-center">
                 <b-col md="3">
-                  <b-button type="submit" class="form-control text-white" variant="primary" >GUARDAR</b-button>
+                  <b-button type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
 
@@ -171,6 +171,8 @@
     <ModalProviders />
     <!-- Modal Products -->
     <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
 
     
   </div>
@@ -205,6 +207,7 @@ export default {
       cInputDetail,
       vSelect,
       LoadingComponent,
+      Keypress: () => import('vue-keypress'),
   },
   data() {
     return {
@@ -370,6 +373,7 @@ function ViewInput() {
   let id_input = je.decrypt(this.id_input);
   let me = this;
   let url = this.url_base+"/input/view/"+id_input;
+  me.isLoading = true;
   axios({
     method: "GET",
     url: url,
@@ -418,9 +422,12 @@ function ViewInput() {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 
@@ -509,6 +516,7 @@ function EditInput(mthis) {
     })
     .catch((error) => {
       Swal.fire({ icon: 'error',title: 'Oops...', text: 'A ocurrido un error',})
+      me.isLoading = false;
     });
 }
 

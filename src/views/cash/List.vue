@@ -9,27 +9,18 @@
           <CCardBody>
             <b-row>
               <b-col sm="12" md="8"></b-col>
-              <b-col sm="6" md="2">
-                <b-link
-                  v-if="Permission('CashAdd')"
-                  class="btn form-control btn-primary"
-                  :to="{ path: '/caja/nuevo' }"
-                  append
-                  >NUEVO</b-link
-                >
-              </b-col>
-              <b-col sm="6" md="2">
+              <b-col sm="6" md="3">
                 <b-input-group>
-                  <b-form-input
-                    v-model="search"
-                    class="form-control"
-                  ></b-form-input>
+                  <b-form-input v-model="search" class="form-control"></b-form-input>
                   <b-input-group-append>
                     <b-button variant="primary" @click="ListCash">
                       <b-icon icon="search"></b-icon
                     ></b-button>
                   </b-input-group-append>
                 </b-input-group>
+              </b-col>
+              <b-col sm="6" md="1">
+                <b-link v-if="Permission('CashAdd')" class="btn form-control btn-primary" :to="{ path: '/caja/nuevo' }" append><i class="fas fa-file"></i></b-link>
               </b-col>
             </b-row>
 

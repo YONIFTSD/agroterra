@@ -22,7 +22,7 @@
                     <b-input-group>
                       <b-form-input v-model="client.document_number" class="form-control" ></b-form-input>
                       <b-input-group-append>
-                        <b-button variant="info"  @click="SearchClient"><b-icon icon="search"></b-icon></b-button>
+                        <b-button variant="primary"  @click="SearchClient"><b-icon icon="search"></b-icon></b-button>
                       </b-input-group-append>
                     </b-input-group>
                     <small v-if="errors.document_number" class="form-text text-danger" >{{error_document_number}}</small>
@@ -98,9 +98,9 @@
                 </b-col>
          
 
-                <b-col md="3"></b-col>
-                <b-col md="6">
-                  <b-button   type="submit"  class="form-control " variant="primary" >GUARDAR</b-button >
+                <b-col md="5"></b-col>
+                <b-col md="2">
+                  <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
               </b-row>
             </b-form>
@@ -108,6 +108,8 @@
         </CCard>
       </CCol>
     </CRow>
+    <LoadingComponent :is-visible="isLoading"/>
+    <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
 
@@ -121,14 +123,17 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
 import ApiQuery from "@/assets/js/APIQuery";
-
+import LoadingComponent from './../pages/Loading'
 export default {
   name: "UsuarioAdd",
   components:{
     vSelect,
+    Keypress: () => import('vue-keypress'),
+      LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module:'Client',
       client: {
         document_type: "1",
@@ -302,7 +307,7 @@ function AddClient(_this) {
   me.client.ubigee = me.mubigee != null ?  me.mubigee.value : '';
   let url = me.url_base + "client/add";
   let data = me.client;
-
+  me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -334,9 +339,11 @@ function AddClient(_this) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
     .catch((error) => {
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
     });
 }
 
