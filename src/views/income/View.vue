@@ -36,13 +36,13 @@
                 </b-col>
 
                 <b-col md="2">
-                  <b-form-group label="Fecha Registro:">
+                  <b-form-group label="Fecha de pago:">
                     <b-form-input type="date" ref="broadcast_date" v-model="income.broadcast_date" disabled></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
-                  <b-form-group label="Fecha Emision:">
+                  <b-form-group label="Fecha de cobro:">
                     <b-form-input type="date" ref="date" v-model="income.date" disabled></b-form-input>
                   </b-form-group>
                 </b-col>

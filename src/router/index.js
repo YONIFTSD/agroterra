@@ -1378,6 +1378,14 @@ function configRoutes() {
           beforeEnter: userGuard,
         },
         {
+          path: "venta-14.1",
+          name: "ReportSale14.1List",
+          component: () => import("@/views/report/Sale14.1"),
+          beforeEnter: userGuard,
+        },
+
+        
+        {
           path: "compra",
           name: "ReportShoppingList",
           component: () => import("@/views/report/Shopping"),

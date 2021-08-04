@@ -60,7 +60,7 @@
                       </b-form-group>
                     </b-col>
 
-                    <b-col md="4">
+                    <b-col md="5">
                       <b-form-group label="Composición :">
                         <b-form-input disabled type="text" ref="composition" v-model="product.composition" ></b-form-input>
                         <small v-if="errors.composition" class="form-text text-danger">Ingrese una composición</small>
@@ -98,7 +98,7 @@
 
                     <b-col md="3">
                       <b-form-group label="Transformable ? :">
-                        <select disabled  ref="transform" v-model="product.transform" class="form-control" >
+                        <select  disabled v-model="product.transform" class="form-control" >
                           <option value="0">NO</option>
                           <option value="1">Transformable</option>
                           <option value="2">Transformado</option>
@@ -107,23 +107,8 @@
                     </b-col>
 
                     <b-col md="3">
-                      <b-form-group label="Peso Bruto :">
-                        <b-form-input disabled type="number" class="text-right" step="any" ref="gross_weight" v-model="product.gross_weight"></b-form-input>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="3">
-                      <b-form-group label="Peso Costo :">
-                        <b-form-input disabled type="number" class="text-right" step="any" ref="weight_cost" v-model="product.weight_cost"></b-form-input>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="3">
                       <b-form-group label="Comisionable :">
-                        <select disabled ref="commissionable" v-model="product.commissionable" class="form-control">
-                          <option value="1">SI</option>
-                          <option value="0">NO</option>
-                        </select>
+                        <b-form-select disabled type="text" v-model="product.commissionable" :options="commissionable"></b-form-select>
                       </b-form-group>
                     </b-col>
 
@@ -135,16 +120,49 @@
 
                     <b-col md="3">
                       <b-form-group label="Producto Interno :">
-                        <select disabled ref="internal_product" v-model="product.internal_product" class="form-control">
-                          <option value="1">SI</option>
-                          <option value="0">NO</option>
-                        </select>
+                        <b-form-select disabled type="text" v-model="product.internal_product" :options="internal_product"></b-form-select>
                       </b-form-group>
                     </b-col>
 
                     <b-col md="3">
+                      <b-form-group label="Peso Bruto :">
+                        <b-form-input disabled type="number" class="text-right" step="any" ref="gross_weight" v-model="product.gross_weight"></b-form-input>
+                      </b-form-group>
+                    </b-col>
+                    
+                    <b-col md="3">
                       <b-form-group label="Codigo de Barras:">
                         <b-form-input disabled type="text" v-model="product.barcode"></b-form-input>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="3">
+                      <b-form-group label="Web:">
+                        <b-form-select disabled type="text" v-model="product.web" :options="web"></b-form-select>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="3">
+                      <b-form-group label="P. destacado:">
+                        <b-form-select disabled type="text" v-model="product.outstanding" :options="outstanding"></b-form-select>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="3">
+                      <b-form-group label="Oferta:">
+                        <b-form-select disabled type="text" v-model="product.offer" :options="offer"></b-form-select>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="3">
+                      <b-form-group label="Compraron esto:">
+                        <b-form-input disabled type="number" step="any" v-model="product.people_who_bought_this"></b-form-input>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="3">
+                      <b-form-group label="Vieron esto:">
+                        <b-form-input disabled type="number" step="any" v-model="product.people_who_see_this"></b-form-input>
                       </b-form-group>
                     </b-col>
 
@@ -233,6 +251,11 @@ export default {
         purchase_price: 0.0,
         regular_price: 0.0,
         sale_price: 0.0,
+        people_who_bought_this:0,
+        people_who_see_this:0,
+        outstanding:0,
+        offer:0,
+        web:0,
         state: 1,
       },
       mprovider :{id:1, name:'Proveedor varios'},
@@ -243,6 +266,26 @@ export default {
       ],
       brands: [],
       photo: null,
+      commissionable:[
+        {value:0,text:'NO'},
+        {value:1,text:'SI'},
+      ],
+      internal_product :[
+        {value:0,text:'NO'},
+        {value:1,text:'SI'},
+      ],
+      outstanding:[
+        {value:0,text:'NO'},
+        {value:1,text:'SI'},
+      ],
+      offer:[
+        {value:0,text:'NO'},
+        {value:1,text:'SI'},
+      ],
+      web:[
+        {value:0,text:'NO'},
+        {value:1,text:'SI'},
+      ],
       //errors
       errors: {
         id_category: false,
@@ -425,6 +468,11 @@ function ViewProduct() {
         me.product.commission = response.data.result.commission;
         me.product.gross_weight = response.data.result.gross_weight;
         me.product.weight_cost = response.data.result.weight_cost;
+        me.product.people_who_bought_this = response.data.result.people_who_bought_this;
+        me.product.people_who_see_this = response.data.result.people_who_see_this;
+        me.product.outstanding = response.data.result.outstanding;
+        me.product.offer = response.data.result.offer;
+        me.product.web = response.data.result.web;
         me.product.state = response.data.result.state;
         me.mprovider = {id: response.data.result.id_provider, name : response.data.result.provider_name}
         me.ListSubcategories();

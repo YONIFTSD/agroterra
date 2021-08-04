@@ -226,7 +226,7 @@ function DeleteEstablishment(id_establishment) {
     method: "delete",
     url: url,
     headers: {
-      token: this.user.token,
+      token: this.user.api_token,
       module: "Establishment",
       role: 4,
     },

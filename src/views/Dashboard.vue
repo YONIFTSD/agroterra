@@ -1,10 +1,17 @@
 <template>
   <div>
 
+
+
+
+
+
+
     <b-row>
       <b-col md="10">
         <b-row>
           <b-col md="3">
+            <b-row></b-row>
             <b-link class="text-decoration-none"  :to="{ path: '/cliente/listar' }" append>
             <b-card no-body class="text-center bg-primary height-card">
               <b-row class="no-gutters h-100">
@@ -141,6 +148,7 @@ export default {
         products:0,
         clients:0,
       },
+      name :'',
      
     }
   },
@@ -196,7 +204,7 @@ function NumberHome() {
         me.number_home.voucher_observer = response.data.voucher_observer;
         me.number_home.products = response.data.products;
         me.number_home.clients = response.data.clients;
-
+        me.name = 'Rosmery'
         EventBus.$emit('DataChartSale',response.data.data_chart);
       }
   })

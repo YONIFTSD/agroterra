@@ -93,7 +93,7 @@
                         <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 3)" @click="ConfirmDeleteSale(item.id_sale)">Eliminar</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 3 || item.state == 5" @click="SendXML(item.id_sale)">Enviar XML</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 4" @click="modalCPESunat(item.id_sale)">Ver CPE</b-dropdown-item>
-                        <b-dropdown-item v-if="item.state == 1 || item.state == 3"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 1 || item.state == 3 || item.state == 4"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
                       </b-dropdown>
                     </td>
                   </tr>

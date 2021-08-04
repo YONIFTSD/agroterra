@@ -19,26 +19,21 @@
             <table class="table table-hover table-bordered">
               <thead>
                 <tr>
-                  <th width="5%"  rowspan="2" class="text-center align-middle">#</th>
-                  <th width="8%"  rowspan="2" class="text-center align-middle">Código</th>
-                  <th width="45%"  rowspan="2" class="text-center align-middle">Nombre</th>
-                  <th width="13%"  :colspan="warehouses.length" class="text-center align-middle">{{establishment.name }}</th>
-                  <th width="10%"  rowspan="2" class="text-center align-middle">Cantidad</th>
-                  <th width="10%"  rowspan="2" class="text-center align-middle">P. Unit.</th>
-                  <th width="7%"  rowspan="2" class="text-center align-middle">Acciones</th>
-                </tr>
-                <tr>
-                  <th class="text-center" v-for="item in warehouses" :key="item.id_warehouse">{{item.name}}</th>
+                  <th width="5%"  class="text-center align-middle">#</th>
+                  <th width="8%"  class="text-center align-middle">Código</th>
+                  <th width="55%"  class="text-center align-middle">Nombre</th>
+                  <th width="10%"  class="text-center align-middle">Por <br> canjear</th>
+                  <th width="10%"  class="text-center align-middle">Cantidad</th>
+                  <th width="10%"  class="text-center align-middle">P. Unit.</th>
+                  <th width="7%"  class="text-center align-middle">Acciones</th>
                 </tr>
               </thead>
-              <tbody v-for="(item, it) in products" :key="item.id_product">
+              <tbody v-for="(item, it) in products" :key="it">
                 <tr :class="BackgroundColor(item.internal_product,item.commissionable)">
                   <td class="text-center">{{ it + 1 }}</td>
                   <td class="text-left">{{ item.code }}</td>
                   <td class="text-left">{{ item.name + " - "+item.presentation  }}</td>
-                  <td class="text-center" v-for="stock in item.stock" :key="stock.id_warehouse+stock.quantity">
-                  {{ stock.quantity }}
-                  </td>
+                  <td class="text-center">{{ item.stock }}</td>
                   <td class="text-center">
                     <input type="number" value="1" :ref="'mSDCantidad'+item.id_product" class="form-control">
                   </td>
@@ -99,19 +94,12 @@ export default {
       this.id_establishment = id_establishment;
       this.modalProducts = true;
       this.role = role;
-      this.ViewEstablishment();
-      this.ListWarehouse();
-     
-      
-
     });
     
   },
   methods: {
       SearchProducts,
       AddProduct,
-      ViewEstablishment,
-      ListWarehouse,
       BackgroundColor,
 
         ...mapActions('Sale',['mLoadAddSaleDetail']),
@@ -140,56 +128,6 @@ function BackgroundColor(internal_product,commissionable) {
     return 'bg-warning';
   }
   return '';
-}
-function ViewEstablishment() {
-  
-  let me = this;
-  let url = this.url_base + "establishment/view/" + this.id_establishment;
-
-  axios({
-    method: "GET",
-    url: url,
-    headers: {
-      token: this.token,
-      module: this.module,
-      role: this.role,
-    },
-  })
-    .then(function (response) {
-      if (response.data.status == 200) {
-        me.establishment = response.data.result;
-      } else {
-        // Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-      }
-    })
-    .catch((error) => {
-      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-    });
-}
-
-function ListWarehouse() {
-  
-  let me = this;
-  let url = this.url_base + "active-warehouses/"+this.id_establishment;
-  axios({
-    method: "GET",
-    url: url,
-    headers: {
-      token: this.token,
-      module: this.module,
-      role: this.role,
-    },
-  })
-    .then(function (response) {
-      if (response.data.status == 200) {
-        me.warehouses = response.data.result;
-      } else {
-        // Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-      }
-    })
-    .catch((error) => {
-      Swal.fire("422", "A Ocurrido un error" + error, "error");
-    });
 }
 
 function AddProduct(id_product) {
@@ -233,7 +171,7 @@ function SearchProducts() {
   
   let me = this;
   let search = this.search_product == "" ? "all" : this.search_product;
-  let url = this.url_base + "search-products-stock/"+this.id_establishment+"/"+ search + "/"+this.stock;
+  let url = this.url_base + "search-products-stock-vi/"+this.id_establishment+"/"+ search;
 
   axios({
     method: "GET",

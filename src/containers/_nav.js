@@ -262,6 +262,9 @@ if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('
   if (user_permissions.indexOf('ReportSaleDetailList') > -1) {
     item.push({ name: 'Detalle de Ventas', to: '/reporte/venta-detallado'});
   }
+  if (user_permissions.indexOf('ReportSale14.1List') > -1) {
+    item.push({ name: 'Ventas 14.1', to: '/reporte/venta-14.1' });
+  }
   if (user_permissions.indexOf('ReportShoppingList') > -1) {
     item.push({ name: 'Compras', to: '/reporte/compra'});
   }

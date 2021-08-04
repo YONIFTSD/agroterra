@@ -268,7 +268,6 @@ import EventBus from '@/assets/js/EventBus';
 import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
 
-
 // components
 import ModalClients from './../components/ModalClient'
 import ModalProducts from './components/ModalProduct'
