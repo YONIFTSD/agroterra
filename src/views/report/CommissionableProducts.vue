@@ -48,6 +48,12 @@
                   </b-form-group>
                 </b-col>
 
+                 <b-col sm="12" md="2">
+                  <b-form-group label=".">
+                    <b-button class="form-control" type="button" variant="success" @click="ExportExcel">EXCEL</b-button>
+                  </b-form-group>
+                </b-col>
+
             </b-row>
           </b-form>
 
@@ -61,6 +67,7 @@
                     <th class="text-center">T. C.</th>
                     <th class="text-center">Serie</th>
                     <th class="text-center">Numero</th>
+                    <th class="text-center">Usuario</th>
                     <th class="text-center">Código</th>
                     <th class="text-center">Producto</th>
                     <th class="text-center">Cantidad</th>
@@ -77,6 +84,7 @@
                     <td class="text-center">{{ CodeInvoice(item.type_invoice) }}</td>
                     <td class="text-center">{{item.serie}}</td>
                     <td class="text-center">{{item.number}}</td>
+                    <td class="text-center">{{item.user}}</td>
                     <td class="text-left">{{item.code}}</td>
                     <td class="text-left">{{item.name}}</td>
                     <td class="text-center">{{item.quantity}}</td>
@@ -149,6 +157,7 @@ export default {
     Validate,
     Report,
     CodeInvoice,
+    ExportExcel,
   },
 
   computed: {
@@ -168,6 +177,13 @@ export default {
 function CodeInvoice(code) {
   return CodeToName.CodeInvoice(code);
 }
+
+function ExportExcel() {  
+   let me = this;
+  let url = me.url_base + "excel-report-commissionable-products/"+me.report.id_establishment+"/"+me.report.id_user+"/"+me.report.from+"/"+me.report.to;
+  window.open(url,'_blank');
+}
+
 function ListEstablishments() {
 
   let me = this;

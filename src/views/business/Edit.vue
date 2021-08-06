@@ -24,13 +24,12 @@
                     <small v-if="errors.type_price" class="form-text text-danger">Seleccione una opción</small>
                   </b-form-group>
 
-                   <b-form-group label="Tipo de cambio :">
+                  <b-form-group label="Tipo de cambio :">
                     <b-form-input type="number" step="any"  class="text-right" v-model="business.exchange_rate" ></b-form-input>
                     <small v-if="errors.exchange_rate" class="form-text text-danger">Ingrese un tipo de cambio</small>
                   </b-form-group>
 
-
-                  
+ 
                 </b-col>
 
                 <b-col md="9">
@@ -185,6 +184,7 @@ export default {
         phone: "",
         email:'',
         invoice_url: '',
+        type_print:'',
         state: 1,
         type_price: 1,
         exchange_rate:0,
@@ -201,6 +201,7 @@ export default {
         {value:2,text:'Precio por Establecimiento'},
 
       ],
+      
       ubigee : null,
       ubigees : [],
       logo: null,
@@ -218,6 +219,7 @@ export default {
         phone: false,
         email: false,
         invoice_url: false,
+        type_print:false,
       },
       validate: false,
     };
@@ -306,6 +308,7 @@ function ViewBusiness(me) {
         me.business.type_price = response.data.result.type_price;
         me.business.exchange_rate = response.data.result.exchange_rate;
 
+
         for (let index = 0; index < me.ubigees.length; index++) {
           const element = me.ubigees[index];
           if (element.value == me.business.ubigee) {
@@ -393,6 +396,7 @@ function Validate() {
   this.errors.email = this.business.email.length == 0 ? true : false;
 
 
+
   if (this.errors.document_number) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.name) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.tradename) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
@@ -403,6 +407,7 @@ function Validate() {
   if (this.errors.process_type) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.phone) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.email) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+
 
 
 

@@ -86,6 +86,12 @@
                   </b-form-group>
                 </b-col>
 
+                <b-col sm="12" md="2">
+                  <b-form-group label=".">
+                    <b-button class="form-control" type="button" variant="success" @click="ExportExcel">EXCEL</b-button>
+                  </b-form-group>
+                </b-col>
+
             </b-row>
           </b-form>
 
@@ -103,7 +109,6 @@
                     <th class="text-center">Código</th>
                     <th class="text-center">Producto</th>
                     <th class="text-center">U.M.</th>
-                    <th class="text-center">Moneda</th>
                     <th class="text-center">Cantidad</th>
                     <th class="text-center">P. Unit</th>
                     <th class="text-center">P. Total</th>
@@ -118,9 +123,8 @@
                     <td class="text-center">{{item.number}}</td>
                     <td class="text-left">{{item.client_name +" - "+ item.client_document_number}}</td>
                     <td class="text-left">{{item.code}}</td>
-                    <td class="text-left">{{item.name}}</td>
+                    <td class="text-left">{{item.name+ " - "+item.presentation}}</td>
                     <td class="text-center">{{item.unit_measure}}</td>
-                    <td class="text-center">{{item.coin}}</td>
                     <td class="text-center">{{item.quantity}}</td>
                     <td class="text-right">{{item.unit_price}}</td>
                     <td class="text-right">{{item.total_price}}</td>
@@ -249,6 +253,7 @@ export default {
     Validate,
     Report,
     SearchClients,
+    ExportExcel,
   },
 
   computed: {
@@ -266,6 +271,15 @@ export default {
   },
 };
 
+function ExportExcel() {  
+    let me = this;
+  me.report.id_client = me.client == null ? 'all':me.client.id;
+  let url = me.url_base + "excel-report-sales-detail/"+me.report.id_establishment+"/"+me.report.type_invoice+"/"+me.report.way_to_pay+"/"+
+  me.report.order_by+"/"+me.report.method+"/"+me.report.month+"/"+me.report.year+"/"+me.report.from+"/"+me.report.to+"/"+me.report.coin+"/"+me.report.id_client;
+
+
+  window.open(url,'_blank');
+}
 function ListEstablishment() {
 
   let me = this;

@@ -38,6 +38,7 @@ import TheHeaderDropdownAccnt from './TheHeaderDropdownAccnt'
 const je = require("json-encrypt");
 const axios = require("axios").default;
 import { mapState,mapActions } from "vuex";
+
 export default {
   name: 'TheHeader',
   components: {
@@ -90,6 +91,12 @@ function ViewEstablishment() {
   .then(function (response) {
     if (response.data.status == 200) {
       me.name_establishment = response.data.result.name;
+      window.localStorage.removeItem('business');
+      let business = {
+        type_print : response.data.result.type_print
+      }
+      business = je.encrypt(JSON.stringify(business));
+      window.localStorage.setItem( "business",business );
     }
   })
 
@@ -107,6 +114,8 @@ function ViewBussiness() {
   .then(function (response) {
     if (response.data.status == 200) {
       me.name_bussines = response.data.result.name+" - "+response.data.result.document_number;
+
+      
     }
   })
 }

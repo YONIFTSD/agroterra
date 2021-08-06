@@ -346,6 +346,11 @@ export default {
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user;
     },
+    type_print: function () {
+      let business = window.localStorage.getItem("business");
+      business = JSON.parse(JSON.parse(je.decrypt(business)));
+      return business.type_print;
+    },
     id_establishment: function () {
       let establishment = window.localStorage.getItem("id_establishment");
       establishment = JSON.parse(je.decrypt(establishment));
@@ -555,21 +560,26 @@ function Validate() {
 
 
 function DataPrint(id_sale) {
-  let me = this;
-  let url = me.url_base + "sale/data-print/"+id_sale;
-  let data = me.sale;
-  axios({
-    method: "GET",
-    url: url,
-    data: data,
-    headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
-  })
-  .then(function (response) {
-    if (response.data.status == 200) {
-      me.Print(response.data.result);
-    } 
-
-  })
+  if (this.type_print == 1) {
+      let me = this;
+      let url = me.url_base + "sale/data-print/"+id_sale;
+      let data = me.sale;
+      axios({
+        method: "GET",
+        url: url,
+        data: data,
+        headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
+      })
+      .then(function (response) {
+        if (response.data.status == 200) {
+          me.Print(response.data.result);
+        } 
+      })
+  }
+  if (this.type_print == 2) {
+    let url = this.url_base + "voucher-sale/"+id_sale;
+    window.open(url,'_blank');
+  }
 }
 
 function Print(info) {

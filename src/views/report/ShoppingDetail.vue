@@ -23,17 +23,23 @@
                   </b-form-group>
                 </b-col>
 
-                 <b-col sm="12" md="3">
+                 <b-col sm="12" md="2">
                   <b-form-group label="Desde :">
                     <b-form-input class="text-center" :max="report.to" type="date"  ref="to" v-model="report.from"></b-form-input>
                     <small v-if="errors.from" class="form-text text-danger" >Selccione una fecha</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col sm="12" md="3">
+                <b-col sm="12" md="2">
                   <b-form-group label="Hasta :">
                     <b-form-input class="text-center" :min="report.from" type="date"  ref="from" v-model="report.to"></b-form-input>
                     <small v-if="errors.to" class="form-text text-danger" >Selccione una fecha</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col sm="12" md="2">
+                  <b-form-group label="Forma de Pago">
+                    <b-form-select v-model="report.way_to_pay" :options="way_to_pay"></b-form-select>
                   </b-form-group>
                 </b-col>
 
@@ -50,15 +56,17 @@
                   </b-form-group>
                 </b-col>
 
+                
+
                 <b-col sm="12" md="2">
-                  <b-form-group label="Forma de Pago">
-                    <b-form-select v-model="report.way_to_pay" :options="way_to_pay"></b-form-select>
+                  <b-form-group label=".">
+                    <b-button class="form-control" type="submit" variant="primary">BUSCAR</b-button>
                   </b-form-group>
                 </b-col>
 
                 <b-col sm="12" md="2">
                   <b-form-group label=".">
-                    <b-button class="form-control" type="submit" variant="primary">BUSCAR</b-button>
+                    <b-button class="form-control" type="button" variant="success" @click="ExportExcel">EXCEL</b-button>
                   </b-form-group>
                 </b-col>
 
@@ -76,10 +84,12 @@
                     <th class="text-center">Serie</th>
                     <th class="text-center">Numero</th>
                     <th class="text-center">Razón Social</th>
+                      <th class="text-center">Forma <br> de Pago</th>
+                     <th class="text-center">Moneda</th>
                     <th class="text-center">Código</th>
                     <th class="text-center">Producto</th>
                     <th class="text-center">U.M.</th>
-                    <th class="text-center">Moneda</th>
+                   
                     <th class="text-center">Cantidad</th>
                     <th class="text-center">P. Unit</th>
                     <th class="text-center">P. Total</th>
@@ -93,10 +103,15 @@
                     <td class="text-center">{{item.serie}}</td>
                     <td class="text-center">{{item.number}}</td>
                     <td class="text-left">{{item.provider_name +" - "+ item.provider_document_number}}</td>
-                    <td class="text-left">{{item.code}}</td>
-                    <td class="text-left">{{item.name}}</td>
-                    <td class="text-center">{{item.unit_measure}}</td>
+                    <td class="text-center">
+                      <span v-if="item.payment_type == '01'">Contado</span>
+                      <span v-if="item.payment_type == '03'">Crédito</span>
+                    </td>
                     <td class="text-center">{{item.coin}}</td>
+                    <td class="text-left">{{item.code}}</td>
+                    <td class="text-left">{{item.name + " - " +item.presentation}}</td>
+                    <td class="text-center">{{item.unit_measure}}</td>
+                    
                     <td class="text-center">{{item.quantity}}</td>
                     <td class="text-right">{{item.unit_price}}</td>
                     <td class="text-right">{{item.total_price}}</td>
@@ -183,6 +198,7 @@ export default {
     Validate,
     Report,
     SearchProviders,
+     ExportExcel,
   },
 
   computed: {
@@ -200,6 +216,12 @@ export default {
   },
 };
 
+function ExportExcel() {  
+  let me = this;
+  me.report.id_provider = me.provider == null ? 'all':me.provider.id;
+  let url = me.url_base + "excel-report-shopping-detail/"+me.report.id_establishment+"/"+me.report.type_invoice+"/"+me.report.from+"/"+me.report.to+"/"+me.report.coin+"/"+me.report.way_to_pay+"/"+me.report.id_provider;
+  window.open(url,'_blank');
+}
 function ListEstablishment() {
 
   let me = this;

@@ -12,8 +12,8 @@
             <b-row>
 
                
-
-                 <b-col sm="12" md="3">
+                <b-col sm="12" md="1"></b-col>
+                <b-col sm="12" md="3">
                   <b-form-group label="Desde :">
                     <b-form-input class="text-center" :max="report.to" type="date"  ref="to" v-model="report.from"></b-form-input>
                     <small v-if="errors.from" class="form-text text-danger" >Selccione una fecha</small>
@@ -31,6 +31,12 @@
                 <b-col sm="12" md="2">
                   <b-form-group label=".">
                     <b-button class="form-control" type="submit" variant="primary">BUSCAR</b-button>
+                  </b-form-group>
+                </b-col>
+
+                <b-col sm="12" md="2">
+                  <b-form-group label=".">
+                    <b-button class="form-control" type="button" variant="success" @click="ExportExcel">EXCEL</b-button>
                   </b-form-group>
                 </b-col>
 
@@ -147,6 +153,7 @@ export default {
   methods: {
     Validate,
     Report,
+    ExportExcel,
   },
 
   computed: {
@@ -164,7 +171,11 @@ export default {
   },
 };
 
-
+function ExportExcel() {  
+  let me = this;
+  let url = me.url_base + "excel-report-sales-141/"+me.report.from+"/"+me.report.to;
+  window.open(url,'_blank');
+}
 
 function Validate() {
   

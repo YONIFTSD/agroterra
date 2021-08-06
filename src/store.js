@@ -35,15 +35,15 @@ const modules = {
 
 const state = {
   sidebarShow: 'responsive',
-  sidebarMinimize: false,
-  // url_base: 'https://dev.sertaads.com/api/',
-   url_base: 'https://agroterra.reyfact.com/api/',
+  sidebarMinimize: true,
   //  url_base: 'https://agrofrontera.reyfact.com/api/',
-  // url_base: 'https://agroplant.reyfact.com/api/',
+    // url_base: 'https://agroplant.reyfact.com/api/',
+   url_base: 'https://agroterra.reyfact.com/api/',
   // url_base: 'https://kalyfarm.reyfact.com/api/',
   // url_base: 'https://demosisventav1.reyfact.com/api/',
   // url_base: 'https://dutyfree.reyfact.com/api/',
   // url_base: 'https://andalucia.reyfact.com/api/',
+  // url_base: 'https://doraditos.reyfact.com/api/',
   // url_base: 'http://localhost:8000/',
 }
 const mutations = {

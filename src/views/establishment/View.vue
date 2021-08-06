@@ -53,7 +53,7 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="6">
+                <b-col md="4">
                   <b-form-group label="Email :">
                     <b-form-input disabled type="text" v-model="establishment.email"></b-form-input>
                   </b-form-group>
@@ -73,6 +73,12 @@
                       <option value="1">SI</option>
                       <option value="0">NO</option>
                     </select>
+                  </b-form-group>
+                </b-col>
+                <b-col md="2">
+                  <b-form-group label="Tipo de Impresión:">
+                    <b-form-select disabled v-model="establishment.type_print" :options="type_print"></b-form-select>
+                    <small v-if="errors.type_print" class="form-text text-danger">Seleccione una opción</small>
                   </b-form-group>
                 </b-col>
                 <b-col md="2">
@@ -127,9 +133,13 @@ export default {
         address: "",
         validate_stock: 1,
         validate_price: 1,
+        type_print: 1,
         state: 1,
       },
-
+      type_print : [
+        {value:1,text:'Ticket'},
+        {value:2,text:'PDF'},
+      ],
       ubigee: [],
       mubigee:null,
       //errors
@@ -205,6 +215,7 @@ function ViewEstablishment(me) {
         me.establishment.state = response.data.result.state;
         me.establishment.validate_stock = response.data.result.validate_stock;
         me.establishment.validate_price = response.data.result.validate_price;
+        me.establishment.type_print = response.data.result.type_print;
 
         for (let index = 0; index < me.ubigee.length; index++) {
           const element = me.ubigee[index];

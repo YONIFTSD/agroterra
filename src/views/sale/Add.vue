@@ -95,8 +95,6 @@
                   </b-form-group>
                 </b-col>
 
-                 
-
 
                 <!-- Detalle venta -->
                 <b-col md="12">
@@ -104,8 +102,6 @@
                     <small  v-if="errors.sale_detail"  class="form-text text-danger">Ingrese Productos</small>
                 </b-col>
                 
-                
-                <!-- Detalle venta -->
 
                 <b-col md="12" class="mt-2"></b-col>
 
@@ -181,6 +177,7 @@
 
     <b-modal hide-title hide-footer ref="modal-confirm-sale">
       <b-form @submit.prevent="AddSale">
+        
         <b-row>
           <b-col class="text-center" md="12">
               <div class="w-100"><i  class="fas fa-question-circle fa-5x"></i></div>
@@ -340,7 +337,7 @@ export default {
         state: '1',
         number_to_letters: '',
       },
-
+     
       series: null,
       warehouses: [],
       clients: [],
@@ -453,6 +450,11 @@ export default {
       let user = window.localStorage.getItem("user");
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user;
+    },
+    type_print: function () {
+      let business = window.localStorage.getItem("business");
+      business = JSON.parse(JSON.parse(je.decrypt(business)));
+      return business.type_print;
     },
     id_establishment: function () {
       let establishment = window.localStorage.getItem("id_establishment");
@@ -759,30 +761,22 @@ function Validate() {
   if (this.errors.sale_detail == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
+  if (this.type_print == 1) {
+    this.quantity_vouchers = [
+      {value:0, text:'No imprimir'},
+      {value:1, text:'Imp. 1 Comprobante'},
+      {value:2, text:'Imp. 2 Comprobantes'},
+    ];
+  }
+  if (this.type_print == 2) {
+    this.quantity_vouchers = [
+      {value:0, text:'No imprimir'},
+      {value:1, text:'Imp. 1 Comprobante'},
+    ];
+  }
+  
+
   this.modalConfirmSale();
-
-  // let me = this;
-  //   Swal.fire({
-  //   title: 'Esta seguro de emitir la venta?',
-  //   icon: 'warning',
-  //   showDenyButton: true,
-  //   showCancelButton: true,
-  //   confirmButtonText: `Guardar e Imprimir`,
-  //   denyButtonText: `Guardar`,
-  //   denyButtonColor: '#000',
-  //   input: 'select',
-  //   inputOptions: {
-  //     '0' : 'Sin comprobantes',
-  //     '1' : 'Ice cream'
-  //   },
-  // }).then((result) => {
-  //   if (result.isConfirmed) {
-  //     AddSale(me,'Yes');
-
-  //   } else if (result.isDenied) {
-  //     AddSale(me,'No');
-  //   }
-  // })
 }
 
 function modalConfirmSale() {
@@ -790,21 +784,27 @@ function modalConfirmSale() {
 }
 
 function DataPrint(me,id_sale) {
-    // me.isLoading = true;
-  let url = me.url_base + "sale/data-print/"+id_sale;
-  let data = me.sale;
-  axios({
-    method: "GET",
-    url: url,
-    data: data,
-    headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
-  })
-  .then(function (response) {
-    if (response.data.status == 200) {
-      me.Print(response.data.result);
-    } 
+  if (this.type_print == 1) {
+    let url = me.url_base + "sale/data-print/"+id_sale;
+    let data = me.sale;
+    axios({
+      method: "GET",
+      url: url,
+      data: data,
+      headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
+    })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.Print(response.data.result);
+      } 
 
-  })
+    })
+  }
+  if (this.type_print == 2) {
+    let url = this.url_base + "voucher-sale/"+id_sale;
+    window.open(url,'_blank');
+  }
+  
 }
 
 function Print(info) {

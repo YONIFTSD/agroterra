@@ -86,6 +86,14 @@
                   </b-form-group>
                 </b-col>
 
+                <b-col sm="12" md="2">
+                  <b-form-group label=".">
+                    <b-button class="form-control" type="button" variant="success" @click="ExportExcel">EXCEL</b-button>
+                  </b-form-group>
+                </b-col>
+
+                
+
             </b-row>
           </b-form>
 
@@ -272,6 +280,7 @@ export default {
     Validate,
     Report,
     SearchClients,
+    ExportExcel,
   },
 
   computed: {
@@ -288,6 +297,16 @@ export default {
     },
   },
 };
+
+function ExportExcel() {  
+  let me = this;
+  me.report.id_client = me.client == null ? 'all':me.client.id;
+  let url = me.url_base + "excel-report-sales/"+me.report.id_establishment+"/"+me.report.type_invoice+"/"+me.report.way_to_pay+"/"+
+  me.report.order_by+"/"+me.report.method+"/"+me.report.month+"/"+me.report.year+"/"+me.report.from+"/"+me.report.to+"/"+me.report.coin+"/"+me.report.id_client;
+
+  
+  window.open(url,'_blank');
+}
 
 function ListEstablishment() {
 
