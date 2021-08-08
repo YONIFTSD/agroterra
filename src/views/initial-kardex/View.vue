@@ -186,7 +186,7 @@ export default {
     return {
       isLoading:false,
       module: 'InitialKardex',
-      role: 2,
+      role: 5,
       initial_kardex: {
         id_initial_kardex: "",
         id_user: "",

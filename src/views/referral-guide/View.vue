@@ -230,7 +230,7 @@ export default {
     return {
       isLoading:false,
       module: 'ReferralGuide',
-      role: 3,
+      role: 5,
       referral_guide: {
         id_referral_guide: "",
         id_user: "",

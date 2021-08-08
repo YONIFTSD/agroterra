@@ -228,7 +228,7 @@ export default {
     return {
       isLoading: false,
       module: "Product",
-      role: 3,
+      role: 5,
      product: {
         id_category: "",
         id_subcategory: "",

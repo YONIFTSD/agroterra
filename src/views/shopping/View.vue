@@ -240,7 +240,7 @@ export default {
     return {
       isLoading:false,
       module: 'Shopping',
-      role: 3,
+      role: 5,
 
       shopping: {
         id_shopping:'',

@@ -178,7 +178,7 @@ export default {
     return {
       isLoading:false,
       module: 'ControlStock',
-      role: 2,
+      role: 5,
       control_stock: {
         id_control_stock: "",
         id_user: "",

@@ -190,7 +190,7 @@ export default {
   data() {
     return {
       module: "Cash",
-      role: 3,
+      role: 5,
 
       cash: {
           id_cash:0,

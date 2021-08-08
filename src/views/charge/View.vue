@@ -140,7 +140,7 @@ export default {
     return {
       isLoading: false,
       module: 'Charge',
-      role: 2,
+      role: 5,
       charge: {
           id_charge:'',
           id_client:'',

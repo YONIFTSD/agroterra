@@ -151,7 +151,7 @@ export default {
     return {
       isLoading: false,
       module: 'Sale',
-      role: 3,
+      role: 5,
       requirement: {
         id_requirement: "",
         id_establishment: "",

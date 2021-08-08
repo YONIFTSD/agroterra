@@ -134,7 +134,7 @@ export default {
     return {
       isLoading: false,
       module: 'Payment',
-      role: 2,
+      role: 5,
       payment: {
           id_payment:'',
           id_provider:'',

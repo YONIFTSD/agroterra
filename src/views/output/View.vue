@@ -188,7 +188,7 @@ export default {
   data() {
     return {
       module: 'Output',
-      role: 3,
+      role: 5,
       output: {
         id_output:'',
         id_provider:'',

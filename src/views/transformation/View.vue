@@ -207,7 +207,7 @@ export default {
     return {
       module: 'Transformation',
       tabIndex: 0,
-      role: 1,
+      role: 5,
       first:false,
       second: true,
       transformation: {

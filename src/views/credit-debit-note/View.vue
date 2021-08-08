@@ -212,7 +212,7 @@ export default {
     return {
       isLoading:false,
       module: 'CreditDebitNote',
-      role: 2,
+      role: 5,
       credit_debit: {
           id_credit_debit_note:'',
           id_shopping:'',

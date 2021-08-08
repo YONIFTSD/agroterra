@@ -197,7 +197,7 @@ export default {
   data() {
     return {
       module: 'Sale',
-      role: 2,
+      role: 5,
       sale: {
         id_sale: "",
         id_client: "",

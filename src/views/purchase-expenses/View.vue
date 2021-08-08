@@ -156,7 +156,7 @@ export default {
     return {
       isLoading:false,
       module: 'PurchaseExpenses',
-      role: 3,
+      role: 5,
       purchase_expenses: {
           id_purchase_expenses:'',
           id_provider:'',
