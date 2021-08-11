@@ -101,6 +101,7 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
 import LoadingComponent from './../pages/Loading'
+import ApiQuery from "@/assets/js/APIQuery";
 export default {
   name: "UsuarioAdd",
   components:{
@@ -171,21 +172,22 @@ function ListUbigeos() {
 }
 
 function SearchProvider() {
-
-
-  let me = this;
- if (me.provider.document_type == 1) {
+   let me = this;
+  if (me.provider.document_type == 1) {
       if (me.provider.document_number.length == 8) {
         me.errors.document_number = false;
-        axios({
-          method: "GET",
-          url: 'https://dni.optimizeperu.com/api/persons/'+me.provider.document_number,
-        }).then(function (response) {
-          console.log(response);
-            if (response.data.name != undefined ) {
-              me.provider.name =  response.data.first_name + ' ' + response.data.last_name + ' '+ response.data.name;
-            }
-        })
+
+        ApiQuery.SearchDni(me.provider.document_number).then((data) => {
+          if (data.status == 200) {
+            me.provider.name = data.razon_social;
+            me.provider.address = data.direccion;
+          }else{
+            me.provider.name = '';
+            me.provider.address = '';
+          }
+            
+        });
+
       }else{
         me.errors.document_number = true;
         me.error_document_number = 'El nro de ducumento debe contener 8 digitos';
@@ -195,15 +197,18 @@ function SearchProvider() {
   if (me.provider.document_type == 6) {
       if (me.provider.document_number.length == 11) {
         me.errors.document_number = false;
-        axios({
-          method: "GET",
-          url: 'https://dniruc.apisperu.com/api/v1/ruc/'+me.provider.document_number+'?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNlZ2NhbmFodWlyZUBnbWFpbC5jb20ifQ.wEYHsSfNliepUjte7SjQVBPxEEB_4TDy9ZEZ_SwArJM',
-        }).then(function (response) {
-          console.log(response);
-            if (response.data.razonSocial != undefined ) {
-              me.provider.name = response.data.razonSocial;
-            }
-        })
+        
+        ApiQuery.SearchRuc(me.provider.document_number).then((data) => {
+          if (data.status == 200) {
+            me.provider.name = data.razon_social;
+            me.provider.address = data.direccion;
+          }else{
+            me.provider.name = '';
+            me.provider.address = '';
+          }
+            
+        });
+
       }else{
         me.errors.document_number = true;
         me.error_document_number = 'El nro de ducumento debe contener 11 digitos';

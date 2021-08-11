@@ -7,55 +7,32 @@
               <b-row>
                 <b-col md="6">
                   <b-form-group label="Tipo de Documento :">
-                    <select
-                      ref="document_type"
-                      class="form-control"
-                      v-model="provider.document_type"
-                    >
+                    <select class="form-control"  v-model="provider.document_type" >
                       <option value="1">DNI</option>
                       <option value="6">RUC</option>
                       <option value="0">OTROS</option>
                     </select>
-                    <small
-                      v-if="errors.document_type"
-                      class="form-text text-danger"
-                      >Seleccione un tipo de documento</small
-                    >
+                    <small v-if="errors.document_type" class="form-text text-danger">Seleccione un tipo de documento</small >
                   </b-form-group>
                 </b-col>
                 <b-col md="6">
                   <b-form-group label="Nro Documento :">
                     <b-input-group>
-                      <b-form-input
-                        v-model="provider.document_number"
-                        class="form-control"
-                      ></b-form-input>
+                      <b-form-input v-model="provider.document_number" class="form-control" ></b-form-input>
                       <b-input-group-append>
                         <b-button variant="info" @click="SearchProvider">
-                          <b-icon icon="search"></b-icon
-                        ></b-button>
+                          <b-icon icon="search"></b-icon></b-button>
                       </b-input-group-append>
                     </b-input-group>
-                    <small
-                      v-if="errors.document_number"
-                      class="form-text text-danger"
-                      >{{error_document_number}}</small
-                    >
+                    <small v-if="errors.document_number" class="form-text text-danger">{{error_document_number}}</small>
                   </b-form-group>
                 </b-col>
             
 
                 <b-col md="12">
                   <b-form-group label="Nombres / Razón Social:" required>
-                    <b-form-input
-                      type="text"
-                      ref="name"
-                      v-model="provider.name"
-                      placeholder="Ingrese su nombre"
-                    ></b-form-input>
-                    <small v-if="errors.name" class="form-text text-danger"
-                      >Ingrese un nombre o razón social</small
-                    >
+                    <b-form-input type="text" v-model="provider.name" placeholder="Ingrese su nombre"></b-form-input>
+                    <small v-if="errors.name" class="form-text text-danger">Ingrese un nombre o razón social</small>
                   </b-form-group>
                 </b-col>
      
@@ -66,40 +43,21 @@
                   </b-form-group>
                 </b-col>
             
-      
-
                 <b-col md="12">
                   <b-form-group label="Dirección :" required>
-                    <b-form-input
-                      type="text"
-                      ref="address"
-                      v-model="provider.address"
-                    ></b-form-input>
+                    <b-form-input type="text"  ref="address" v-model="provider.address"></b-form-input>
                   </b-form-group>
                 </b-col>
   
       
                 <b-col md="12">
                   <b-form-group label="Email :" required>
-                    <b-form-input
-                      type="email"
-                      ref="email"
-                      v-model="provider.email"
-                      placeholder="Ingrese su email"
-                    ></b-form-input>
+                    <b-form-input type="email" ref="email" v-model="provider.email"  placeholder="Ingrese su email" ></b-form-input>
                   </b-form-group>
                 </b-col>
 
-
- 
-             
                 <b-col md="12">
-                  <b-button
-                    type="submit"
-                    class="form-control bg-primary text-white"
-                    variant="primary"
-                    >GUARDAR</b-button
-                  >
+                  <b-button type="submit" class="form-control bg-primary text-white" variant="primary" >GUARDAR</b-button>
                 </b-col>
               </b-row>
             </b-form>

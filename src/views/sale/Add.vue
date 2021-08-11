@@ -69,15 +69,12 @@
                   </b-form-group>
                 </b-col>
 
-                
-
                  <b-col md="3">
                   <b-form-group>
                     <label class="control-label">Forma de Pago: <span v-if="bnt_fees_collected" class="badge badge-primary link" @click="ModalFeedCollected">Cuotas</span></label>
                     <b-form-select @change="BntFeesCollected" v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
                   </b-form-group>
                 </b-col>
-
                
                 
                 <b-col md="6">
@@ -95,13 +92,11 @@
                   </b-form-group>
                 </b-col>
 
-
                 <!-- Detalle venta -->
                 <b-col md="12">
                     <SaleDetail :type_invoice="sale.type_invoice" :reason="sale.reason"/>
                     <small  v-if="errors.sale_detail"  class="form-text text-danger">Ingrese Productos</small>
                 </b-col>
-                
 
                 <b-col md="12" class="mt-2"></b-col>
 
@@ -592,6 +587,7 @@ function GetNumberBySerie() {
       if (response.data.status == 200) {
         me.sale.number = response.data.result.number;
         me.document_type = response.data.result.document_type;
+        me.sale.broadcast_date = moment(new Date()).local().format("YYYY-MM-DD");
       } else {
         me.sale.number = '';
       }

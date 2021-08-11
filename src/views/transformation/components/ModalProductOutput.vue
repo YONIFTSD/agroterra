@@ -72,7 +72,7 @@ export default {
   data() {
     return {
         modalProducts:false,
-        module:'Output',
+        module:'Transformation',
         role:0,
         search_product:'',
         products: [],
