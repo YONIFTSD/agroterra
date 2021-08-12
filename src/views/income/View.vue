@@ -42,7 +42,7 @@
                 </b-col>
 
                 <b-col md="2">
-                  <b-form-group label="Fecha de cobro:">
+                  <b-form-group label="Fecha Emisión:">
                     <b-form-input type="date" ref="date" v-model="income.date" disabled></b-form-input>
                   </b-form-group>
                 </b-col>

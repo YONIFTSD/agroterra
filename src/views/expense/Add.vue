@@ -41,14 +41,14 @@
                 </b-col>
 
                 <b-col md="2">
-                  <b-form-group label="Fecha de cobro:">
+                  <b-form-group label="Fecha de Pago:">
                     <b-form-input type="date" class="text-center" ref="broadcast_date" v-model="expense.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
-                  <b-form-group label="Fecha de pago:">
+                  <b-form-group label="Fecha Emisión:">
                     <b-form-input type="date" class="text-center" ref="date" v-model="expense.date"></b-form-input>
                     <small v-if="errors.date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>

@@ -11,21 +11,6 @@
       <b-col md="10">
         <b-row>
           <b-col md="3">
-            <b-row></b-row>
-            <b-link class="text-decoration-none"  :to="{ path: '/cliente/listar' }" append>
-            <b-card no-body class="text-center bg-primary height-card">
-              <b-row class="no-gutters h-100">
-                <b-col md="8" class="text-light align-self-center text-center">
-                  <span>Clientes <br> Registrados</span>
-                </b-col>
-                <b-col md="4" class="text-light align-self-center text-center">
-                  <span class="align-middle h3">{{number_home.clients}}</span>
-                </b-col>
-              </b-row>
-            </b-card>
-            </b-link>
-          </b-col>
-          <b-col md="3">
             <b-link class="text-decoration-none"  :to="{ path: '/producto/listar' }" append>
             <b-card no-body class="text-center bg-primary height-card">
               <b-row class="no-gutters h-100">
@@ -34,6 +19,21 @@
                 </b-col>
                 <b-col md="4" class="text-light align-self-center text-center">
                   <span class="align-middle h3">{{number_home.products}}</span>
+                </b-col>
+              </b-row>
+            </b-card>
+            </b-link>
+          </b-col>
+          <b-col md="3">
+            <b-row></b-row>
+            <b-link class="text-decoration-none" @click="modalRequirementsShow" append>
+            <b-card no-body class="text-center bg-primary height-card">
+              <b-row class="no-gutters h-100">
+                <b-col md="8" class="text-light align-self-center text-center">
+                  <span>Requerimientos <br> Pendientes</span>
+                </b-col>
+                <b-col md="4" class="text-light align-self-center text-center">
+                  <span class="align-middle h3">{{number_home.requirements}}</span>
                 </b-col>
               </b-row>
             </b-card>
@@ -112,6 +112,7 @@
     <ModalCPESunat />
     <ModalObserverVouchers />
     <ModalProductsDelivered />
+    <ModalRequirements />
   </div>
 </template>
 <style scoped>
@@ -129,6 +130,7 @@ import EventBus from '@/assets/js/EventBus';
 import ModalCPESunat from './components/ModalCPESunat'
 import ModalObserverVouchers from './components/ModalObserverVouchers'
 import ModalProductsDelivered from './components/ModalProductsDelivered'
+import ModalRequirements from './components/ModalRequirements'
 import ChartSales from './components/ChartSales'
 
 export default {
@@ -138,6 +140,7 @@ export default {
    ModalCPESunat,
    ModalObserverVouchers,
    ModalProductsDelivered,
+   ModalRequirements,
   ChartSales,
   },
   data () {
@@ -147,6 +150,7 @@ export default {
         voucher_observer:0,
         products:0,
         clients:0,
+        requirements:0,
       },
       name :'',
      
@@ -162,6 +166,7 @@ export default {
     modalCPEShow,
     modalObserverVouchersShow,
     modalProductsDeliveredShow,
+    modalRequirementsShow,
     Permission,
     NumberHome,
   },
@@ -180,6 +185,7 @@ export default {
   },
 }
 
+
 function modalCPEShow() {
   EventBus.$emit('ModalCPESunatShow');
 }
@@ -188,6 +194,9 @@ function modalObserverVouchersShow() {
 }
 function modalProductsDeliveredShow() {
   EventBus.$emit('ModalProductsDeliveredShow');
+}
+function modalRequirementsShow() {
+  EventBus.$emit('ModalRequirementsShow');
 }
 
 function NumberHome() {
@@ -204,7 +213,7 @@ function NumberHome() {
         me.number_home.voucher_observer = response.data.voucher_observer;
         me.number_home.products = response.data.products;
         me.number_home.clients = response.data.clients;
-        me.name = 'Rosmery'
+        me.number_home.requirements = response.data.requirements;
         EventBus.$emit('DataChartSale',response.data.data_chart);
       }
   })

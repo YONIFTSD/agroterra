@@ -27,13 +27,10 @@
                     <td class="text-center"> {{ CodeInvoice(item.type_invoice)+ ' '+item.serie+'-'+item.number }}</td>
                     <td class="text-left"> {{ item.establishment_name }}</td>
                     <td class="text-center">
-                      <b-button type="button" @click="ViewRequirement(item.id_requirement)" variant="warning">
+                      <b-button type="button" @click="ViewRequirement(item.id_requirement)" variant="primary">
                         <i class="fas fa-eye"></i>
                       </b-button>
 
-                      <b-button type="button" class="ml-1" @click="AddRequirement(item.id_requirement)" variant="primary">
-                        <i class="fas fa-plus-square"></i>
-                      </b-button>
                     </td>
                   </tr>
                 </tbody>
@@ -70,7 +67,7 @@ export default {
   data() {
     return {
         modalRequirement:false,
-        module: 'Output',
+        module: 'Requirement',
         perPage: 15,
         currentPage: 1,
         rows: 0,
@@ -83,9 +80,9 @@ export default {
     
   },
   mounted () {
-    EventBus.$on('ModalRequirementsShow', (role) => {
+    EventBus.$on('ModalRequirementsShow', () => {
       this.modalRequirement = true;
-      this.role = role;
+      this.role = 1;
       this.ListRequirementsPending();
     });
     
@@ -93,7 +90,6 @@ export default {
   methods: {
       ListRequirementsPending,
       CodeInvoice,
-      AddRequirement,
       ViewRequirement,
 
         ...mapActions('Output',['mLoadAddLinkageOutput','mLoadAddOutputDetail']),
@@ -115,13 +111,6 @@ export default {
 };
 function CodeInvoice(code) {
   return CodeToName.CodeInvoice(code);
-}
-function ViewRequirement(id_requirement) {
- let route = this.$router.resolve({
-    name: "RequirementView",
-    params: { id_requirement: je.encrypt(id_requirement) },
-  });
-  window.open(route.href, '_blank');
 }
 
 function ListRequirementsPending() {
@@ -150,56 +139,12 @@ function ListRequirementsPending() {
     });
 }
 
-function AddRequirement(id_requirement) {
-    let me = this;
-    let url = this.url_base + "requirement/view/" + id_requirement;
-
-    axios({
-      method: "GET",
-      url: url,
-      headers: { token: this.token, module: this.module, role: this.role, },
-    })
-    .then(function (response) {
-      if (response.data.status == 200) {
-          
-        let linkage = {
-          id_module: response.data.result.requirement.id_requirement,
-          module: 'Requerimiento',
-          broadcast_date: response.data.result.requirement.broadcast_date,
-          reference: CodeInvoice(response.data.result.requirement.type_invoice) + " " + response.data.result.requirement.serie + "-"+response.data.result.requirement.number,
-        }
-        EventBus.$emit('Select_Establishment_Destination',response.data.result.requirement.id_establishment);
-        me.mLoadAddLinkageOutput(linkage);
-
-        let requirement_detail = response.data.result.requirement_detail;
-        for (let index = 0; index < requirement_detail.length; index++) {
-          const element = requirement_detail[index];
-          let detail = {
-            id_product: element.id_product,
-            code: element.code,
-            name: element.name,
-            presentation: element.presentation,
-            unit_measure: element.unit_measure,
-            igv: element.igv,
-            existence_type: element.existence_type,
-            quantity: element.quantity,
-          }
-          
-          me.mLoadAddOutputDetail(detail);
-        }
-        
-
-        
-      } else {
-        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      // Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-    });
-
-   
+function ViewRequirement(id_requirement) {
+ let route = this.$router.resolve({
+    name: "RequirementView",
+    params: { id_requirement: je.encrypt(id_requirement) },
+  });
+  window.open(route.href, '_blank');
 }
 //Buscar productos
 function SearchProducts() {
