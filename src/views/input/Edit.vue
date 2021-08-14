@@ -274,6 +274,7 @@ export default {
         {value: "52", text : "Despacho Simplificado - Importación Simplificada"},
         {value: "91", text : "Comprobante de No Domiciliado"},
         {value: "NE", text : "Nota de Entrada"},
+        {value: "GD", text : "Guía de Despacho"},
         {value: "00", text : "Otros"},
       ],
 

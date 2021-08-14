@@ -1,8 +1,10 @@
 <template>
   <div class="c-app">
-    <TheSidebar/>
+
+  
+    <TheSidebar :style="bg_sidebar"/>
     <CWrapper>
-      <TheHeader/>
+      <TheHeader :style="bg_sidebar"/>
       <div class="c-body">
         <main class="c-main">
           <CContainer fluid>
@@ -15,6 +17,7 @@
       <TheFooter/>
     </CWrapper>
     <notifications group="alert" animation-name="v-fade-left" position="top left" :speed="500" />
+  
   </div>
 </template>
 
@@ -22,17 +25,63 @@
 import TheSidebar from './TheSidebar'
 import TheHeader from './TheHeader'
 import TheFooter from './TheFooter'
-
+const axios = require("axios").default;
+import { mapState } from "vuex";
+const je = require("json-encrypt");
 export default {
   name: 'TheContainer',
   components: {
     TheSidebar,
     TheHeader,
     TheFooter
-  }
+  },
+  data() {
+    return {
+      bg_sidebar: "--bg-header : #423C6A; --bg-sidebar : #423C6A; --bg-sidebar-nav-dropdown-toggle : #423C6A; --bg-sidebar-nav-dropdown-items:  #4A46A4; " ,
+      business: {
+        id_company : '',
+        bg_header : '',
+        bg_sidebar : '',
+        bg_sidebar_nav_dropdown_toggle : '',
+        bg_sidebar_nav_dropdown_items : '',
+      },
+    };
+  },
+  mounted () {
+    this.ViewBusiness();
+  },
+  methods: {
+    ViewBusiness,
+  },
+computed: {
+    ...mapState(["url_base"]),
+    token: function () {
+      let user = window.localStorage.getItem("user");
+      user = JSON.parse(JSON.parse(je.decrypt(user)));
+      return user.api_token;
+    }
+  },
+
+  
+}
+
+function ViewBusiness() {
+  let me = this;
+  let url = me.url_base + "get-business";
+
+  axios({
+    method: "GET",
+    url: url,
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.bg_sidebar = "--bg-header : "+response.data.result.bg_header+"; --bg-sidebar : "+response.data.result.bg_sidebar+"; --bg-sidebar-nav-dropdown-toggle : "+response.data.result.bg_sidebar_nav_dropdown_toggle+"; --bg-sidebar-nav-dropdown-items:  "+response.data.result.bg_sidebar_nav_dropdown_items+"; ";
+      } 
+    })
 }
 </script>
 <style>
+
 table tr td{
   padding: 3px !important;
   vertical-align: middle !important;
@@ -46,33 +95,39 @@ table tr th{
   color: #fff;
 }
 td img{
-  max-height: 70px;;
+  max-height: 70px;
 }
 .height-table{
   min-height: 150px !important;
 }
 .c-sidebar {
     color: #fff; 
-    background: #455A64; 
+    background: var(--bg-sidebar); 
 }
-
+.c-header{
+  color: #fff; 
+    background: var(--bg-header); 
+}
 .c-sidebar .c-sidebar-nav-link:hover, .c-sidebar .c-sidebar-nav-dropdown-toggle:hover {
     color: #fff;
-    background: #000;
+    background: var(--bg-sidebar-nav-dropdown-items) !important;
 }
 .c-sidebar-nav-icon {
   color: #fff !important;
 }
 .c-sidebar.c-sidebar-minimized .c-sidebar-nav-item:hover > .c-sidebar-nav-link, .c-sidebar.c-sidebar-minimized .c-sidebar-nav-item:hover > .c-sidebar-nav-dropdown-toggle {
-    background:#607D8B !important;
+    background: var(--bg-sidebar-nav-dropdown-toggle) !important;
+}
+.c-sidebar.c-sidebar-minimized .c-sidebar-nav > .c-sidebar-nav-dropdown > .c-sidebar-nav-dropdown-items {
+    background: var(--bg-sidebar-nav-dropdown-items) !important;
 }
 .c-sidebar.c-sidebar-minimized .c-sidebar-nav > .c-sidebar-nav-dropdown:hover {
-    background: #455A64;
+    background: var(--bg-sidebar-nav-dropdown-toggle) !important;
 }
 
 .c-sidebar .c-sidebar-brand {
     color: #fff;
-    background: #fff !important;
+    background: var(--bg-header); 
 }
 
 div.modal-backdrop {

@@ -125,8 +125,11 @@
                     </b-col>
 
                         <b-col md="3"></b-col>
-                        <b-col md="6">
-                          <b-button type="submit" class="form-control bg-primary text-white"  variant="primary" >GUARDAR</b-button >
+                        <b-col md="3">
+                          <b-button type="button" @click="ModalThemeShow" class="form-control text-white"  variant="primary" >Tema</b-button >
+                        </b-col>
+                        <b-col md="3">
+                          <b-button type="submit" class="form-control text-white"  variant="primary" >Guardar</b-button >
                         </b-col>
 
                     </b-row>
@@ -142,6 +145,8 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <ModalTheme />
   </div>
 </template>
 
@@ -154,12 +159,15 @@ const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
+import ModalTheme from './../components/ModalThemeApp'
+import EventBus from "@/assets/js/EventBus";
 
 export default {
   name: "ProductEdit",
   props: ["id_product"],
   components:{
       vSelect,
+      ModalTheme
   },
   data() {
     return {
@@ -237,6 +245,7 @@ export default {
     Validate,
 
     SelectUbigee,
+    ModalThemeShow,
     
   },
 
@@ -249,7 +258,9 @@ export default {
     },
   },
 };
-
+function ModalThemeShow() {
+  EventBus.$emit('ModalThemeAppShow');
+}
 function onLogoChange(e) {
   this.business.logo_change = e.target.files[0];
 }
@@ -338,6 +349,7 @@ function SelectUbigee() {
     }
   }
 }
+
 //editar usuario
 function EditBusiness(me) {
 

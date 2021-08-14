@@ -40,7 +40,7 @@ var CodeInvoice = (function() {
             case 'AT': code = "AT"; break;
             case 'NA': code = "NA"; break;
             case 'NP': code = "NP"; break;
-            case 'NS': code = "NS"; break;
+            case 'GD': code = "GD"; break;
             default: code = ''; break;
         }
 
@@ -79,6 +79,7 @@ var NameInvoice = (function() {
             case 'NP' : name = "Nota de Pago"; break; 
             case 'NA' : name = "Nota de Almacen"; break; 
             case 'NS' : name = "Nota de Servicio"; break; 
+            case 'GD' : name = "Guía de Despacho"; break; 
             default: name = ''; break;
         }
 

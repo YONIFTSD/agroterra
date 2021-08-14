@@ -38,14 +38,14 @@
                         </b-form-group>
                       </b-col>
 
-                      <b-col md="3" v-if="input.type_invoice != 'NE'">
+                      <b-col md="3" v-if="!(input.type_invoice == 'NE' || input.type_invoice == 'GD')">
                         <b-form-group label="Serie :">
                           <b-form-input type="text" ref="serie" v-model="input.serie"></b-form-input>
                           <small v-if="errors.serie"  class="form-text text-danger" >Ingrese una serie de 4 digitos</small>
                         </b-form-group>
                       </b-col>
 
-                      <b-col md="3" v-if="input.type_invoice == 'NE'">
+                      <b-col md="3" v-if="input.type_invoice == 'NE' || input.type_invoice == 'GD'">
                         <b-form-group label="Serie :">
                           <b-form-select @change="GetNumberBySerie" ref="id_serie" v-model="input.id_serie" :options="series"></b-form-select>
                           <small v-if="errors.id_serie"  class="form-text text-danger" >Seleccione una serie</small>
@@ -54,7 +54,7 @@
 
                       <b-col md="3">
                         <b-form-group label="Numero :">
-                          <b-form-input :readonly="input.type_invoice == 'NE'" type="text" ref="number" @change="NumberPadStart" v-model="input.number"></b-form-input>
+                          <b-form-input :readonly="input.type_invoice == 'NE' || input.type_invoice == 'GD'" type="text" ref="number" @change="NumberPadStart" v-model="input.number"></b-form-input>
                           <small v-if="errors.number" class="form-text text-danger">Ingrese un numero de 8 digitos</small>
                         </b-form-group>
                       </b-col>
@@ -284,6 +284,7 @@ export default {
         {value: "52", text : "Despacho Simplificado - Importación Simplificada"},
         {value: "91", text : "Comprobante de No Domiciliado"},
         {value: "NE", text : "Nota de Entrada"},
+        {value: "GD", text : "Guía de Despacho"},
         {value: "00", text : "Otros"},
       ],
       
@@ -378,40 +379,44 @@ function SearchProvider(search, loading) {
 
 //listar almacenes
 function ListSerie() {
-  if (this.input.type_invoice != 'NE') {
-    return false;
-  }
-  let me = this;
-  let url = this.url_base + "list-series/"+this.input.type_invoice+"/"+this.id_establishment;
+  if (this.input.type_invoice == 'NE' || this.input.type_invoice == 'GD') {
+    let me = this;
+    let url = this.url_base + "list-series/"+this.input.type_invoice+"/"+this.id_establishment;
 
-  axios({
-    method: "GET",
-    url: url,
-    headers: {
-      token: this.token,
-    },
-  })
-    .then(function (response) {
-      me.series = [];
-      if (response.data.status == 200) {
-        let data = response.data.result;
-        for (let index = 0; index < data.length; index++) {
-          me.series.push( { value : data[index].id_serie , text: data[index].serie } );
-          me.input.id_serie = data[index].id_serie;
-        }
-        if (response.data.result.length == 0)  {
-          me.input.id_serie = '';
-          me.input.number = '';
-        }else{
-          me.GetNumberBySerie();
-        }
-      } else {
-        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-      }
+    axios({
+      method: "GET",
+      url: url,
+      headers: {
+        token: this.token,
+      },
     })
-    .catch((error) => {
-      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-    });
+      .then(function (response) {
+        me.series = [];
+        if (response.data.status == 200) {
+          let data = response.data.result;
+          for (let index = 0; index < data.length; index++) {
+            me.series.push( { value : data[index].id_serie , text: data[index].serie } );
+            me.input.id_serie = data[index].id_serie;
+          }
+          if (response.data.result.length == 0)  {
+            me.input.id_serie = '';
+            me.input.number = '';
+          }else{
+            me.GetNumberBySerie();
+          }
+        } else {
+          Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+        }
+      })
+      .catch((error) => {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      });
+  }else{
+    me.input.id_serie = '';
+    me.input.serie = '';
+    me.input.number = '';
+  }
+  
 }
 
 function GetNumberBySerie() {
@@ -593,11 +598,12 @@ function Validate() {
   this.validate = false;
 
   this.errors.id_provider = this.provider == null ? true : false;
-  if (this.input.type_invoice == "NE") {
+  if (this.input.type_invoice == "NE" || this.input.type_invoice == "GD") {
     this.errors.id_serie = this.input.id_serie.length == 4 ? true : false;
   }else{
       this.errors.serie = this.input.serie.length != 4 ? true : false;
   }
+
 
   this.errors.number = this.input.number.length != 8 ? true : false;
   this.errors.broadcast_date = this.input.broadcast_date.length == 0 ? true : false;
@@ -608,7 +614,7 @@ function Validate() {
 
 
   if (this.errors.id_provider == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.input.type_invoice == "NE") {
+  if (this.input.type_invoice == "NE" || this.input.type_invoice == "GD") {
       if (this.errors.id_serie == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   }else{
       if (this.errors.serie == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }

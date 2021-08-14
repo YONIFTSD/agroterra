@@ -11,7 +11,7 @@
 
     <CRenderFunction flat :content-to-render="$options.nav"/>
     <CSidebarMinimizer
-      class="d-md-down-none"
+      class="d-md-down-none text-white"
       @click.native="$store.commit('set', ['sidebarMinimize', !minimize])"
     />
   </CSidebar>

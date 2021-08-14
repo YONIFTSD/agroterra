@@ -1,16 +1,27 @@
 <template>
   <div class="c-app flex-row align-items-center">
     <CContainer>
+
       <CRow class="justify-content-center">
-        <CCol md="5">
+        <CCol md="4">
           <CCardGroup>
             <CCard class="p-4 bg-card">
               <CCardBody>
                 <CForm @submit.prevent="Login">
-                  <h1>Login</h1>
-                  <p class="text-muted">Iniciar sesión en su cuenta</p>
+                  
+                  <div class="w-100 text-center mb-1">
+                    <b-card-img class="img-fluid" style="max-width: 200px;" :src="url_base + business.logo"></b-card-img>
+                  </div>
+                  <div class="w-100 text-center mt-1">
+                    <span>Bienvenido a</span>
+                    <h4>{{business.name}}</h4>
+                  </div>
+                  <div class="w-100 text-center pt-2">
+                    <strong class="text-muted">Ingresa a tu cuenta</strong>
+                  </div>
 
-                
+                  
+                  
 
                   <b-form-group class="mb-1" label="Establecimiento :">
                     <b-form-select ref="id_establishment" v-model="id_establishment" :options="establishments"></b-form-select>
@@ -59,7 +70,7 @@
 } */
 .bg-card{
   background-color: #fff !important;
-
+  
   /* opacity: 0.6; */
 }
 </style>
@@ -77,6 +88,10 @@ export default {
     return {
       email: '',
       password: '',
+      business: {
+        logo:'',
+        name:'',
+      },
       id_establishment: '',
       establishments: [],
 
@@ -89,10 +104,12 @@ export default {
   },
   methods: {
     Login,
-    ListEstablishment
+    ListEstablishment,
+    ViewBussiness,
   },
   mounted() {
     this.ListEstablishment();
+    this.ViewBussiness();
     
   },
   computed: {
@@ -155,6 +172,23 @@ function Login() {
     }
   });
 
+}
+
+function ViewBussiness() {
+  let me = this;
+  let url = this.url_base + "get-business";
+
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token,},
+  })
+  .then(function (response) {
+    if (response.data.status == 200) {
+      me.business.logo = response.data.result.logo;
+      me.business.name = response.data.result.name;
+    }
+  })
 }
 
 function ListEstablishment() {

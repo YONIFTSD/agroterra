@@ -114,7 +114,8 @@ function ViewBussiness() {
   .then(function (response) {
     if (response.data.status == 200) {
       me.name_bussines = response.data.result.name+" - "+response.data.result.document_number;
-
+      // document.querySelector(".c-sidebar").style.background = "red";
+      // document.querySelector(".c-sidebar").style.background = "red";
       
     }
   })

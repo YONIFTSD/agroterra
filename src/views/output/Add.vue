@@ -239,6 +239,7 @@ export default {
       type_invoices:[
         {value: "09", text : "Guía de remisión - Remitente"},
         {value: "NS", text : "Nota de Salida"},
+        {value: "GD", text : "Guía de Despacho"},
       ],
       
       //errors
