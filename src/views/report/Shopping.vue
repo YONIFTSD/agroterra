@@ -80,6 +80,9 @@
               <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
+                    <th class="text-center" colspan="13">COMPRAS ( {{report.from}} -  {{report.to}}) </th>
+                  </tr>
+                  <tr>
                     <th class="text-center">#</th>
                     <th class="text-center">Fecha <br> Emision</th>
                     <th class="text-center">T. D.</th>
@@ -124,6 +127,8 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -137,14 +142,18 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
 import CodeToName from "@/assets/js/CodeToName";
+import LoadingComponent from './../pages/Loading'
 var moment = require("moment");
 export default {
   name: "UsuarioList",
   components:{
     vSelect,
+    LoadingComponent,
+    
   },
   data() {
     return {
+      isLoading: false,
       module: 'Sale',
       role:1,
       perPage: 15,
@@ -272,6 +281,7 @@ function Report(me) {
   me.report.id_provider = me.provider == null ? 'all':me.provider.id;
   let data = me.report;
   let url = this.url_base + "report/shopping";
+  me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -284,6 +294,7 @@ function Report(me) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
 }
 

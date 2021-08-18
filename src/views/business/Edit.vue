@@ -104,6 +104,20 @@
                     </b-col>
 
                     <b-col md="6">
+                      <b-form-group label="Descripción :">
+                        <b-form-input v-model="business.description"></b-form-input>
+                        <small v-if="errors.description" class="form-text text-danger">ingrese una descripción</small>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="6">
+                      <b-form-group label="Email de Backup :">
+                        <b-form-input type="email" v-model="business.email_backup"></b-form-input>
+                        <small v-if="errors.email_backup" class="form-text text-danger">ingrese una email</small>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="6">
                       <b-form-group label="Email :">
                         <b-form-input v-model="business.email"></b-form-input>
                         <small v-if="errors.email" class="form-text text-danger">Ingrese un email</small>
@@ -179,6 +193,7 @@ export default {
         document_number: "",
         name: "",
         tradename: "",
+        description: "",
         ubigee: "",
         country_code: "",
         user_sol: "",
@@ -193,6 +208,7 @@ export default {
         email:'',
         invoice_url: '',
         type_print:'',
+        email_backup:'',
         state: 1,
         type_price: 1,
         exchange_rate:0,
@@ -302,6 +318,7 @@ function ViewBusiness(me) {
         me.business.document_number = response.data.result.document_number;
         me.business.name = response.data.result.name;
         me.business.tradename = response.data.result.tradename;
+        me.business.description = response.data.result.description;
         me.business.ubigee = response.data.result.ubigee;
         me.business.address = response.data.result.address;
         me.business.country_code = response.data.result.country_code;
@@ -318,8 +335,7 @@ function ViewBusiness(me) {
         me.business.state = response.data.result.state;
         me.business.type_price = response.data.result.type_price;
         me.business.exchange_rate = response.data.result.exchange_rate;
-
-
+        me.business.email_backup = response.data.result.email_backup;
         for (let index = 0; index < me.ubigees.length; index++) {
           const element = me.ubigees[index];
           if (element.value == me.business.ubigee) {
@@ -360,6 +376,7 @@ function EditBusiness(me) {
   data.append("document_number", me.business.document_number);
   data.append("name", me.business.name);
   data.append("tradename", me.business.tradename);
+  data.append("description", me.business.description);
   data.append("ubigee", me.ubigee.value);
   data.append("address", me.business.address);
   data.append("country_code", me.business.country_code);
@@ -371,6 +388,7 @@ function EditBusiness(me) {
   data.append("logo", me.business.logo_change);
   data.append("type_price", me.business.type_price);
   data.append("exchange_rate", me.business.exchange_rate);
+  data.append("email_backup", me.business.email_backup);
   data.append("phone", me.business.phone);
   data.append("email", me.business.email);
   axios({

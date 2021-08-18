@@ -33,7 +33,7 @@
              
 
                <b-col md="3">
-                  <b-form-group label="Tipo de Comprobante :">
+                  <b-form-group label="Comprobante :">
                     <b-form-select disabled v-model="sale.type_invoice" :options="type_invoice"></b-form-select>
                   </b-form-group>
                 </b-col>
@@ -60,8 +60,9 @@
                 </b-col>
 
                 <b-col md="3">
-                  <b-form-group label="Forma de Pago :">
-                    <b-form-select disabled v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
+                  <b-form-group>
+                    <label class="control-label">Forma de Pago: <span v-if="disabled_fees_collected" class="badge badge-primary link" @click="ModalFeedCollected">Cuotas</span></label>
+                    <b-form-select disabled @change="BntFeesCollected" v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
                   </b-form-group>
                 </b-col>
 
@@ -122,16 +123,16 @@
 
                 <b-col md="12" class="mt-2"></b-col>
 
-                <b-col md="8">
+                <b-col md="6">
                   <b-form-group class="m-0" >
                     <b-form-input readonly v-model="sale.number_to_letters" ></b-form-input>
                   </b-form-group>
                   <b-row>
                     
-                    <b-col md="6">
+                    <b-col md="7">
                         <div class="table-responsive mt-3">
                           <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
-                            <thead class="">
+                            <thead>
                               <tr>
                                 <th width="25%" class="text-center">Fecha</th>
                                 <th width="75%" class="text-center">Refenrencia</th>
@@ -140,33 +141,72 @@
                             <tbody v-for="(item, it) in sale.linkages" :key="it">
                               <tr>
                                   <td class="align-middle text-center">{{ item.broadcast_date }}</td>
-                                  <td class="align-middle text-center">{{ item.reference + " " + (sale.reason != "" ? " - "+CodeReasor(sale.type_invoice,sale.reason) : "")}}</td>
+                                  <td class="align-middle text-center">{{ item.reference }}</td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
                     </b-col>
-                    <b-col md="6">
+                    <b-col md="5" class="mt-2">
                       <b-form-group label="Observación:">
-                        <b-form-textarea disabled rows="1"  v-model="sale.observation" max-rows="2"></b-form-textarea>
+                        <b-form-textarea v-model="sale.observation"></b-form-textarea>
                       </b-form-group>
                     </b-col>
                   </b-row>
+                  
+                
+                </b-col>
+
+                <b-col md="2">
+
+                  <div class="table-responsive">
+                    <table  class="table   table-hover table-lg mt-lg mb-0">
+                      <tbody>
+                        <tr>
+                            <td width="40%" class="align-middle text-right text-total">SUBTOTAL:</td>
+                            <td width="60%" class="align-middle text-right text-total">{{ sale.subtotal }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">IGV:</td>
+                            <td class="align-middle text-right text-total">{{ sale.igv }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">TOTAL:</td>
+                            <td class="align-middle text-right text-total">{{ sale.total }}</td>
+                        </tr>
+                        <tr>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </b-col>
 
                 <b-col md="4">
-                  <b-form-group class="m-0" label-cols-lg="8" label="Subtotal:" label-align="right" >
-                    <b-form-input readonly class="text-right" v-model="sale.subtotal"></b-form-input>
-                  </b-form-group>
+                  <div class="table-responsive">
+                    <table  class="table  table-lg mt-lg mb-0">
+                      <thead>
+                        <tr>
+                            <td width="70%" class="align-middle text-center">M. Pago:</td>
+                            <td width="30%" class="align-middle text-center">Monto</td>
+                        </tr>
+                      </thead>
+                      <thead>
+                        <tr v-for="(item, it) in payment_cash" :key="it" >
+                            <td class="align-middle">
+                                <b-form-select v-model="item.payment_method" :options="payment_method"></b-form-select>
+                            </td>
+                            <td class="align-middle">
+                              <b-form-select v-model="item.id_cash" :options="cashs"></b-form-select>
+                            </td>
+                            <td class="align-middle">
+                              <b-form-input class="text-right" type="number" step="any" v-model="item.total"></b-form-input>
+                            </td>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
 
-                  <b-form-group  class="m-0"  label-cols-lg="8" label="IGV (18%):"  label-align="right">
-                    <b-form-input readonly class="text-right" v-model="sale.igv"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group  class="m-0" label-cols-lg="8" label="Total:" label-align="right">
-                    <b-form-input readonly class="text-right" v-model="sale.total"></b-form-input>
-                    <small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small>
-                  </b-form-group>
+             
 
                 </b-col>
 
@@ -187,17 +227,61 @@
 
     <!-- Modal Products -->
     <ModalProducts />
-    <!-- Modal Products -->
-
-    <!-- Modal Clients -->
     <ModalClients />
-    <!-- Modal Clients -->
+    
+
+    <b-modal size="md" hide-footer v-model="modal_fees_collected" class="w-100" title="CUOTAS">
+
+             <div class="table-responsive mt-3">
+              <table class="table table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th width="15%" class="text-center">Dias</th>
+                    <th width="40%" class="text-center">Fecha</th>
+                    <th width="30%" class="text-center">Total</th>
+           
+                  </tr>
+                </thead>
+  
+                <tbody v-for="(item, it) in fees_collected" :key="it">
+                  <tr>
+                    <td class="text-center">
+                      <b-form-input class="text-center" disabled v-model="item.days" type="number"></b-form-input>
+                    </td>
+                    <td class="text-center">
+                      <b-form-input class="text-center" disabled v-model="item.date" type="date"></b-form-input>
+                    </td>
+                    <td class="text-right">
+                        <b-form-input class="text-right" disabled v-model="item.total" type="number" step="any"></b-form-input>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+    </b-modal>
 
     
   </div>
 </template>
 
 <style>
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.text-total{
+  font-size: 14px;
+  font-weight: 500;
+}
+
 
 </style>
 <script>
@@ -213,7 +297,6 @@ import EventBus from '@/assets/js/EventBus';
 import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
 import CodeToName from "@/assets/js/CodeToName";
-
 // components
 import ModalClients from './../components/ModalClient'
 import ModalProducts from './components/ModalProduct'
@@ -270,8 +353,10 @@ export default {
         total: '0.00',
         state: '1',
         number_to_letters: '',
+         fees_collected:[],
       },
       sale_detail:[],
+      fees_collected:[],
       series: null,
       warehouses: [],
       clients: [],
@@ -286,10 +371,7 @@ export default {
         {value: "USD", text : "Dolares"},
       ],
       way_to_pay:[
-        {value:"01-008", text: 'Contado - Efectivo'},
-        {value:"01-001", text: 'Contado - Depósito en Cuenta'},
-        {value:"01-002", text: 'Contado - Giro'},
-        {value:"01-005", text: 'Contado - Tarjeta de Débito'},
+        {value:"01-000", text :'Contado'},
         {value:'03-7',text:'Credito - 7 Dias'},
         {value:'03-15',text:'Credito - 15 Dias'},
         {value:'03-30',text:'Credito - 30 Dias'},
@@ -299,7 +381,24 @@ export default {
         {value:'03-90',text:'Credito - 75 Dias'},
       ],
 
-  
+       payment_method: [
+          {value :"001", text :'DEPÓSITO EN CUENTA'},
+          {value :"003", text :'TRANSFERENCIA DE FONDOS'},
+          {value :"004", text :'ORDEN DE PAGO'},
+          {value :"005", text :'TARJETA DE DÉBITO'},
+          {value :"006", text :'TARJETA DE CRÉDITO'},
+          {value :"007", text :'CHEQUES CON LA CLÁUSULA DE "NO NEGOCIABLE"'},
+          {value :"008", text :'EFECTIVO'},
+          {value :"101", text :'TRANSFERENCIAS - COMERCIO EXTERIOR'},
+          {value :"102", text :'CHEQUES BANCARIOS  - COMERCIO EXTERIOR'},
+          {value :"000", text :'PAGO POR WEB'},
+      ],
+
+      cashs:[],
+      id_cash_active:'',
+      payment_cash : [],
+      disabled_fees_collected: false,
+      modal_fees_collected:false,
       //errors
       errors: {
         id_serie: false,
@@ -330,6 +429,11 @@ export default {
 
     DataPrint,
     Print,
+
+
+    
+    BntFeesCollected,
+    ModalFeedCollected,
 
     ...mapActions('Sale',['mLoadResetSaleDetail','mLoadAddSaleDetail']),
   },
@@ -443,8 +547,10 @@ function ViewSale() {
         me.sale.address = response.data.result.address;
         if (response.data.result.payment_type == "01") {
           me.sale.way_to_pay = response.data.result.payment_type+'-'+response.data.result.payment_method;
+          me.disabled_fees_collected = false;
         }else{
           me.sale.way_to_pay = response.data.result.payment_type+'-'+response.data.result.payment_deadline;
+          me.disabled_fees_collected = true;
         }
         
         me.sale.payment_type = response.data.result.payment_type;
@@ -471,8 +577,8 @@ function ViewSale() {
         me.sale.number_to_letters = response.data.result.number_to_letters;
        
         me.sale_detail = response.data.detail_result;
-      
-        
+        me.payment_cash = response.data.charges;
+        me.fees_collected = response.data.result.fees_collected;
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
@@ -604,4 +710,20 @@ function Print(info) {
     });
 }
 
+function BntFeesCollected() {
+  let payment_type = this.sale.way_to_pay.split('-');
+  if (payment_type[0] == "03") {
+    this.disabled_fees_collected = true;
+  }else{
+    this.disabled_fees_collected = false;
+    this.sale.fees_collected = [];
+    
+  }
+
+
+}
+
+function ModalFeedCollected() {
+this.modal_fees_collected = true;
+}
 </script>

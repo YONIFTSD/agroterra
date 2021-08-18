@@ -77,7 +77,7 @@
 
                 <b-col md="2">
                   <b-form-group label="Caja:">
-                    <b-form-select type="number" v-model="charge.id_cash" :options="cashs" ></b-form-select>
+                    <b-form-select type="number" v-model="charge.cash" :options="cashs" ></b-form-select>
                   </b-form-group>
                 </b-col>
 
@@ -140,13 +140,15 @@ export default {
           id_charge:'',
           id_client:'',
           id_user:'',
+          id_sale:0,
+          id_establishment:0,
           broadcast_date:moment(new Date()).local().format("YYYY-MM-DD"),
           payment_method:'008',
           document:'',
           coin:'PEN',
           exchange_rate:'1.00',
           bank:'',
-          id_cash:'',
+          cash:'0',
           number_op:'',
           observation:'',
           total: (0).toFixed(2),
@@ -211,7 +213,10 @@ export default {
         {value :'095', text:'SECREX  CIA. SEGUROS'},
         {value :'099', text:'OTROS'},
       ],
-      cashs:[],
+      cashs:[
+        {value:0,text:'No'},
+        {value:1,text:'Si'},
+      ],
       //errors
       errors: {
         id_client: false,
@@ -227,11 +232,10 @@ export default {
     };
   },
   mounted() {
-    this.GetCashActives();
+ 
   },
   methods: {
     SearchClients,
-    GetCashActives,
     modalClients,
     AddCharge,
     Validate,
@@ -279,28 +283,7 @@ function modalClients() {
   EventBus.$emit('ModalClientsShow');
 }
 
-function GetCashActives() {
-  let me = this;
-  me.cashs = [{value:'',text:'Ninguna'}];
-  let url = me.url_base + "cash/get-cash-actives";
-  axios({
-    method: "GET",
-    url: url,
-    headers: { "Content-Type": "application/json",token: me.token, module: me.module, role: 2,},
-  })
-    .then(function (response) {
-      if (response.data.status == 200) {
-        for (let index = 0; index < response.data.result.length; index++) {
-          let element = response.data.result[index];
-          me.cashs.push({value:element.id_cash,text:element.cash_number});
-        }
-          
-      }
-    })
-    .catch((error) => {
-      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-    });
-}
+
 function AddCharge(me) {
 
   me.charge.id_user = me.user.id_user;

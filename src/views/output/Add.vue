@@ -31,7 +31,7 @@
                 </b-col>
 
                 <b-col md="3">
-                  <b-form-group label="Tipo de Comprobante :">
+                  <b-form-group label="Comprobante :">
                     <b-form-select @change="ListSerie" ref="type_invoice" v-model="output.type_invoice" :options="type_invoices"></b-form-select>
                   </b-form-group>
                 </b-col>

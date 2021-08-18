@@ -9,7 +9,6 @@
           <CCardBody>
             <b-form id="Form" @submit.prevent="Validate">
               <b-row>
-       
                 <b-col md="2">
                   <b-form-group>
                     <b-form-select v-model="sale.id_warehouse" :options="warehouses"></b-form-select>
@@ -24,7 +23,11 @@
                   </b-form-group>
                 </b-col>
     
-                <b-col md="2"></b-col>
+                <b-col md="2">
+                  <b-form-group>
+                    <b-button variant="warning" class="form-control"  @click="modalCurrecyConverterShow">Conversor de Divisas</b-button>
+                  </b-form-group>
+                </b-col>
                 <b-col md="2">
                   <b-form-group>
                     <b-button class="form-control" variant="success" @click="modalOrders">Pedidos</b-button>
@@ -71,7 +74,7 @@
 
                  <b-col md="3">
                   <b-form-group>
-                    <label class="control-label">Forma de Pago: <span v-if="bnt_fees_collected" class="badge badge-primary link" @click="ModalFeedCollected">Cuotas</span></label>
+                    <label class="control-label">Forma de Pago: <span v-if="disabled_fees_collected" class="badge badge-primary link" @click="ModalFeedCollected">Cuotas</span></label>
                     <b-form-select @change="BntFeesCollected" v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
                   </b-form-group>
                 </b-col>
@@ -91,22 +94,21 @@
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
-
                 <!-- Detalle venta -->
                 <b-col md="12">
                     <SaleDetail :type_invoice="sale.type_invoice" :reason="sale.reason"/>
                     <small  v-if="errors.sale_detail"  class="form-text text-danger">Ingrese Productos</small>
                 </b-col>
 
-                <b-col md="12" class="mt-2"></b-col>
-
-                <b-col md="8">
+                <b-col md="12" class="mt-2"> <hr> </b-col>
+  
+                <b-col md="6">
                   <b-form-group class="m-0" >
                     <b-form-input readonly v-model="total_sale.number_to_letters" ></b-form-input>
                   </b-form-group>
                   <b-row>
                     
-                    <b-col md="6">
+                    <b-col md="7">
                         <div class="table-responsive mt-3">
                           <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                             <thead>
@@ -128,7 +130,7 @@
                           </table>
                         </div>
                     </b-col>
-                    <b-col md="6" class="mt-2">
+                    <b-col md="5" class="mt-2">
                       <b-form-group label="Observación:">
                         <b-form-textarea v-model="sale.observation"></b-form-textarea>
                       </b-form-group>
@@ -138,19 +140,60 @@
                 
                 </b-col>
 
+                <b-col md="2">
+
+                  <div class="table-responsive">
+                    <table  class="table   table-hover table-lg mt-lg mb-0">
+                      <tbody>
+                        <tr>
+                            <td width="40%" class="align-middle text-right text-total">SUBTOTAL:</td>
+                            <td width="60%" class="align-middle text-right text-total">{{ total_sale.subtotal }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">IGV:</td>
+                            <td class="align-middle text-right text-total">{{ total_sale.igv }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">TOTAL:</td>
+                            <td class="align-middle text-right text-total">{{ total_sale.total }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="align-middle text-center"><small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </b-col>
+
                 <b-col md="4">
-                  <b-form-group label-cols-lg="8" label="Subtotal:" label-align="right" >
-                    <b-form-input readonly class="text-right" v-model="total_sale.subtotal"></b-form-input>
-                  </b-form-group>
+                  <div class="table-responsive">
+                    <table  class="table  table-lg mt-lg mb-0">
+                      <thead>
+                        <tr>
+                            <td width="65%" class="align-middle text-center">M. Pago:</td>
+                            <td width="30%" class="align-middle text-center">Monto</td>
+                            <td width="5%" class="align-middle text-center"></td>
+                        </tr>
+                      </thead>
+                      <thead>
+                        <tr v-for="(item, it) in payment_cash" :key="it" >
+                            <td class="align-middle">
+                                <b-form-select v-model="item.payment_method" :options="payment_method"></b-form-select>
+                            </td>
+                            <td class="align-middle">
+                              <b-form-input class="text-right" type="number" step="any" v-model="item.total"></b-form-input>
+                            </td>
+                            <td class="align-middle text-center">
+                              <b-button @click="DeletePaymentCash(it)" type="button" class="p-1" variant="danger"><i class="fas fa-trash"></i></b-button>
+                            </td>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
 
-                  <b-form-group   label-cols-lg="8" label="IGV (18%):"  label-align="right">
-                    <b-form-input readonly class="text-right" v-model="total_sale.igv"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group  label-cols-lg="8" label="Total:" label-align="right">
-                    <b-form-input readonly class="text-right" v-model="total_sale.total"></b-form-input>
-                    <small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small>
-                  </b-form-group>
+                  <div class="w-100">
+                    <b-link v-if="!disabled_fees_collected" @click="AddPaymentCash"><i class="fas fa-plus"></i> Agregar pago</b-link>
+                  </div>
 
                 </b-col>
 
@@ -184,67 +227,38 @@
       </b-form>
     </b-modal>
 
-    <b-modal size="md" id="modal_fees_collected" hide-footer v-model="modal_fees_collected" class="w-100" title="CUOTAS">
-      <b-form @submit.prevent="AddFeedCollected">
-        <b-row>
-          <b-col md="5">
-            <b-form-group label="Fecha">
-              <b-form-input class="text-center" :max="fee_collected.max_date" :min="fee_collected.min_date" v-model="fee_collected.date" type="date"></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col md="4">
-            <b-form-group label="Monto">
-              <b-form-input class="text-right" v-model="fee_collected.total" type="number" step="any"></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col md="3">
-            <b-form-group label=".">
-              <b-button type="submit" class="form-control" variant="info"><i class="fas fa-plus-circle"></i></b-button>
-            </b-form-group>
-          </b-col>
-        </b-row>
-
-
-             <div class="table-responsive mt-3">
-              <table class="table table-hover table-bordered">
-                <thead>
-                  <tr>
-                    <th width="5%" class="text-center">#</th>
-                    <th width="40%" class="text-center">Fecha</th>
-                    <th width="45%" class="text-center">Total</th>
-                    <th width="10%" class="text-center"></th>
-                  </tr>
-                </thead>
   
-                <tbody v-for="(item, it) in fees_collected" :key="it">
-                  <tr>
-                    <td class="text-center">{{ it + 1 }}</td>
-                    <td class="text-center"> {{ item.date }}</td>
-                    <td class="text-right"> {{ item.total }} </td>
-                    <td class="text-center">
-                       <b-button @click="DeleteFeedCollected(it)" type="button" class="form-control" variant="danger"><i class="fas fa-trash"></i></b-button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
 
-      </b-form>
-    </b-modal>
-
-<!-- Modal Products -->
     <ModalProducts />
-    <!-- Modal Products -->
-    <!-- Modal Clients -->
     <ModalClients />
-    <!-- Modal Clients -->
-    <ModalOrders/>
+    <ModalOrders />
+    <ModalCurrencyConverter />
+    <ModalFeesCollected :fees_collected="sale.fees_collected" :way_to_pay="sale.way_to_pay" :broadcast_date="sale.broadcast_date"/>
     <LoadingComponent :is-visible="isLoading"/>
     <Keypress key-event="keyup" :key-code="113" @success="modalProducts" />
     <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
 </template>
-<style>
+<style scoped>
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.text-total{
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+</style>>
 
 </style>
 <script>
@@ -265,7 +279,9 @@ import ModalClients from './../components/ModalClient'
 import ModalProducts from './components/ModalProduct'
 import SaleDetail from './components/SaleDetail'
 import ModalOrders from './components/ModalOrder'
+import ModalFeesCollected from './components/ModalFeesCollected'
 import LoadingComponent from './../pages/Loading'
+import ModalCurrencyConverter from './../components/ModalCurrencyConverter'
 
 export default {
   name: "UsuarioAdd",
@@ -275,7 +291,9 @@ export default {
       SaleDetail,
       ModalClients,
       ModalOrders,
+      ModalFeesCollected,
       LoadingComponent,
+      ModalCurrencyConverter,
       Keypress: () => import('vue-keypress'),
   },
   data() {
@@ -307,7 +325,7 @@ export default {
         web_pay: 0,
         coin: "PEN",
         address: '',
-        way_to_pay: "01-008",
+        way_to_pay: "01-000",
         payment_type: "01",
         payment_method: "008",
         payment_deadline: "0",
@@ -348,10 +366,7 @@ export default {
         {value: "USD", text : "Dolares"},
       ],
       way_to_pay:[
-        {value:"01-008", text: 'Contado - Efectivo'},
-        {value:"01-001", text: 'Contado - Depósito en Cuenta'},
-        {value:"01-002", text: 'Contado - Giro'},
-        {value:"01-005", text: 'Contado - Tarjeta de Débito'},
+        {value:"01-000", text :'Contado'},
         {value:'03-7',text:'Credito - 7 Dias'},
         {value:'03-15',text:'Credito - 15 Dias'},
         {value:'03-30',text:'Credito - 30 Dias'},
@@ -361,7 +376,21 @@ export default {
         {value:'03-90',text:'Credito - 75 Dias'},
       ],
 
-  
+       payment_method: [
+          {value :"001", text :'DEPÓSITO EN CUENTA'},
+          {value :"003", text :'TRANSFERENCIA DE FONDOS'},
+          {value :"004", text :'ORDEN DE PAGO'},
+          {value :"005", text :'TARJETA DE DÉBITO'},
+          {value :"006", text :'TARJETA DE CRÉDITO'},
+          {value :"007", text :'CHEQUES CON LA CLÁUSULA DE "NO NEGOCIABLE"'},
+          {value :"008", text :'EFECTIVO'},
+          {value :"101", text :'TRANSFERENCIAS - COMERCIO EXTERIOR'},
+          {value :"102", text :'CHEQUES BANCARIOS  - COMERCIO EXTERIOR'},
+          {value :"000", text :'PAGO POR WEB'},
+      ],
+
+      cashs:[],
+      payment_cash : [],
       //errors
       errors: {
         id_serie: false,
@@ -373,19 +402,8 @@ export default {
       },
       validate: false,
 
-
-
       ///cuotas 
-      modal_fees_collected:false,
-      bnt_fees_collected: false,
-      fees_collected: [],
-      fee_collected: {
-        date:moment(new Date()).local().format("YYYY-MM-DD"),
-        total: (0).toFixed(2),
-        min_date:moment(new Date()).local().format("YYYY-MM-DD"),
-        max_date:moment(new Date()).local().format("YYYY-MM-DD"),
-      },
-      payments:[],
+      disabled_fees_collected: false,
     };
   },
   mounted() {
@@ -394,11 +412,37 @@ export default {
       this.sale.type_invoice = data.type_invoice;
       this.ListSeries();
     });
+
+    EventBus.$on('TotalPaymentCash', () => {
+      let total = this.total_sale.total;
+      let payment_method = this.sale.way_to_pay.split("-");
+      if (payment_method[0] == "01") {
+        if (this.payment_cash.length == 0) {
+          this.payment_cash.push(
+            {id_charge:'', payment_method:'008', document:'', total: parseFloat(total).toFixed(2)}
+          )
+        }else{
+          let total_payment = parseFloat(total) / parseFloat(this.payment_cash.length);
+          for (let index = 0; index < this.payment_cash.length; index++) {
+            this.payment_cash[index].total = parseFloat(total_payment).toFixed(2);
+          }
+        
+        }
+      }else{
+        this.payment_cash = [];
+      }
+      
+    });
+
+    EventBus.$on('ChangeFeesCollected', (data) => {
+      this.sale.fees_collected = data;
+    });
+
+
     this.mLoadResetSaleDetail();
     this.mLoadResetLinkages();
     this.ListWarehouses();
     this.ListSeries();
-
     this.$refs.search_barcode.focus();
   },
   methods: {
@@ -424,12 +468,16 @@ export default {
 
     BntFeesCollected,
     ModalFeedCollected,
-    AddFeedCollected,
-    DeleteFeedCollected,
+  
 
     DeleteLinkeage,
     Teclado,
- 
+
+
+    AddPaymentCash,
+    DeletePaymentCash,
+
+    modalCurrecyConverterShow,
     ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages','mLoadAddSaleDetail']),
   },
 
@@ -458,6 +506,28 @@ export default {
     }
   },
 };
+
+function AddPaymentCash() {
+  let payment_method = this.sale.way_to_pay.split("-");
+  if (payment_method[0] == "01") {
+    this.payment_cash.push(
+      {id_charge:'', payment_method:'008', document:'', total: (0).toFixed(2)}
+    )
+    EventBus.$emit('TotalPaymentCash');
+  }
+  
+}
+
+function  DeletePaymentCash(index) {
+  this.payment_cash.splice(index, 1);
+  EventBus.$emit('TotalPaymentCash');
+}
+
+function  modalCurrecyConverterShow() {
+  EventBus.$emit('ModalCurrecyConverterShow');
+}
+
+
 
 function AddressClient() {
   if (this.client == null) {
@@ -659,7 +729,7 @@ function AddSale() {
   me.sale.number_to_letters = me.total_sale.number_to_letters;
   me.sale.linkages = me.linkages;
   me.sale.sale_detail = me.sale_detail;
-  me.sale.fees_collected = me.fees_collected;
+  me.sale.payment_cash = me.payment_cash;
 
   
   let data = me.sale;
@@ -714,7 +784,8 @@ function AddSale() {
         me.mLoadResetSaleDetail();
         me.mLoadResetLinkages();
         EventBus.$emit('RefreshModalProducts');
-  
+        me.payment_cash = [];
+        me.disabled_fees_collected = false;
         if (me.print_voucher == 1) {
           me.DataPrint(me,response.data.result.id_sale);
         }
@@ -756,6 +827,60 @@ function Validate() {
   if (this.errors.way_to_pay == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.sale_detail == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+
+
+  
+  let total = 0;
+  let payment_method = this.sale.way_to_pay.split("-");
+  if (payment_method[0] == "01") {
+    this.sale.fees_collected = [];
+    for (let index = 0; index < this.payment_cash.length; index++) {
+      const element = this.payment_cash[index];
+      if (element.payment_method == "") {
+        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos cuenten con un metodo de pago', timer: 2000,}); return false;
+      }
+      if (element.total.length == 0) {
+        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
+      }
+      if (parseFloat(element.total) <= 0) {
+        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
+      }
+      total += parseFloat(element.total);
+    }
+    let balance_payment_cash = parseFloat(this.total_sale.total) - parseFloat(total);
+    if (balance_payment_cash < 0 || balance_payment_cash > 0.15) {
+      this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos coincidan con el total del comprobante', timer: 4000,}); 
+      return false;
+    }
+  }else{
+    this.payment_cash = [];
+    if (this.sale.fees_collected.length > 0) {
+      for (let index = 0; index < this.sale.fees_collected.length; index++) {
+        const element = this.sale.fees_collected[index];
+        if (element.date == "") {
+          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas cuenten con un fecha', timer: 2000,}); return false;
+        }
+        if (element.total.length == 0) {
+          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas sean mayores a 0', timer: 2000,}); return false;
+        }
+        if (parseFloat(element.total) <= 0) {
+          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas  sean mayores a 0', timer: 2000,}); return false;
+        }
+        total += parseFloat(element.total);
+      }
+      let balance_fee_collection = parseFloat(this.total_sale.total) - parseFloat(total);
+      console.log(balance_fee_collection)
+      if (balance_fee_collection < 0 || balance_fee_collection > 0.15) {
+        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas coincidan con el total del comprobante', timer: 4000,}); 
+        return false;
+      }
+    }
+    
+  }
+  
+ 
+
+
 
   if (this.type_print == 1) {
     this.quantity_vouchers = [
@@ -828,70 +953,23 @@ function Print(info) {
 // CUOTAS DE PAGO
 function BntFeesCollected() {
   let payment_type = this.sale.way_to_pay.split('-');
-  let days = 0;
   if (payment_type[0] == "03") {
-    this.bnt_fees_collected = true;
+    this.disabled_fees_collected = true;
   }else{
-    this.bnt_fees_collected = false;
-    this.fees_collected = [];
+    this.disabled_fees_collected = false;
+    this.sale.fees_collected = [];
+    
   }
+
+  EventBus.$emit('TotalPaymentCash');
 }
 
 function ModalFeedCollected() {
-  this.modal_fees_collected = true;
-  let payment_type = this.sale.way_to_pay.split('-');
-  let days = payment_type[1];
-  let balance = 0;
-  for (let index = 0; index < this.fees_collected.length; index++) {
-    const element = this.fees_collected[index];
-    balance += parseFloat(element.total);
-  }
-  this.fee_collected.total = parseFloat(this.total_sale.total) - parseFloat(balance); 
-  this.fee_collected.total = this.fee_collected.total.toFixed(2);
-  this.fee_collected.max_date = moment(this.fee_collected.min_date, "YYYY-MM-DD").add('days',parseInt(days)).local().format("YYYY-MM-DD");
-  
+  EventBus.$emit('ModalFeesCollectedShow');
 }
 
-function AddFeedCollected() {
-  let balance = 0;
-  for (let index = 0; index < this.fees_collected.length; index++) {
-    const element = this.fees_collected[index];
-    balance += parseFloat(element.total);
-  }
-  balance = parseFloat(this.total_sale.total) - parseFloat(balance); 
 
-  if (this.fee_collected.date.length == 0 || this.fee_collected.total.length == 0 || balance < parseFloat(this.fee_collected.total))  {
-    return false;
-  }
-  
-  this.fees_collected.push({date:this.fee_collected.date, total: parseFloat(this.fee_collected.total).toFixed(2)});
 
-  balance = 0;
-  for (let index = 0; index < this.fees_collected.length; index++) {
-    const element = this.fees_collected[index];
-    balance += parseFloat(element.total);
-  }
-  this.fee_collected.total = parseFloat(this.total_sale.total) - parseFloat(balance); 
-  this.fee_collected.total = this.fee_collected.total.toFixed(2);
-
-  
-}
-
-function DeleteFeedCollected(index) {
-  for (var i = 0; i < this.fees_collected.length; i++) {
-    if (i == index) {
-      this.fees_collected.splice(i, 1); break;
-    }
-  }
-  let balance = 0;
-  for (let index = 0; index < this.fees_collected.length; index++) {
-    const element = this.fees_collected[index];
-    balance += parseFloat(element.total);
-  }
-  this.fee_collected.total = parseFloat(this.total_sale.total) - parseFloat(balance); 
-  this.fee_collected.total = this.fee_collected.total.toFixed(2);
-  
-}
 
 
 </script>

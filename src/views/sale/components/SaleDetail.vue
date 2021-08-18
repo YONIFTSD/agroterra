@@ -94,7 +94,9 @@ function EditDetail(id_product) {
     }
   }
   this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha modificado el producto ' + name, type: 'warn'})
-  this.mLoadEditSaleDetail(id_product)
+  this.mLoadEditSaleDetail(id_product);
+  EventBus.$emit('TotalPaymentCash');
+  EventBus.$emit('ChangeFeesCollectedModal');
 }
 
 function DeleteDetail(id_product) {
@@ -107,6 +109,8 @@ function DeleteDetail(id_product) {
     }
   }
   this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha eliminado el producto ' + name, type: 'warn'})
-  this.mLoadDeleteSaleDetail(id_product)
+  this.mLoadDeleteSaleDetail(id_product);
+  EventBus.$emit('TotalPaymentCash');
+  EventBus.$emit('ChangeFeesCollectedModal');
 }
 </script>

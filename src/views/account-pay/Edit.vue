@@ -20,7 +20,7 @@
                 </b-col>
 
                 <b-col md="2">
-                  <b-form-group label="Tipo de Comprobante :">
+                  <b-form-group label="Comprobante :">
                     <b-form-select v-model="account_pay.type_invoice" :options="type_invoice"></b-form-select>
                     <small v-if="errors.type_invoice" class="form-text text-danger" >Selccione un tipo de comprobante</small>
                   </b-form-group>

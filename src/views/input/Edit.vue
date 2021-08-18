@@ -33,7 +33,7 @@
                     </b-col>
 
                     <b-col md="3">
-                      <b-form-group label="Tipo de Comprobante :">
+                      <b-form-group label="Comprobante :">
                         <b-form-select ref="type_invoice" v-model="input.type_invoice" :options="type_invoices"></b-form-select>
                       </b-form-group>
                     </b-col>
@@ -121,7 +121,7 @@
                       </b-col>
                     
                       <b-col md="2">
-                        <b-form-group label="Tipo de Comprobante :">
+                        <b-form-group label="Comprobante :">
                           <b-form-select v-model="input.carrier_type_invoice" :options="type_invoices"></b-form-select>
                           <small v-if="errors.carrier_type_invoice"  class="form-text text-danger" >Seleccione un tipo de comprobante</small>
                         </b-form-group>
@@ -401,7 +401,7 @@ function ViewInput() {
         me.input.observation = response.data.result.input.observation; 
         me.input.state = response.data.result.input.state; 
         me.provider = {id:response.data.result.input.id_provider, name: response.data.result.input.provider_name + ' - '+response.data.result.input.provider_document_number}; 
-        me.carrier_provider = response.data.result.carrier_id_provider == "" ? null : {id:response.data.result.input.id_provider, name: response.data.result.input.provider_name + ' - '+response.data.result.input.provider_document_number};
+        me.carrier_provider = response.data.result.carrier_id_provider == "" ? null : {id:response.data.result.input.carrier_id_provider, name: response.data.result.input.carrier_name + ' - '+response.data.result.input.carrier_document_number};
 
         me.input.carrier_id_provider = response.data.result.input.carrier_id_provider;
         me.input.carrier_type_invoice = response.data.result.input.carrier_type_invoice;

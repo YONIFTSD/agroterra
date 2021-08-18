@@ -3,7 +3,7 @@
     <b-modal size="lg" ref="modal-referral-guide" hide-footer v-model="modal_referral_guide" class="w-100" title="GENERAR GUIA DE REMISIÓN">
       <b-row>
           <b-col md="4">
-            <b-form-group label="Tipo de Comprobante :">
+            <b-form-group label="Comprobante :">
               <b-form-select @change="ListSerie" v-model="referral_guide.type_invoice" :options="type_invoices"></b-form-select>
             </b-form-group>
           </b-col>

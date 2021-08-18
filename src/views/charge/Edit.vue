@@ -78,7 +78,7 @@
 
                 <b-col md="2">
                   <b-form-group label="Caja:">
-                    <b-form-input disabled v-model="charge.cash_number" ></b-form-input>
+                    <b-form-select type="number" v-model="charge.cash" :options="cashs" ></b-form-select>
                   </b-form-group>
                 </b-col>
 
@@ -153,7 +153,7 @@ export default {
           document:'',
           coin:'PEN',
           exchange_rate:'1.00',
-          cash_number:'',
+          cash:'',
           bank:'',
           number_op:'',
           observation:'',
@@ -218,6 +218,10 @@ export default {
         {value :'094', text:'SEGUROS LA FENIX PERUANA'},
         {value :'095', text:'SECREX  CIA. SEGUROS'},
         {value :'099', text:'OTROS'},
+      ],
+      cashs:[
+        {value:0,text:'No'},
+        {value:1,text:'Si'},
       ],
       //errors
       errors: {
@@ -306,7 +310,7 @@ function ViewCharge() {
           me.charge.document = response.data.result.document;
           me.charge.coin = response.data.result.coin;
           me.charge.exchange_rate = response.data.result.exchange_rate;
-          me.charge.cash_number = response.data.result.cash_number;
+          me.charge.cash = response.data.result.cash;
           me.charge.bank = response.data.result.bank;
           me.charge.number_op = response.data.result.number_op;
           me.charge.observation = response.data.result.observation;

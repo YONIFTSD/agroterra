@@ -4,7 +4,7 @@
       <CCol col>
         <CCard>
           <CCardHeader>
-            <strong> Reporte Productos Comsionables</strong>
+            <strong> Reporte Liquidación de Ingresos</strong>
           </CCardHeader>
           <CCardBody>
 
@@ -62,36 +62,48 @@
               <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
-                    <th class="text-center" colspan="13">PRODUCTOS COMISIONABLES ( {{report.from}} -  {{report.to}}) </th>
+                    <th class="text-center" colspan="12">LIQUIDACION DE INGRESOS * NUEVOS SOLES * ( {{report.from}} -  {{report.to}}) </th>
                   </tr>
                   <tr>
                     <th class="text-center">#</th>
                     <th class="text-center">Fecha</th>
-                    <th class="text-center">Documento</th>
-                    <th class="text-center">Usuario</th>
-                    <th class="text-center">Código</th>
-                    <th class="text-center">Producto</th>
-                    <th class="text-center">Cantidad</th>
-                    <th class="text-center">P. Unit</th>
-                    <th class="text-center">P. Total</th>
-                    <th class="text-center">Com. Unit.</th>
-                    <th class="text-center">Com. Total</th>
+                    <th class="text-center">Venta del Dia</th>
+                    <th class="text-center">Contado</th>
+                    <th class="text-center">Dep. a Cuenta</th>
+                    <th class="text-center">T. Débito</th>
+                    <th class="text-center">T. Crédito</th>
+                    <th class="text-center">Trans. de Fondos</th>
+                    <th class="text-center">Pago Web</th>
+                    <th class="text-center">Otros</th>
                   </tr>
                 </thead>
-                <tbody v-for="(item, it) in data_table" :key="it">
-                  <tr>
+                <tbody >
+                  <tr v-for="(item, it) in data_table" :key="it">
                     <td class="text-center">{{it + 1}}</td>
-                    <td class="text-center">{{item.broadcast_date}}</td>
-                    <td class="text-center">{{ CodeInvoice(item.type_invoice)+" "+item.serie+"-"+item.number }}</td>
-                    <td class="text-center">{{item.user}}</td>
-                    <td class="text-left">{{item.code}}</td>
-                    <td class="text-left">{{item.name}}</td>
-                    <td class="text-center">{{item.quantity}}</td>
-                    <td class="text-right">{{item.unit_price}}</td>
-                    <td class="text-right">{{item.total_price}}</td>
-                    <td class="text-right">{{item.unit_commission}}</td>
-                    <td class="text-right">{{item.total_commission}}</td>
+                    <td class="text-center">{{item.date}}</td>
+                    <td class="text-right">{{item.sale_day}}</td>
+                    <td class="text-right">{{item.counted}}</td>
+                    <td class="text-right">{{item.deposit_account}}</td>
+                    <td class="text-right">{{item.debit}}</td>
+                    <td class="text-right">{{item.credit}}</td>
+                    <td class="text-right">{{item.transfer_funds}}</td>
+                    <td class="text-right">{{item.web_payment}}</td>
+                    <td class="text-right">{{item.others}}</td>
                   </tr>
+
+                  <tr>
+                    <th class="text-center"></th>
+                    <th class="text-center">{{balance.date}}</th>
+                    <th class="text-right">{{balance.sale_day}}</th>
+                    <th class="text-right">{{balance.counted}}</th>
+                    <th class="text-right">{{balance.deposit_account}}</th>
+                    <th class="text-right">{{balance.debit}}</th>
+                    <th class="text-right">{{balance.credit}}</th>
+                    <th class="text-right">{{balance.transfer_funds}}</th>
+                    <th class="text-right">{{balance.web_payment}}</th>
+                    <th class="text-right">{{balance.others}}</th>
+                  </tr>
+                  
                 </tbody>
                
               </table>
@@ -102,6 +114,7 @@
         </CCard>
       </CCol>
     </CRow>
+
     <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
@@ -116,9 +129,9 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
 import CodeToName from "@/assets/js/CodeToName";
-var moment = require("moment");
 import LoadingComponent from './../pages/Loading'
 
+var moment = require("moment");
 export default {
   name: "UsuarioList",
   components:{
@@ -128,12 +141,13 @@ export default {
   data() {
     return {
       isLoading: false,
-      module: 'ReportCommissionableProducts',
+      module: 'ReportIncomeSettlement',
       role:1,
       perPage: 15,
       currentPage: 1,
       rows: 0,
       data_table: [],
+      balance: {},
 
       report:{
         id_establishment: 'all',
@@ -184,7 +198,7 @@ function CodeInvoice(code) {
 
 function ExportExcel() {  
    let me = this;
-  let url = me.url_base + "excel-report-commissionable-products/"+me.report.id_establishment+"/"+me.report.id_user+"/"+me.report.from+"/"+me.report.to;
+  let url = me.url_base + "excel-report-income-settlement/"+me.report.id_establishment+"/"+me.report.id_user+"/"+me.report.from+"/"+me.report.to;
   window.open(url,'_blank');
 }
 
@@ -251,7 +265,7 @@ function Validate() {
 
 function Report(me) {
   let data = me.report;
-  let url = this.url_base + "report/commissionable-products";
+  let url = this.url_base + "report/income-settlement";
   me.isLoading = true;
   axios({
     method: "POST",
@@ -261,7 +275,8 @@ function Report(me) {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-        me.data_table = response.data.result;
+        me.data_table = response.data.result.report;
+        me.balance = response.data.result.balance;
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }

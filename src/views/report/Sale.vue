@@ -102,6 +102,9 @@
               <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
+                    <th class="text-center" colspan="19">VENTAS ( {{report.from}} -  {{report.to}}) </th>
+                  </tr>
+                  <tr>
                     <th rowspan="2" class="text-center">#</th>
                     <th rowspan="2" class="text-center">Fecha <br> Emision</th>
                     <th rowspan="2" class="text-center">Fecha <br> Vencim.</th>
@@ -164,6 +167,8 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -178,13 +183,17 @@ const je = require("json-encrypt");
 import { mapState } from "vuex";
 import CodeToName from "@/assets/js/CodeToName";
 var moment = require("moment");
+import LoadingComponent from './../pages/Loading'
+
 export default {
   name: "UsuarioList",
   components:{
     vSelect,
+    LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'ReportSale',
       role:1,
       perPage: 15,
@@ -358,6 +367,7 @@ function Report(me) {
   me.report.id_client = me.client == null ? 'all':me.client.id;
   let data = me.report;
   let url = this.url_base + "report/sales";
+  me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -370,6 +380,7 @@ function Report(me) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
 }
 

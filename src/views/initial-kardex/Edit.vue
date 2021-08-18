@@ -12,7 +12,7 @@
 
 
                <b-col md="3">
-                  <b-form-group label="Tipo de Comprobante :">
+                  <b-form-group label="Comprobante :">
                     <b-form-select disabled v-model="initial_kardex.type_invoice" :options="type_invoice"></b-form-select>
                   </b-form-group>
                 </b-col>

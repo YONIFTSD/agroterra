@@ -109,7 +109,7 @@ const actions = {
                     detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                     detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
                   }else{
-                    detail[index].total_cost_igv = parseFloat(detail[index].unit_freight_value) * parseFloat(0.18);
+                    detail[index].total_cost_igv = parseFloat(detail[index].total_freight_value) * parseFloat(0.18);
                     detail[index].total_cost_final = parseFloat(detail[index].total_cost) + parseFloat(detail[index].total_cost_igv);
                     detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                     detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
@@ -149,7 +149,7 @@ const actions = {
                     detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                     detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
                   }else{
-                    detail[index].total_cost_igv = parseFloat(detail[index].unit_freight_value) * parseFloat(0.18);
+                    detail[index].total_cost_igv = parseFloat(detail[index].total_freight_value) * parseFloat(0.18);
                     detail[index].total_cost_final = parseFloat(detail[index].total_cost) + parseFloat(detail[index].total_cost_igv);
                     detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                     detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
@@ -188,12 +188,11 @@ const actions = {
                       detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                       detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
                     }else{
-                      detail[index].total_cost_igv = parseFloat(detail[index].unit_freight_value) * parseFloat(0.18);
+                      detail[index].total_cost_igv = parseFloat(detail[index].total_freight_value) * parseFloat(0.18);
                       detail[index].total_cost_final = parseFloat(detail[index].total_cost) + parseFloat(detail[index].total_cost_igv);
                       detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                       detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
                     }
-  
                     detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(2);
                     detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(2);
                     detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(2);
@@ -226,7 +225,7 @@ const actions = {
                       detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                       detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
                     }else{
-                      detail[index].total_cost_igv = parseFloat(detail[index].unit_freight_value) * parseFloat(0.18);
+                      detail[index].total_cost_igv = parseFloat(detail[index].total_freight_value) * parseFloat(0.18);
                       detail[index].total_cost_final = parseFloat(detail[index].total_cost) + parseFloat(detail[index].total_cost_igv);
                       detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                       detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);

@@ -12,15 +12,15 @@
             <b-row>
 
                
-                <b-col sm="12" md="1"></b-col>
-                <b-col sm="12" md="3">
+                <b-col sm="12" md="2"></b-col>
+                <b-col sm="12" md="2">
                   <b-form-group label="Desde :">
                     <b-form-input class="text-center" :max="report.to" type="date"  ref="to" v-model="report.from"></b-form-input>
                     <small v-if="errors.from" class="form-text text-danger" >Selccione una fecha</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col sm="12" md="3">
+                <b-col sm="12" md="2">
                   <b-form-group label="Hasta :">
                     <b-form-input class="text-center" :min="report.from" type="date"  ref="from" v-model="report.to"></b-form-input>
                     <small v-if="errors.to" class="form-text text-danger" >Selccione una fecha</small>
@@ -47,6 +47,9 @@
             <div class="table-responsive mt-3">
               <table class="table table-hover table-bordered">
                 <thead>
+                  <tr>
+                    <th class="text-center" colspan="19">VENTAS 14.1 ( {{report.from}} -  {{report.to}}) </th>
+                  </tr>
                   <tr>
                     <th rowspan="2" class="text-center">#</th>
                     <th rowspan="2" class="text-center">Fecha <br> Emision</th>
@@ -110,6 +113,8 @@
         </CCard>
       </CCol>
     </CRow>
+
+    <LoadingComponent :is-visible="isLoading"/>
   </div>
 </template>
 
@@ -124,13 +129,17 @@ const je = require("json-encrypt");
 import { mapState } from "vuex";
 import CodeToName from "@/assets/js/CodeToName";
 var moment = require("moment");
+import LoadingComponent from './../pages/Loading'
+
 export default {
   name: "UsuarioList",
   components:{
     vSelect,
+    LoadingComponent,
   },
   data() {
     return {
+      isLoading: false,
       module: 'ReportSale14.1',
       role:1,
       perPage: 15,
@@ -188,6 +197,7 @@ function Validate() {
 function Report(me) {
   let data = me.report;
   let url = this.url_base + "report/sales-141";
+  me.isLoading = true;
   axios({
     method: "POST",
     url: url,
@@ -200,6 +210,7 @@ function Report(me) {
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
 }
 

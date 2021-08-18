@@ -1406,6 +1406,20 @@ function configRoutes() {
           props: true,
           beforeEnter: userGuard,
         },
+        {
+          path: "liquidacion-de-ingresos",
+          name: "ReportIncomeSettlementList",
+          component: () => import("@/views/report/IncomeSettlement"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "liquidacion-de-ingresos-diaria",
+          name: "ReportDayliIncomeSettlementList",
+          component: () => import("@/views/report/DayliIncomeSettlement"),
+          props: true,
+          beforeEnter: userGuard,
+        },
       ],
     },
 

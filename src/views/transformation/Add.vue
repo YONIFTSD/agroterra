@@ -40,7 +40,7 @@
                           </b-col>
 
                           <b-col md="3">
-                            <b-form-group label="Tipo de Comprobante :">
+                            <b-form-group label="Comprobante :">
                               <b-form-select @change="ListSeries(1)" v-model="transformation.type_invoice_output" :options="type_invoice_output"></b-form-select>
                               <small v-if="errors.type_invoice_output"  class="form-text text-danger" >Seleccione un tipo de comprobante</small>
                             </b-form-group>
@@ -85,7 +85,7 @@
                   <b-tab :disabled="second" title="Datos de Entrada">
                       <b-row>
                           <b-col md="3">
-                            <b-form-group label="Tipo de Comprobante :">
+                            <b-form-group label="Comprobante :">
                               <b-form-select @change="ListSeries(2)" v-model="transformation.type_invoice_input" :options="type_invoice_input"></b-form-select>
                             </b-form-group>
                           </b-col>

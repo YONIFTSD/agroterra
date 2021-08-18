@@ -65,7 +65,7 @@
                       </tr>
                     </thead>
                     <tbody v-for="(item, it) in charge_pending" :key="it">
-                      <tr>
+                      <tr v-b-popover.hover.top="item.document" :class="item.id_sale > 0 ? 'bg-info':''">
                         <td class="text-center">{{ it + 1 }}</td>
                         <td class="text-center"> {{ item.broadcast_date  }}</td>
                         <td class="text-left"> {{ item.name + ' - '+item.document_number  }}</td>
@@ -150,7 +150,7 @@
                       </tr>
                     </thead>
                     <tbody v-for="(item, it) in charge_cancelled" :key="it">
-                      <tr>
+                      <tr v-b-popover.hover.top="item.document" :class="item.id_sale > 0 ? 'bg-info':''">
                         <td class="text-center">{{ it + 1 }}</td>
                         <td class="text-center"> {{ item.broadcast_date  }}</td>
                         <td class="text-left"> {{ item.name + ' - '+item.document_number  }}</td>

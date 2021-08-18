@@ -33,19 +33,19 @@
                       </b-col>
 
                       <b-col md="3">
-                        <b-form-group label="Tipo de Comprobante :">
+                        <b-form-group label="Comprobante :">
                           <b-form-select @change="ListSerie" ref="type_invoice" v-model="input.type_invoice" :options="type_invoices"></b-form-select>
                         </b-form-group>
                       </b-col>
 
-                      <b-col md="3" v-if="!(input.type_invoice == 'NE' || input.type_invoice == 'GD')">
+                      <b-col md="3" v-if="input.type_invoice != 'NE'">
                         <b-form-group label="Serie :">
                           <b-form-input type="text" ref="serie" v-model="input.serie"></b-form-input>
                           <small v-if="errors.serie"  class="form-text text-danger" >Ingrese una serie de 4 digitos</small>
                         </b-form-group>
                       </b-col>
 
-                      <b-col md="3" v-if="input.type_invoice == 'NE' || input.type_invoice == 'GD'">
+                      <b-col md="3" v-if="input.type_invoice == 'NE'">
                         <b-form-group label="Serie :">
                           <b-form-select @change="GetNumberBySerie" ref="id_serie" v-model="input.id_serie" :options="series"></b-form-select>
                           <small v-if="errors.id_serie"  class="form-text text-danger" >Seleccione una serie</small>
@@ -54,7 +54,7 @@
 
                       <b-col md="3">
                         <b-form-group label="Numero :">
-                          <b-form-input :readonly="input.type_invoice == 'NE' || input.type_invoice == 'GD'" type="text" ref="number" @change="NumberPadStart" v-model="input.number"></b-form-input>
+                          <b-form-input :readonly="input.type_invoice == 'NE'" type="text" ref="number" @change="NumberPadStart" v-model="input.number"></b-form-input>
                           <small v-if="errors.number" class="form-text text-danger">Ingrese un numero de 8 digitos</small>
                         </b-form-group>
                       </b-col>
@@ -129,7 +129,7 @@
                       </b-col>
                     
                       <b-col md="2">
-                        <b-form-group label="Tipo de Comprobante :">
+                        <b-form-group label="Comprobante :">
                           <b-form-select v-model="input.carrier_type_invoice" :options="type_invoices"></b-form-select>
                           <small v-if="errors.carrier_type_invoice"  class="form-text text-danger" >Seleccione un tipo de comprobante</small>
                         </b-form-group>
@@ -379,7 +379,7 @@ function SearchProvider(search, loading) {
 
 //listar almacenes
 function ListSerie() {
-  if (this.input.type_invoice == 'NE' || this.input.type_invoice == 'GD') {
+  if (this.input.type_invoice == 'NE') {
     let me = this;
     let url = this.url_base + "list-series/"+this.input.type_invoice+"/"+this.id_establishment;
 

@@ -31,7 +31,7 @@
                     </b-col>
 
                     <b-col md="3">
-                      <b-form-group label="Tipo de Comprobante :">
+                      <b-form-group label="Comprobante :">
                         <b-form-select disabled ref="type_invoice" v-model="input.type_invoice" :options="type_invoices"></b-form-select>
                       </b-form-group>
                     </b-col>
@@ -126,28 +126,28 @@
                       <b-col md="6">
                         <b-form-group>
                           <label>Proveedor: </label>
-                          <b-form-input type="text" v-model="input.carrier_provider"></b-form-input>
+                          <b-form-input disabled type="text" v-model="input.carrier_provider"></b-form-input>
                           <small v-if="errors.carrier_id_provider" class="form-text text-danger" >Selccione un proveedor</small>
                         </b-form-group>
                       </b-col>
                     
                       <b-col md="2">
-                        <b-form-group label="Tipo de Comprobante :">
-                          <b-form-select v-model="input.carrier_type_invoice" :options="type_invoices"></b-form-select>
+                        <b-form-group label="Comprobante :">
+                          <b-form-select disabled v-model="input.carrier_type_invoice" :options="type_invoices"></b-form-select>
                           <small v-if="errors.carrier_type_invoice"  class="form-text text-danger" >Seleccione un tipo de comprobante</small>
                         </b-form-group>
                       </b-col>
 
                       <b-col md="2">
                         <b-form-group label="Serie :">
-                          <b-form-input type="text" v-model="input.carrier_serie"></b-form-input>
+                          <b-form-input disabled type="text" v-model="input.carrier_serie"></b-form-input>
                           <small v-if="errors.carrier_serie"  class="form-text text-danger" >Ingrese una serie de 4 digitos</small>
                         </b-form-group>
                       </b-col>
 
                       <b-col md="2">
                         <b-form-group label="Numero :">
-                          <b-form-input type="text" v-model="input.carrier_number"></b-form-input>
+                          <b-form-input disabled type="text" v-model="input.carrier_number"></b-form-input>
                           <small v-if="errors.carrier_number" class="form-text text-danger">Ingrese un numero de 8 digitos</small>
                         </b-form-group>
                       </b-col>
@@ -155,7 +155,7 @@
 
                       <b-col md="12">
                         <b-form-group label="Observación:">
-                          <b-form-textarea rows="1"  v-model="input.carrier_observation" max-rows="3"></b-form-textarea>
+                          <b-form-textarea disabled rows="1"  v-model="input.carrier_observation" max-rows="3"></b-form-textarea>
                         </b-form-group>
                       </b-col>
                       
@@ -365,9 +365,8 @@ function ViewInput() {
         me.input.carrier_serie = response.data.result.input.carrier_serie;
         me.input.carrier_number = response.data.result.input.carrier_number;
         me.input.carrier_observation = response.data.result.input.carrier_observation;
-
-  
-    
+        
+        me.input.carrier_provider = response.data.result.input.carrier_name + ' - '+response.data.result.input.carrier_document_number;
         
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})

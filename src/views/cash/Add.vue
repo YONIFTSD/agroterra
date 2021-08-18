@@ -125,17 +125,32 @@
                                             <td class="text-let pl-5" >Deposito a cuenta</td>
                                             <td class="text-right" >{{cash.deposit_account_pen}}</td>
                                             <td class="text-right" >{{cash.deposit_account_usd}}</td>
-                                            
-                                          </tr>
-                                          <tr class="bg-light text-dark">
-                                            <td class="text-let pl-5" >Giro</td>
-                                            <td class="text-right" >{{cash.turn_pen}}</td>
-                                            <td class="text-right" >{{cash.turn_usd}}</td>
                                           </tr>
                                           <tr class="bg-light text-dark">
                                             <td class="text-let pl-5" >Tarjeta de Débito</td>
                                             <td class="text-right" >{{cash.debit_pen}}</td>
                                             <td class="text-right" >{{cash.debit_usd}}</td>
+                                          </tr>
+                                          
+                                          <tr class="bg-light text-dark">
+                                            <td class="text-let pl-5" >Tarjeta de Crédito</td>
+                                            <td class="text-right" >{{cash.credit_pen}}</td>
+                                            <td class="text-right" >{{cash.credit_usd}}</td>
+                                          </tr>
+                                          <tr class="bg-light text-dark">
+                                            <td class="text-let pl-5" >Transferencia de Fondos</td>
+                                            <td class="text-right" >{{cash.transfer_funds_pen}}</td>
+                                            <td class="text-right" >{{cash.transfer_funds_usd}}</td>
+                                          </tr>
+                                          <tr class="bg-light text-dark">
+                                            <td class="text-let pl-5" >Pagos por Web</td>
+                                            <td class="text-right" >{{cash.web_payment_pen}}</td>
+                                            <td class="text-right" >{{cash.web_payment_usd}}</td>
+                                          </tr>
+                                          <tr class="bg-light text-dark">
+                                            <td class="text-let pl-5" >Otros</td>
+                                            <td class="text-right" >{{cash.others_pen}}</td>
+                                            <td class="text-right" >{{cash.others_usd}}</td>
                                           </tr>
                                           <tr class="bg-info">
                                             <td class="text-let pl-3" >Ventas al Credito</td>
@@ -208,10 +223,10 @@
                                     <b-button type="button" @click="ExportPDF" class="form-control btn btn-primary" variant="info">PDF</b-button>
                                 </b-col>
                                 <b-col md="2">
-                                    <b-button type="button" @click="ExportExcel" class="form-control btn btn-primary" variant="success">EXCEL</b-button>
+                                    <b-button type="button" @click="ExportExcel" class="form-control btn btn-primary" variant="success">Excel</b-button>
                                 </b-col>
                                 <b-col md="2">
-                                    <b-button type="submit" class="form-control btn btn-primary" variant="primary">CERRAR CAJA</b-button>
+                                    <b-button type="submit" class="form-control btn btn-primary" variant="primary">Cerrar Caja</b-button>
                                 </b-col>
                             </b-row>
                       </b-form>
@@ -281,8 +296,11 @@ export default {
           initial_balance_pen:(0).toFixed(2),
           counted_pen:(0).toFixed(2),
           deposit_account_pen:(0).toFixed(2),
-          turn_pen:(0).toFixed(2),
           debit_pen:(0).toFixed(2),
+          credit_pen:(0).toFixed(2),
+          transfer_funds_pen:(0).toFixed(2),
+          others_pen:(0).toFixed(2),
+          web_payment_pen:(0).toFixed(2),
           total_cash_sales_pen:(0).toFixed(2),
           total_credit_sales_pen:(0).toFixed(2),
           total_sales_period_pen:(0).toFixed(2),
@@ -294,8 +312,11 @@ export default {
           initial_balance_usd:(0).toFixed(2),
           counted_usd:(0).toFixed(2),
           deposit_account_usd:(0).toFixed(2),
-          turn_usd:(0).toFixed(2),
           debit_usd:(0).toFixed(2),
+          credit_usd:(0).toFixed(2),
+          transfer_funds_usd:(0).toFixed(2),
+          others_usd:(0).toFixed(2),
+          web_payment_usd:(0).toFixed(2),
           total_cash_sales_usd:(0).toFixed(2),
           total_credit_sales_usd:(0).toFixed(2),
           total_sales_period_usd:(0).toFixed(2),
@@ -573,8 +594,11 @@ function CalculateCash() {
           me.cash.initial_balance_pen = response.data.result.initial_balance_pen;
           me.cash.counted_pen = response.data.result.counted_pen;
           me.cash.deposit_account_pen = response.data.result.deposit_account_pen;
-          me.cash.turn_pen = response.data.result.turn_pen;
           me.cash.debit_pen = response.data.result.debit_pen;
+          me.cash.credit_pen = response.data.result.credit_pen;
+          me.cash.transfer_funds_pen = response.data.result.transfer_funds_pen;
+          me.cash.others_pen = response.data.result.others_pen;
+          me.cash.web_payment_pen = response.data.result.web_payment_pen;
           me.cash.total_cash_sales_pen = response.data.result.total_cash_sales_pen;
           me.cash.total_credit_sales_pen = response.data.result.total_credit_sales_pen;
           me.cash.total_sales_period_pen = response.data.result.total_sales_period_pen;
@@ -586,8 +610,11 @@ function CalculateCash() {
           me.cash.initial_balance_usd = response.data.result.initial_balance_usd;
           me.cash.counted_usd = response.data.result.counted_usd;
           me.cash.deposit_account_usd = response.data.result.deposit_account_usd;
-          me.cash.turn_usd = response.data.result.turn_usd;
           me.cash.debit_usd = response.data.result.debit_usd;
+          me.cash.credit_usd = response.data.result.credit_usd;
+          me.cash.transfer_funds_usd = response.data.result.transfer_funds_usd;
+          me.cash.others_usd = response.data.result.others_usd;
+          me.cash.web_payment_usd = response.data.result.web_payment_usd;
           me.cash.total_cash_sales_usd = response.data.result.total_cash_sales_usd;
           me.cash.total_credit_sales_usd = response.data.result.total_credit_sales_usd;
           me.cash.total_sales_period_usd = response.data.result.total_sales_period_usd;

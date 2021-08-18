@@ -32,7 +32,7 @@
                 </b-col>
 
                 <b-col md="3">
-                  <b-form-group label="Tipo de Comprobante :">
+                  <b-form-group label="Comprobante :">
                     <b-form-select ref="invoice_type" v-model="shopping.invoice_type" :options="invoices_type"></b-form-select>
                   </b-form-group>
                 </b-col>
