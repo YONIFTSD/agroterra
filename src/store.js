@@ -15,6 +15,7 @@ import ExchangeDocument from './modules/ExchangeDocument'
 import SettlementPayment from './modules/SettlementPayment'
 import SettlementCollection from './modules/SettlementCollection'
 import CreditDebitNote from './modules/CreditDebitNote'
+import SalePOS from './modules/SalePOS'
 
 const modules = {
   RoomControl,
@@ -31,6 +32,7 @@ const modules = {
   SettlementPayment,
   SettlementCollection,
   CreditDebitNote,
+  SalePOS,
 }
 
 const state = {

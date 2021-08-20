@@ -5,6 +5,7 @@ import converter from "@/assets/js/NumberToLetters";
 //to handle state
 const state = {
     sale_detail: [],
+    coin:'PEN',
     total_sale:{
         taxed_operation: (0).toFixed(2),
         exonerated_operation: (0).toFixed(2),
@@ -25,7 +26,10 @@ const getters = {}
 
 //to handle actions
 const actions = {
-
+    mLoadEditCoin(context,coin) {
+        context.commit('mEditCoin',coin);
+        context.dispatch('mLoadTotalSaleDetail');
+    },
     mLoadAddSaleDetail(context,product) {
         let validate = true;
         let detail = context.state.sale_detail;
@@ -87,9 +91,11 @@ const actions = {
             discount:0,
             subtotal:0,
             igv:0,
-            total:0
+            total:0,
+            number_to_letters:''
         }
         let detail = context.state.sale_detail;
+        let coin = context.state.coin;
 
         for (let index = 0; index < detail.length; index++) {
             if (detail[index].igv == '10') {
@@ -114,8 +120,14 @@ const actions = {
         total.subtotal = total.subtotal.toFixed(2);
         total.igv = total.igv.toFixed(2);
         total.total = total.total.toFixed(2);
-        total.number_to_letters =  "SON : " +converter.NumberToLetters(total.total);
-
+        
+        converter.NumberToLettersApi(total.total,coin).then((data) => {
+        if (data.status == 200) {
+            total.number_to_letters = 'SON : '+ data.result;
+        }else{
+            total.number_to_letters =  "SON : " +converter.NumberToLetters(total.total);
+        } 
+        });
 
         context.commit('mTotalSale',total);
         
@@ -151,12 +163,14 @@ const mutations = {
 
     mTotalSale(state,total){
         state.total_sale = total;
-    }
-    ,
+    },
     mResertSaleDetail(state) {
         state.sale_detail = [];
+        state.coin = 'PEN';
     },
-
+    mEditCoin(state,coin) {
+        state.coin = coin;
+    },
 
     mAddLinkages(state, linkage) {
         state.linkages.push(linkage);

@@ -19,7 +19,7 @@
 
                 <b-col md="2">
                   <b-form-group>
-                    <b-form-select v-model="sale.coin" :options="coins"></b-form-select>
+                    <b-form-select @change="ChangeCoin" v-model="sale.coin" :options="coins"></b-form-select>
                     <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
                   </b-form-group>
                 </b-col>
@@ -489,8 +489,8 @@ export default {
     DeletePaymentCash,
 
     modalCurrecyConverterShow,
-
-    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadAddSaleDetail']),
+    ChangeCoin,
+    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadAddSaleDetail','mLoadEditCoin']),
   },
 
   computed: {
@@ -518,6 +518,10 @@ export default {
     }
   },
 };
+
+function ChangeCoin() {
+  this.mLoadEditCoin(this.sale.coin);
+}
 
 function AddPaymentCash() {
   let payment_method = this.sale.way_to_pay.split("-");
@@ -684,7 +688,7 @@ function ViewSale() {
       if (response.data.status == 200) {
       
         me.client = {id: response.data.result.id_client,full_name: response.data.result.name + ' - ' + response.data.result.document_number};
-
+        me.mLoadEditCoin(response.data.result.coin);
         me.sale.id_sale = response.data.result.id_sale,
         me.sale.id_warehouse = response.data.result.id_warehouse,
         me.sale.linkages = response.data.result.linkages;

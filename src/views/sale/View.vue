@@ -193,13 +193,10 @@
                       <thead>
                         <tr v-for="(item, it) in payment_cash" :key="it" >
                             <td class="align-middle">
-                                <b-form-select v-model="item.payment_method" :options="payment_method"></b-form-select>
+                                <b-form-select disabled v-model="item.payment_method" :options="payment_method"></b-form-select>
                             </td>
                             <td class="align-middle">
-                              <b-form-select v-model="item.id_cash" :options="cashs"></b-form-select>
-                            </td>
-                            <td class="align-middle">
-                              <b-form-input class="text-right" type="number" step="any" v-model="item.total"></b-form-input>
+                              <b-form-input disabled class="text-right" type="number" step="any" v-model="item.total"></b-form-input>
                             </td>
                         </tr>
                       </thead>

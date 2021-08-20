@@ -115,14 +115,14 @@ const actions = {
                     detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
                   }
 
-                  detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(2);
-                  detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(2);
-                  detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(2);
-                  detail[index].unit_cost_igv = parseFloat(detail[index].unit_cost_igv).toFixed(2);
-                  detail[index].unit_cost_final = parseFloat(detail[index].unit_cost_final).toFixed(2);
-                  detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(2);
-                  detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(2);
-                  detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(2);
+                  detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(5);
+                  detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(5);
+                  detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(5);
+                  detail[index].unit_cost_igv = parseFloat(detail[index].unit_cost_igv).toFixed(5);
+                  detail[index].unit_cost_final = parseFloat(detail[index].unit_cost_final).toFixed(5);
+                  detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(5);
+                  detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(5);
+                  detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(5);
                   
 
                 }
@@ -155,14 +155,14 @@ const actions = {
                     detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
                   }
 
-                  detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(2);
-                  detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(2);
-                  detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(2);
-                  detail[index].unit_cost_igv = parseFloat(detail[index].unit_cost_igv).toFixed(2);
-                  detail[index].unit_cost_final = parseFloat(detail[index].unit_cost_final).toFixed(2);
-                  detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(2);
-                  detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(2);
-                  detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(2);
+                  detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(5);
+                  detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(5);
+                  detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(5);
+                  detail[index].unit_cost_igv = parseFloat(detail[index].unit_cost_igv).toFixed(5);
+                  detail[index].unit_cost_final = parseFloat(detail[index].unit_cost_final).toFixed(5);
+                  detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(5);
+                  detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(5);
+                  detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(5);
                   
 
                 }
@@ -193,14 +193,14 @@ const actions = {
                       detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                       detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
                     }
-                    detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(2);
-                    detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(2);
-                    detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(2);
-                    detail[index].unit_cost_igv = parseFloat(detail[index].unit_cost_igv).toFixed(2);
-                    detail[index].unit_cost_final = parseFloat(detail[index].unit_cost_final).toFixed(2);
-                    detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(2);
-                    detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(2);
-                    detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(2);
+                    detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(5);
+                    detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(5);
+                    detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(5);
+                    detail[index].unit_cost_igv = parseFloat(detail[index].unit_cost_igv).toFixed(5);
+                    detail[index].unit_cost_final = parseFloat(detail[index].unit_cost_final).toFixed(5);
+                    detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(5);
+                    detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(5);
+                    detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(5);
 
                   }
                 //   console.log(detail)
@@ -230,14 +230,14 @@ const actions = {
                       detail[index].unit_cost_igv = parseFloat(detail[index].total_cost_igv) / parseFloat(detail[index].quantity);
                       detail[index].unit_cost_final = parseFloat(detail[index].total_cost_final) / parseFloat(detail[index].quantity);
                     }
-                    detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(2);
-                    detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(2);
-                    detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(2);
-                    detail[index].unit_cost_igv = parseFloat(detail[index].unit_cost_igv).toFixed(2);
-                    detail[index].unit_cost_final = parseFloat(detail[index].unit_cost_final).toFixed(2);
-                    detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(2);
-                    detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(2);
-                    detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(2);
+                    detail[index].unit_freight_value = parseFloat(detail[index].unit_freight_value).toFixed(5);
+                    detail[index].total_freight_value = parseFloat(detail[index].total_freight_value).toFixed(5);
+                    detail[index].unit_cost = parseFloat(detail[index].unit_cost).toFixed(5);
+                    detail[index].unit_cost_igv = parseFloat(detail[index].unit_cost_igv).toFixed(5);
+                    detail[index].unit_cost_final = parseFloat(detail[index].unit_cost_final).toFixed(5);
+                    detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(5);
+                    detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(5);
+                    detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(5);
 
                   }
                 //   console.log(detail)

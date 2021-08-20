@@ -33,7 +33,7 @@ const actions = {
             if (detail[index].id_product == product.id_product) {
 
                 detail[index].quantity = parseFloat(detail[index].quantity) + parseFloat(product.quantity);
-                detail[index].unit_value = detail[index].unit_value.length == 0 ? (0).toFixed(2) : parseFloat(detail[index].unit_value).toFixed(2);
+                detail[index].unit_value = detail[index].unit_value.length == 0 ? (0).toFixed(5) : parseFloat(detail[index].unit_value).toFixed(5);
                 detail[index].percentage_discount = detail[index].percentage_discount.length == 0 ? (0).toFixed(2) : parseFloat(detail[index].percentage_discount).toFixed(2);
                 detail[index].unit_discount = (parseFloat(detail[index].percentage_discount) * parseFloat(detail[index].unit_value)) / 100;
                 detail[index].total_discount = (parseFloat(detail[index].unit_discount) * parseFloat(detail[index].quantity));
@@ -69,16 +69,16 @@ const actions = {
                 detail[index].total_price = parseFloat(detail[index].unit_price) * parseFloat(detail[index].quantity);
                 
 
-                detail[index].unit_discount = detail[index].unit_discount.toFixed(2);
-                detail[index].net_unit_value = detail[index].net_unit_value.toFixed(2);
-                detail[index].unit_igv = detail[index].unit_igv.toFixed(2);
-                detail[index].unit_price = detail[index].unit_price.toFixed(2);
+                detail[index].unit_discount = detail[index].unit_discount.toFixed(5);
+                detail[index].net_unit_value = detail[index].net_unit_value.toFixed(5);
+                detail[index].unit_igv = detail[index].unit_igv.toFixed(5);
+                detail[index].unit_price = detail[index].unit_price.toFixed(5);
                 
-                detail[index].total_value = detail[index].total_value.toFixed(2);
-                detail[index].total_discount = detail[index].total_discount.toFixed(2);
-                detail[index].net_total_value = detail[index].net_total_value.toFixed(2);
-                detail[index].total_igv = detail[index].total_igv.toFixed(2);
-                detail[index].total_price = detail[index].total_price.toFixed(2);
+                detail[index].total_value = detail[index].total_value.toFixed(5);
+                detail[index].total_discount = detail[index].total_discount.toFixed(5);
+                detail[index].net_total_value = detail[index].net_total_value.toFixed(5);
+                detail[index].total_igv = detail[index].total_igv.toFixed(5);
+                detail[index].total_price = detail[index].total_price.toFixed(5);
 
                 validate = false;
                 context.dispatch('mLoadTotalsShoppingDetail');
@@ -106,7 +106,7 @@ const actions = {
         for (let index = 0; index < detail.length; index++) {
             if (detail[index].id_product == id_product) {
                 detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity);
-                detail[index].unit_value = detail[index].unit_value.length == 0 ? (0).toFixed(2) : parseFloat(detail[index].unit_value).toFixed(2);
+                detail[index].unit_value = detail[index].unit_value.length == 0 ? (0).toFixed(5) : parseFloat(detail[index].unit_value).toFixed(5);
                 
                 detail[index].percentage_discount = detail[index].percentage_discount.length == 0 ? (0).toFixed(2) : parseFloat(detail[index].percentage_discount).toFixed(2);
                 detail[index].unit_discount = (parseFloat(detail[index].percentage_discount) * parseFloat(detail[index].unit_value)) / 100;
@@ -144,16 +144,16 @@ const actions = {
                 detail[index].total_price = parseFloat(detail[index].unit_price) * parseFloat(detail[index].quantity);
                 
 
-                detail[index].unit_discount = detail[index].unit_discount.toFixed(2);
-                detail[index].net_unit_value = detail[index].net_unit_value.toFixed(2);
-                detail[index].unit_igv = detail[index].unit_igv.toFixed(2);
-                detail[index].unit_price = detail[index].unit_price.toFixed(2);
+                detail[index].unit_discount = detail[index].unit_discount.toFixed(5);
+                detail[index].net_unit_value = detail[index].net_unit_value.toFixed(5);
+                detail[index].unit_igv = detail[index].unit_igv.toFixed(5);
+                detail[index].unit_price = detail[index].unit_price.toFixed(5);
                 
-                detail[index].total_value = detail[index].total_value.toFixed(2);
-                detail[index].total_discount = detail[index].total_discount.toFixed(2);
-                detail[index].net_total_value = detail[index].net_total_value.toFixed(2);
-                detail[index].total_igv = detail[index].total_igv.toFixed(2);
-                detail[index].total_price = detail[index].total_price.toFixed(2);
+                detail[index].total_value = detail[index].total_value.toFixed(5);
+                detail[index].total_discount = detail[index].total_discount.toFixed(5);
+                detail[index].net_total_value = detail[index].net_total_value.toFixed(5);
+                detail[index].total_igv = detail[index].total_igv.toFixed(5);
+                detail[index].total_price = detail[index].total_price.toFixed(5);
 
                 context.dispatch('mLoadTotalsShoppingDetail');
                 break;

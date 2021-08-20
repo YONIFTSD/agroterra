@@ -139,17 +139,17 @@ function AddProduct(id_product) {
           percentage_discount: (0).toFixed(2),
           package: (1).toFixed(0),
 
-          unit_value: (0).toFixed(2),
-          unit_discount: (0).toFixed(2),
-          net_unit_value: (0).toFixed(2),
-          unit_igv: (0).toFixed(2),
-          unit_price: (0).toFixed(2),
+          unit_value: (0).toFixed(5),
+          unit_discount: (0).toFixed(5),
+          net_unit_value: (0).toFixed(5),
+          unit_igv: (0).toFixed(5),
+          unit_price: (0).toFixed(5),
 
-          total_value: (0).toFixed(2),
-          total_discount: (0).toFixed(2),
-          net_total_value: (0).toFixed(2),
-          total_igv: (0).toFixed(2),
-          total_price: (0).toFixed(2),
+          total_value: (0).toFixed(5),
+          total_discount: (0).toFixed(5),
+          net_total_value: (0).toFixed(5),
+          total_igv: (0).toFixed(5),
+          total_price: (0).toFixed(5),
         }
 
         me.mLoadAddShoppingDetail(detail);

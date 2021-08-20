@@ -196,5 +196,25 @@ var NumberToLetters = (function() {
 })();
 
 
+var NumberToLettersApi = (function() {
+    return function NumberToLetters(total,coin) {
+        var url = 'https://apis.reyfact.com/number-to-letters';
+        var data = {total: total, coin:coin};
+        return fetch(url,{
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+            'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .catch(error => {return false})
+        .then(json => {
+            return json;
+        })
+    };
 
-export default {NumberToLetters}
+   
+})();
+
+export default {NumberToLetters,NumberToLettersApi}

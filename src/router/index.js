@@ -615,6 +615,21 @@ function configRoutes() {
     },
 
     {
+      path: "/pos",
+      redirect: "/post/nuevo",
+      name: "POS",
+      component: TheContainer,
+      children: [
+        {
+          path: "nuevo",
+          name: "POSAdd",
+          component: () => import("@/views/pos/Add"),
+          beforeEnter: userGuard,
+        }
+      ],
+    },
+
+    {
       path: "/canje-venta",
       redirect: "/canje-venta/listar",
       name: "CanjeVenta",

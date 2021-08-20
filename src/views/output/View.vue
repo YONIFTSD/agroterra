@@ -330,7 +330,7 @@ function ViewOutput() {
     headers: {
       token: this.token,
       module: this.module,
-      role: 3,
+      role: 5,
     },
   })
     .then(function (response) {

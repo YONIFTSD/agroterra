@@ -18,7 +18,7 @@
 
                 <b-col md="2">
                   <b-form-group label="">
-                    <b-form-select v-model="sale.coin" :options="coins"></b-form-select>
+                    <b-form-select @change="ChangeCoin" v-model="sale.coin" :options="coins"></b-form-select>
                     <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
                   </b-form-group>
                 </b-col>
@@ -258,7 +258,7 @@ input[type=number] {
 }
 
 
-</style>>
+</style>
 
 </style>
 <script>
@@ -302,6 +302,7 @@ export default {
         {value:0, text:'No imprimir'},
         {value:1, text:'Imp. 1 Comprobante'},
         {value:2, text:'Imp. 2 Comprobantes'},
+        {value:3, text:'Imp. 2 Comprobantes'},
       ],
       print_voucher: 1,
       isLoading: false,
@@ -477,8 +478,10 @@ export default {
     AddPaymentCash,
     DeletePaymentCash,
 
+    ChangeCoin,
+
     modalCurrecyConverterShow,
-    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages','mLoadAddSaleDetail']),
+    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages','mLoadAddSaleDetail','mLoadEditCoin']),
   },
 
   computed: {
@@ -506,6 +509,10 @@ export default {
     }
   },
 };
+
+function ChangeCoin() {
+  this.mLoadEditCoin(this.sale.coin);
+}
 
 function AddPaymentCash() {
   let payment_method = this.sale.way_to_pay.split("-");
@@ -793,6 +800,10 @@ function AddSale() {
           me.DataPrint(me,response.data.result.id_sale);
           me.DataPrint(me,response.data.result.id_sale);
         }
+        if (me.print_voucher == 3) {
+          me.DataPrint(me,response.data.result.id_sale);
+          me.DataPrint(me,response.data.result.id_sale);
+        }
         me.$refs['modal-confirm-sale'].hide()
         Swal.fire({ icon: 'success', text: 'Se ha emitido correctamente la venta', timer: 3000,})
       } else {
@@ -887,6 +898,7 @@ function Validate() {
       {value:0, text:'No imprimir'},
       {value:1, text:'Imp. 1 Comprobante'},
       {value:2, text:'Imp. 2 Comprobantes'},
+      {value:2, text:'Imp. 3 Comprobantes'},
     ];
   }
   if (this.type_print == 2) {

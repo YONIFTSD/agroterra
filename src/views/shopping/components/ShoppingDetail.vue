@@ -9,11 +9,11 @@
                     <th rowspan="2" width="35%" class="text-center">Nombre</th>
                     <th rowspan="2" width="5%" class="text-center">UM</th>
                     <th rowspan="2" width="8%" class="text-center">Cantidad</th>
-                    <th rowspan="2" width="9%" class="text-center">Imp. Unit.</th>
+                    <th rowspan="2" width="10%" class="text-center">Imp. Unit.</th>
                     <th colspan="2" width="10%" class="text-center">Descuento</th>
                     <th rowspan="2" width="7%" class="text-center">V. Unit. <br> Neto</th>
                     <th rowspan="2" width="7%" class="text-center">Valor Total</th>
-                    <th rowspan="2" width="8%" class="text-center">Bultos</th>
+                    <th rowspan="2" width="5%" class="text-center">Bultos</th>
                     <th rowspan="2" width="5%" class="text-center"></th>
                   </tr>
                   <tr>
@@ -53,10 +53,25 @@
   </div>
 </template>
 <style scoped>
-.table-responsive{
-  min-height: 15px !important;
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
-</style>
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.text-total{
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+</style>>
 <script>
 const axios = require("axios").default;
 const Swal = require("sweetalert2");

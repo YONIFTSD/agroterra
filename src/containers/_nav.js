@@ -10,11 +10,14 @@ var modules = [{
   icon: 'cilHome',
 }];
 
-if(user_permissions.indexOf('SaleList') > -1 || user_permissions.indexOf('OrderList') > -1  || user_permissions.indexOf('RedeemedSaleList') > -1 ){
+if(user_permissions.indexOf('SaleList') > -1 || user_permissions.indexOf('OrderList') > -1  || user_permissions.indexOf('RedeemedSaleList') > -1 || user_permissions.indexOf('POSList') > -1 ){
   let me = this;
   let item = [];
   if (user_permissions.indexOf('SaleList') > -1) {
     item.push({ name: 'Venta', to: '/venta/listar' });
+  }
+  if (user_permissions.indexOf('POSList') > -1) {
+    item.push({ name: 'POS', to: '/pos/nuevo' });
   }
   if (user_permissions.indexOf('OrderList') > -1) {
     item.push({ name: 'Pedidos', to: '/pedidos/listar' });
