@@ -11,14 +11,14 @@
       <b-col md="10">
         <b-row>
           <b-col md="3">
-            <b-link class="text-decoration-none"  :to="{ path: '/producto/listar' }" append>
+            <b-link class="text-decoration-none" @click="modalTransformsShow" append>
             <b-card no-body class="text-center bg-primary height-card">
               <b-row class="no-gutters h-100">
                 <b-col md="8" class="text-light align-self-center text-center">
-                  <span>Productos <br> Registrados</span>
+                  <span>Transferencias <br> Pendientes</span>
                 </b-col>
                 <b-col md="4" class="text-light align-self-center text-center">
-                  <span class="align-middle h3">{{number_home.products}}</span>
+                  <span class="align-middle h3">{{number_home.transfers}}</span>
                 </b-col>
               </b-row>
             </b-card>
@@ -113,6 +113,7 @@
     <ModalObserverVouchers />
     <ModalProductsDelivered />
     <ModalRequirements />
+    <ModalTransfers />
   </div>
 </template>
 <style scoped>
@@ -131,6 +132,7 @@ import ModalCPESunat from './components/ModalCPESunat'
 import ModalObserverVouchers from './components/ModalObserverVouchers'
 import ModalProductsDelivered from './components/ModalProductsDelivered'
 import ModalRequirements from './components/ModalRequirements'
+import ModalTransfers from './components/ModalTransfers'
 import ChartSales from './components/ChartSales'
 
 export default {
@@ -141,6 +143,7 @@ export default {
    ModalObserverVouchers,
    ModalProductsDelivered,
    ModalRequirements,
+   ModalTransfers,
   ChartSales,
   },
   data () {
@@ -151,6 +154,7 @@ export default {
         products:0,
         clients:0,
         requirements:0,
+        transfers:0,
       },
       name :'',
      
@@ -167,6 +171,7 @@ export default {
     modalObserverVouchersShow,
     modalProductsDeliveredShow,
     modalRequirementsShow,
+    modalTransformsShow,
     Permission,
     NumberHome,
   },
@@ -198,6 +203,10 @@ function modalProductsDeliveredShow() {
 function modalRequirementsShow() {
   EventBus.$emit('ModalRequirementsShow');
 }
+function modalTransformsShow() {
+  EventBus.$emit('ModalTransfersShow');
+}
+
 
 function NumberHome() {
   let me = this;
@@ -214,6 +223,8 @@ function NumberHome() {
         me.number_home.products = response.data.products;
         me.number_home.clients = response.data.clients;
         me.number_home.requirements = response.data.requirements;
+        me.number_home.transfers = response.data.transfers;
+        
         EventBus.$emit('DataChartSale',response.data.data_chart);
       }
   })

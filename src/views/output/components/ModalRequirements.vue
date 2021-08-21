@@ -16,7 +16,8 @@
                     <th width="5%" class="text-center">#</th>
                     <th width="15%" class="text-center">Fecha</th>
                     <th width="20%" class="text-center">Comprobante</th>
-                    <th width="50%" class="text-center">Establecimiento que solicito</th>
+                    <th width="35%" class="text-center">Establecimiento que solicito</th>
+                    <th width="15%" class="text-center">Usuario</th>
                     <th width="10%" class="text-center">Acciones</th>
                   </tr>
                 </thead>
@@ -26,6 +27,7 @@
                     <td class="text-center"> {{ item.broadcast_date }}</td>
                     <td class="text-center"> {{ CodeInvoice(item.type_invoice)+ ' '+item.serie+'-'+item.number }}</td>
                     <td class="text-left"> {{ item.establishment_name }}</td>
+                    <td class="text-left"> {{ item.user }}</td>
                     <td class="text-center">
                       <b-button type="button" @click="ViewRequirement(item.id_requirement)" variant="warning">
                         <i class="fas fa-eye"></i>

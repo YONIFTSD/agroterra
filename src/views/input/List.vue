@@ -58,9 +58,10 @@
                     <th width="10%" class="text-center">Fecha</th>
                     <th width="15%" class="text-center">Comprobante</th>
                     <th width="45%" class="text-center">Razón Social</th>
+                    <th width="15%" class="text-center">Tipo Operación</th>
                     <th width="10%" class="text-center">Usuario</th>
-                    <th width="10%" class="text-center">Estado</th>
-                    <th width="10%" class="text-center">Acciones</th>
+                    <th width="5%" class="text-center">Estado</th>
+                    <th width="7%" class="text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in data_table" :key="item.id_input">
@@ -69,7 +70,8 @@
                     <td class="text-center"> {{ item.broadcast_date }}</td>
                     <td class="text-center"> {{ CodeInvoice(item.type_invoice)+ ' '+item.serie+'-'+item.number }}</td>
                     <td class="text-left"> {{ item.provider_name + ' - '+item.provider_document_number }}</td>
-                    <td class="text-left"> {{ Substr(item.user_email,23)}} </td>
+                    <td class="text-left"> {{ NameOperationType(item.type_operation) }}</td>
+                    <td class="text-left"> {{ item.user}} </td>
                     <td class="text-center">
                       <b-badge v-if="item.state == 1" variant="info">Pendiente</b-badge>
                       <b-badge v-if="item.state == 2" variant="success">Finalizado</b-badge>
@@ -157,6 +159,7 @@ export default {
     Permission,
 
     CodeInvoice,
+    NameOperationType,
     Substr,
     SearchProvider,
   },
@@ -196,6 +199,10 @@ function SearchProvider(search, loading) {
 function CodeInvoice(code) {
   return CodeToName.CodeInvoice(code);
 }
+function NameOperationType(code) {
+  return CodeToName.NameOperationType(code);
+}
+
 function Substr(name,limit) {
   if (name.length > limit ) {
     return name.substr(0,limit)+'...';

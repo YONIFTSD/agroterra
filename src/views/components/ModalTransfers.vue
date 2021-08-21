@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal size="xl" hide-footer v-model="modalTransfers" class="w-100" title="Salida por Transferencias">
+    <b-modal size="xl" hide-footer v-model="modalTransfers" class="w-100" title="Entradas por transferencias pendientes">
       <b-row>
         <b-col md="12">
           <b-form-group label="Buscar Transferencia :">
@@ -31,9 +31,6 @@
                     <td class="text-center">
                       <b-button type="button" @click="ViewOutput(item.id_output)" variant="warning">
                         <i class="fas fa-eye"></i>
-                      </b-button>
-                      <b-button type="button" @click="AddTransfer(item.id_output)" variant="primary">
-                        <i class="fas fa-plus-square"></i>
                       </b-button>
                     </td>
                   </tr>
@@ -84,9 +81,9 @@ export default {
     
   },
   mounted () {
-    EventBus.$on('ModalTransfersShow', (role) => {
+    EventBus.$on('ModalTransfersShow', () => {
       this.modalTransfers = true;
-      this.role = role;
+      this.role = 2;
       this.ListTransfers();
     });
     
