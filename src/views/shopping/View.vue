@@ -100,12 +100,17 @@
                 </b-col>
 
 
-                <b-col md="10">
+                <b-col md="8">
                   <b-form-group label="Observación:">
                     <b-form-input disabled rows="1"  v-model="shopping.observation" max-rows="3"></b-form-input>
                   </b-form-group>
                 </b-col>
 
+                <b-col md="2">
+                  <b-form-group label="Doc. Referencia:">
+                    <b-form-input disabled v-model="shopping.reference" ></b-form-input>
+                  </b-form-group>
+                </b-col>
                 <!-- Detalle Entrada -->
                  <div class="col-md-12">
                   <div class="table-responsive mt-3">
@@ -255,6 +260,7 @@ export default {
         broadcast_date:moment(new Date()).local().format("YYYY-MM-DD"),
         arrival_date:moment(new Date()).local().format("YYYY-MM-DD"),
         coin:'PEN',
+        reference:'',
         exchange_rate: '1.00',
         way_to_pay: '01-008',
         payment_type:'01',
@@ -495,6 +501,7 @@ function ViewShopping() {
           me.shopping.invoice_type = response.data.result.shopping.invoice_type;
           me.shopping.serie = response.data.result.shopping.serie;
           me.shopping.number = response.data.result.shopping.number;
+          me.shopping.reference = response.data.result.shopping.reference;
           me.shopping.broadcast_date = response.data.result.shopping.broadcast_date;
           me.shopping.arrival_date = response.data.result.shopping.arrival_date;
           me.shopping.coin = response.data.result.shopping.coin;

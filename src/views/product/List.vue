@@ -24,8 +24,7 @@
                 <b-link v-if="Permission('ProductAdd')" class="btn form-control btn-primary" :to="{ path: '/producto/nuevo' }" append><i class="fas fa-file"></i></b-link>
               </b-col>
             </b-row>
-
-            <div class="table-responsive mt-3 height-table">
+            <div v-if="type_business != 2" class="table-responsive mt-3 height-table">
               <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
@@ -43,10 +42,52 @@
                   <tr>
                     <td class="text-center">{{ it + 1 }}</td>
                     <td class="text-center"> {{ item.code }}</td>
-                    <td class="text-left"> {{ item.name +" - "+item.presentation }}</td>
+                    <td class="text-left"> {{ item.name + (item.presentation.length == 0 ? "": " - "+item.presentation) }}</td>
                     <td class="text-left"> {{ item.category_name }}</td>
                     <td class="text-left"> {{ item.brand_name }}</td>
                     <td class="text-left"> {{ item.provider_name }}</td>
+                    <td class="text-center">
+                      <b-badge v-if="item.state == 1" variant="success">Activo</b-badge>
+                      <b-badge v-if="item.state == 0" variant="danger">Anulado</b-badge>
+                    </td>
+                    <td class="text-center">
+                      <b-dropdown bloque size="sm" text="Acciones" right>
+                        <b-dropdown-item v-if="Permission('ProductEdit')" @click="EditProduct(item.id_product)">Editar</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('ProductView')" @click="ViewProduct(item.id_product)">Ver</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('ProductDelete')" @click="ConfirmDeleteProduct(item.id_product)">Eliminar</b-dropdown-item>
+                      </b-dropdown>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-if="type_business == 2" class="table-responsive mt-3 height-table">
+              <table class="table table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th width="5%" class="text-center">#</th>
+                    
+                    <th width="6%" class="text-center">Código</th>
+                    <th width="40%" class="text-center">Nombre</th>
+                    <th width="10%" class="text-center">Categoria</th>
+                    <th width="10%" class="text-center">Marca</th>
+                    <th width="23%" class="text-center">Proveedor</th>
+                    <th width="6%" class="text-center">Foto</th>
+                    <th width="6%" class="text-center">Estado</th>
+                    <th width="8%" class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody v-for="(item, it) in data_table" :key="item.id_product">
+                  <tr>
+                    <td class="text-center">{{ it + 1 }}</td>
+                    <td class="text-center"> {{ item.code }}</td>
+                    <td class="text-left"> {{ item.name + (item.presentation.length == 0 ? "": " - "+item.presentation) }}</td>
+                    <td class="text-left"> {{ item.category_name }}</td>
+                    <td class="text-left"> {{ item.brand_name }}</td>
+                    <td class="text-left"> {{ item.provider_name }}</td>
+                    <td class="text-center">
+                      <b-card-img :src="url_base + item.photo"></b-card-img>
+                    </td>
                     <td class="text-center">
                       <b-badge v-if="item.state == 1" variant="success">Activo</b-badge>
                       <b-badge v-if="item.state == 0" variant="danger">Anulado</b-badge>
@@ -117,6 +158,11 @@ export default {
 
   computed: {
     ...mapState(["url_base"]),
+    type_business: function () {
+      let type_business = window.localStorage.getItem("type_business");
+      type_business = JSON.parse(JSON.parse(je.decrypt(type_business)));
+      return type_business.type_business;
+    },
     token: function () {
       let user = window.localStorage.getItem("user");
       user = JSON.parse(JSON.parse(je.decrypt(user)));

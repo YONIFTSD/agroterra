@@ -72,7 +72,7 @@
 
                 <b-col md="2">
                   <b-form-group>
-                    <label for="">Tipo de Cambio : <b-badge @click="modalExachangeRate" variant="info">Nuevo</b-badge></label>
+                    <label for="">T. Cambio : <b-badge @click="modalExachangeRate" variant="info">Nuevo</b-badge></label>
                     <b-form-input class="text-right" type="number" readonly ref="number" v-model="shopping.exchange_rate"></b-form-input>
                     <small v-if="errors.exchange_rate" class="form-text text-danger">Ingrese un tipo de cambio</small>
                   </b-form-group>
@@ -99,9 +99,15 @@
                 </b-col>
 
 
-                <b-col md="10">
+                <b-col md="8">
                   <b-form-group label="Observación:">
                     <b-form-input rows="1"  v-model="shopping.observation" max-rows="3"></b-form-input>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
+                  <b-form-group label="Doc. Referencia:">
+                    <b-form-input v-model="shopping.reference" ></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -246,6 +252,7 @@ export default {
         invoice_type:'01',
         serie:'',
         number:'',
+        reference:'',
         broadcast_date:moment(new Date()).local().format("YYYY-MM-DD"),
         arrival_date:moment(new Date()).local().format("YYYY-MM-DD"),
         coin:'PEN',
@@ -529,7 +536,7 @@ function AddShopping(mthis) {
             me.shopping.invoice_type = '01';
             me.shopping.serie = '';
             me.shopping.number = '';
-            me.shopping.number = '';
+            me.shopping.reference = '';
             me.shopping.broadcast_date = moment(new Date()).local().format("YYYY-MM-DD");
             me.shopping.arrival_date = moment(new Date()).local().format("YYYY-MM-DD");
             me.shopping.coin = 'PEN';

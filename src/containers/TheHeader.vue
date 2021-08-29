@@ -93,7 +93,7 @@ function ViewEstablishment() {
       me.name_establishment = response.data.result.name;
       window.localStorage.removeItem('business');
       let business = {
-        type_print : response.data.result.type_print
+        type_print : response.data.result.type_print,
       }
       business = je.encrypt(JSON.stringify(business));
       window.localStorage.setItem( "business",business );
@@ -114,8 +114,14 @@ function ViewBussiness() {
   .then(function (response) {
     if (response.data.status == 200) {
       me.name_bussines = response.data.result.name+" - "+response.data.result.document_number;
-      // document.querySelector(".c-sidebar").style.background = "red";
-      // document.querySelector(".c-sidebar").style.background = "red";
+
+      window.localStorage.removeItem('type_business');
+      let type_business = {
+        type_business : response.data.result.type_business,
+      }
+      type_business = je.encrypt(JSON.stringify(type_business));
+      window.localStorage.setItem( "type_business",type_business );
+ 
       
     }
   })

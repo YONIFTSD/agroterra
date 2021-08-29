@@ -38,25 +38,26 @@
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in data_table" :key="it">
-                  <tr>
+                  <tr :class="item.id_client == 1 ? 'bg-warning':'bg-light text-dark'">
                     <td class="text-center">{{ it + 1 }}</td>
                     <td class="text-center"> {{ item.created_at }}</td>
                     <td class="text-center"> {{ item.number_of_order }}</td>
-                    <td class="text-left"> {{ item.client_name + ' - '+item.client_document_number }}</td>
-                    <td class="text-left"> {{ item.client_email }} </td>
-                    <td class="text-left"> {{ item.client_phone }} </td>
+                    <td class="text-left"> {{ item.id_client == 1 ? item.customer_name : item.client_name + ' - '+item.client_document_number }}</td>
+                    <td class="text-left"> {{ item.email }} </td>
+                    <td class="text-left"> {{ item.id_client == 1 ? item.phone: item.client_phone }} </td>
                     <td class="text-right"> {{ item.total }} </td>
                     <td class="text-center">
-                          <b-badge v-if="item.state == 0" variant="danger">Anulado</b-badge>
+                          <b-badge v-if="item.state == 0" variant="danger">Abandonado</b-badge>
                           <b-badge v-if="item.state == 1" variant="warning">Pendiente</b-badge>
                           <b-badge v-if="item.state == 2" variant="info">En Proceso</b-badge>
                           <b-badge v-if="item.state == 3" variant="success">Finalizado</b-badge>
+                          <b-badge v-if="item.state == 4" variant="danger">Anulado</b-badge>
                     </td>
                     <td class="text-center">
                       <b-dropdown bloque size="sm" text="Acciones" right>
-                        <b-dropdown-item v-if="Permission('OrderEdit')" @click="EditOrder(item.id_order)">Editar</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('OrderEdit') && item.state == 1" @click="EditOrder(item.id_order)">Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('OrderView')"  @click="ViewOrder(item.id_order)">Ver</b-dropdown-item>
-                        <b-dropdown-item v-if="Permission('OrderDelete')" @click="ConfirmDeleteOrder(item.id_order)">Eliminar</b-dropdown-item>
+                        <!-- <b-dropdown-item v-if="Permission('OrderDelete')" @click="ConfirmDeleteOrder(item.id_order)">Eliminar</b-dropdown-item> -->
                       </b-dropdown>
                     </td>
                   </tr>

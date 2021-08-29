@@ -23,7 +23,8 @@
                   <th width="8%"  rowspan="2" class="text-center align-middle">Código</th>
                   <th width="45%"  rowspan="2" class="text-center align-middle">Nombre</th>
                   <th width="13%"  :colspan="warehouses.length" class="text-center align-middle">{{establishment.name }}</th>
-                  <th width="10%"  rowspan="2" class="text-center align-middle">Cantidad</th>
+                  <th width="8%"  rowspan="2" class="text-center align-middle">Cantidad</th>
+                  <th width="8%"  rowspan="2" class="text-center align-middle">P. Minimo</th>
                   <th width="10%"  rowspan="2" class="text-center align-middle">P. Unit.</th>
                   <th width="7%"  rowspan="2" class="text-center align-middle">Acciones</th>
                 </tr>
@@ -35,13 +36,14 @@
                 <tr :class="BackgroundColor(item.internal_product,item.commissionable)">
                   <td class="text-center">{{ it + 1 }}</td>
                   <td class="text-left">{{ item.code }}</td>
-                  <td class="text-left">{{ item.name + " - "+item.presentation  }}</td>
+                  <td class="text-left">{{ item.name + (item.presentation.length == 0 ? "":" - "+item.presentation)   }}</td>
                   <td class="text-center" v-for="stock in item.stock" :key="stock.id_warehouse+stock.quantity">
                   {{ stock.quantity }}
                   </td>
                   <td class="text-center">
                     <input type="number" value="1" :ref="'mSDCantidad'+item.id_product" class="form-control">
                   </td>
+                  <td class="text-right">{{ item.minimal_price }}</td>
                   <td class="text-center">
                     <input type="number" step="any" :value="item.sale_price" :ref="'mSDPUnit'+item.id_product" class="form-control text-right">
                   </td>
@@ -205,12 +207,14 @@ function AddProduct(id_product) {
     })
     .then(function (response) {
       if (response.data.status == 200) {
+        me.search_product = "";
         let total_price = parseFloat(unit_price) * parseFloat(quantity);
         let detail = {
           id_product: response.data.result.id_product,
           code: response.data.result.code,
           name: response.data.result.name,
           presentation: response.data.result.presentation,
+          barcode: response.data.result.barcode,
           unit_measure: response.data.result.unit_measure,
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
@@ -233,10 +237,15 @@ function SearchProducts() {
   
   let me = this;
   let search = this.search_product == "" ? "all" : this.search_product;
-  let url = this.url_base + "search-products-stock/"+this.id_establishment+"/"+ search + "/"+this.stock;
-
+  let url = this.url_base + "search-products-stock";
+  let data = {
+    id_establishment : this.id_establishment,
+    search : search,
+    stock: this.stock
+  };
   axios({
-    method: "GET",
+    method: "POST",
+    data: data,
     url: url,
     headers: {
       token: this.token,

@@ -15,7 +15,7 @@
         <tbody  v-for="(item, it) in pos_detail" :key="it" >
           <tr>
             <td width="5%" class="text-center">{{ it + 1}}</td>
-            <td width="52%" class="text-lefet">{{item.code}} | {{item.name+" - "+item.presentation}}</td>
+            <td width="52%" class="text-lefet">{{item.code}} | {{item.name }}</td>
             <td width="15%" class="text-center">
               <b-form-input @change="UpdateDetail(it)" class="form-control text-center" type="number" v-model="item.quantity"></b-form-input>
             </td>

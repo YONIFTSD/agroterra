@@ -2,18 +2,18 @@
   <div>
     <b-modal size="xl" hide-footer v-model="modalProducts" class="w-100" title="Productos">
       <b-row>
-        <b-col md="10">
+        <b-col md="12">
           <b-form-group label="Buscar producto :">
             <b-form-input  type="text"  ref="email" autofocus v-model="search_product" @keyup="SearchProducts"></b-form-input>
           </b-form-group>
         </b-col>
-        <b-col md="2">
+        <!-- <b-col md="2">
           <b-form-group label=".">
               <b-form-checkbox @change="SearchProducts" v-model="stock" value="1" unchecked-value="0">
                 solo con stock
               </b-form-checkbox>
           </b-form-group>
-        </b-col>
+        </b-col> -->
         <b-col md="12">
           <div class="table-responsive mt-3">
             <table class="table table-hover table-bordered">
@@ -32,7 +32,7 @@
                 <tr :class="BackgroundColor(item.internal_product,item.commissionable)">
                   <td class="text-center">{{ it + 1 }}</td>
                   <td class="text-left">{{ item.code }}</td>
-                  <td class="text-left">{{ item.name + " - "+item.presentation  }}</td>
+                  <td class="text-left">{{ item.name + (item.presentation.length == 0 ? "": " - "+item.presentation)  }}</td>
                   <td class="text-center">{{ item.stock }}</td>
                   <td class="text-center">
                     <input type="number" value="1" :ref="'mSDCantidad'+item.id_product" class="form-control">
@@ -149,7 +149,7 @@ function AddProduct(id_product) {
           id_product: response.data.result.id_product,
           code: response.data.result.code,
           name: response.data.result.name,
-          presentation: response.data.result.presentation,
+          presentation: '',
           unit_measure: response.data.result.unit_measure,
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
@@ -171,11 +171,15 @@ function SearchProducts() {
   
   let me = this;
   let search = this.search_product == "" ? "all" : this.search_product;
-  let url = this.url_base + "search-products-stock-vi/"+this.id_establishment+"/"+ search;
-
+  let url = this.url_base + "search-products-stock-vi";
+let data = {
+    id_establishment : this.id_establishment,
+    search : search,
+  };
   axios({
-    method: "GET",
+    method: "POST",
     url: url,
+    data:data,
     headers: {
       token: this.token,
     },

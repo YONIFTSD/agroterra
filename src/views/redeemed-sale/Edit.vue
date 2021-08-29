@@ -19,7 +19,7 @@
 
                 <b-col md="2">
                   <b-form-group>
-                    <b-form-select v-model="sale.coin" :options="coins"></b-form-select>
+                    <b-form-select @change="ChangeCoin" v-model="sale.coin" :options="coins"></b-form-select>
                     <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
                   </b-form-group>
                 </b-col>
@@ -27,7 +27,7 @@
                 <b-col md="6"></b-col>
                 <b-col md="2">
                   <b-form-group>
-                    <b-button class="form-control btn btn-info" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
+                    <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
              
@@ -75,12 +75,26 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="6">
+                 <b-col  v-if="type_business == 1 || type_business == 2" md="6">
                   <b-form-group label="Dirección :">
                     <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
+
+                <b-col  v-if="type_business == 3" md="4">
+                  <b-form-group label="Dirección :">
+                    <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
+                    <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col  v-if="type_business == 3" md="2">
+                  <b-form-group label="Placa:">
+                    <b-form-input type="text" v-model="sale.license_plate"></b-form-input>
+                  </b-form-group>
+                </b-col>
+
 
                  
 
@@ -132,19 +146,30 @@
                   </b-row>
                 </b-col>
 
-                <b-col md="4">
-                  <b-form-group class="m-0" label-cols-lg="8" label="Subtotal:" label-align="right" >
-                    <b-form-input readonly class="text-right" v-model="total_sale.subtotal"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group  class="m-0"  label-cols-lg="8" label="IGV (18%):"  label-align="right">
-                    <b-form-input readonly class="text-right" v-model="total_sale.igv"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group  class="m-0" label-cols-lg="8" label="Total:" label-align="right">
-                    <b-form-input readonly class="text-right" v-model="total_sale.total"></b-form-input>
-                    <small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small>
-                  </b-form-group>
+                <b-col md="2"></b-col>
+                <b-col md="2">
+                  <div class="table-responsive">
+                    <table  class="table   table-hover table-lg mt-lg mb-0">
+                      <tbody>
+                        <tr>
+                            <td width="40%" class="align-middle text-right text-total">SUBTOTAL:</td>
+                            <td width="60%" class="align-middle text-right text-total">{{ total_sale.subtotal }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">IGV:</td>
+                            <td class="align-middle text-right text-total">{{ total_sale.igv }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">TOTAL:</td>
+                            <td class="align-middle text-right text-total">{{ total_sale.total }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="align-middle text-center"><small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
 
                 </b-col>
 
@@ -257,6 +282,7 @@ export default {
         payment_method: "008",
         payment_deadline: "0",
         observation: "",
+        license_plate: "",
         modified_document_type: "",
         modified_serie: "",
         modified_number: "",
@@ -307,10 +333,7 @@ export default {
         {value: "USD", text : "Dolares"},
       ],
       way_to_pay:[
-        {value:"01-008", text: 'Contado - Efectivo'},
-        {value:"01-001", text: 'Contado - Depósito en Cuenta'},
-        {value:"01-002", text: 'Contado - Giro'},
-        {value:"01-005", text: 'Contado - Tarjeta de Débito'},
+        {value:"01-000", text: 'Contado '},
       ],
 
   
@@ -356,10 +379,12 @@ export default {
     ValidateSaleLow,
     SaleLow,
 
+    ChangeCoin,
+
     DataPrint,
     Print,
 
-    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadAddSaleDetail']),
+    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadAddSaleDetail','mLoadEditCoin']),
   },
 
   computed: {
@@ -375,6 +400,16 @@ export default {
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user;
     },
+    type_print: function () {
+      let business = window.localStorage.getItem("business");
+      business = JSON.parse(JSON.parse(je.decrypt(business)));
+      return business.type_print;
+    },
+    type_business: function () {
+      let type_business = window.localStorage.getItem("type_business");
+      type_business = JSON.parse(JSON.parse(je.decrypt(type_business)));
+      return type_business.type_business;
+    },
     id_establishment: function () {
       let establishment = window.localStorage.getItem("id_establishment");
       establishment = JSON.parse(je.decrypt(establishment));
@@ -382,6 +417,9 @@ export default {
     }
   },
 };
+function ChangeCoin() {
+  this.mLoadEditCoin(this.sale.coin);
+}
 
 function CodeReasor(type_invoice,code) {
   return CodeToName.NameReasonNCD(type_invoice,code);
@@ -553,6 +591,7 @@ function ViewSale() {
         me.sale.payment_method = response.data.result.payment_method;
         me.sale.payment_deadline = response.data.result.payment_deadline;
         me.sale.observation = response.data.result.observation;
+        me.sale.license_plate = response.data.result.license_plate;
         me.sale.modified_document_type = response.data.result.modified_document_type;
         me.sale.modified_serie = response.data.result.modified_serie;
         me.sale.modified_number = response.data.result.modified_number;
@@ -579,7 +618,7 @@ function ViewSale() {
               id_product: element.id_product,
               code: element.code,
               name: element.name,
-              presentation: element.presentation,
+              presentation: '',
               unit_measure: element.unit_measure,
               igv: element.igv,
               existence_type: element.existence_type,
@@ -680,21 +719,28 @@ function Validate() {
 }
 
 function DataPrint(id_redeemed_sale) {
-  let me = this;
-  let url = me.url_base + "redeemed-sale/data-print/"+id_redeemed_sale;
-  let data = me.sale;
-  axios({
-    method: "GET",
-    url: url,
-    data: data,
-    headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
-  })
-  .then(function (response) {
-    if (response.data.status == 200) {
-      me.Print(response.data.result);
-    } 
+   if (this.type_print == 1) {
+      let me = this;
+      let url = me.url_base + "redeemed-sale/data-print/"+id_redeemed_sale;
+      let data = me.sale;
+      axios({
+        method: "GET",
+        url: url,
+        data: data,
+        headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
+      })
+      .then(function (response) {
+        if (response.data.status == 200) {
+          me.Print(response.data.result);
+        } 
 
-  })
+      })
+   }
+   if (this.type_print == 2) {
+     let url = this.url_base + "voucher-redeemed-sale/"+id_redeemed_sale;
+    window.open(url,'_blank');
+   }
+ 
 }
 
 function Print(info) {

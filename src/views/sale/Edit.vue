@@ -81,10 +81,23 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="6">
+                <b-col  v-if="type_business == 1 || type_business == 2" md="6">
                   <b-form-group label="Dirección :">
                     <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col  v-if="type_business == 3" md="4">
+                  <b-form-group label="Dirección :">
+                    <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
+                    <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col  v-if="type_business == 3" md="2">
+                  <b-form-group label="Placa:">
+                    <b-form-input type="text" v-model="sale.license_plate"></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -335,6 +348,7 @@ export default {
         payment_method: "008",
         payment_deadline: "0",
         observation: "",
+        license_plate: "",
         modified_document_type: "",
         modified_serie: "",
         modified_number: "",
@@ -510,6 +524,11 @@ export default {
       let business = window.localStorage.getItem("business");
       business = JSON.parse(JSON.parse(je.decrypt(business)));
       return business.type_print;
+    },
+    type_business: function () {
+      let type_business = window.localStorage.getItem("type_business");
+      type_business = JSON.parse(JSON.parse(je.decrypt(type_business)));
+      return type_business.type_business;
     },
     id_establishment: function () {
       let establishment = window.localStorage.getItem("id_establishment");
@@ -713,6 +732,7 @@ function ViewSale() {
         me.sale.payment_method = response.data.result.payment_method;
         me.sale.payment_deadline = response.data.result.payment_deadline;
         me.sale.observation = response.data.result.observation;
+        me.sale.license_plate = response.data.result.license_plate;
         me.sale.modified_document_type = response.data.result.modified_document_type;
         me.sale.modified_serie = response.data.result.modified_serie;
         me.sale.modified_number = response.data.result.modified_number;
@@ -741,8 +761,9 @@ function ViewSale() {
               id_product: element.id_product,
               code: element.code,
               name: element.name,
-              presentation: element.presentation,
+              presentation: '',
               unit_measure: element.unit_measure,
+              barcode: element.barcode,
               igv: element.igv,
               existence_type: element.existence_type,
               quantity: parseFloat(element.quantity),

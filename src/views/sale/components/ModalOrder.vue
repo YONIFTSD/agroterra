@@ -27,7 +27,7 @@
                     <td class="text-center">{{ it + 1 }}</td>
                     <td class="text-center"> {{ item.created_at }}</td>
                     <td class="text-center"> {{ item.number_of_order }}</td>
-                    <td class="text-left"> {{ item.client_name + ' - '+item.client_document_number }}</td>
+                    <td class="text-left"> {{ item.id_client == 1 ? item.customer_name : item.client_name + ' - '+item.client_document_number }}</td>
                     <td class="text-left"> {{ item.client_email }} </td>
                     <td class="text-left"> {{ item.client_phone }} </td>
                     <td class="text-right"> {{ item.total }} </td>
@@ -127,7 +127,7 @@ function AddOrder(id_order) {
           type_invoice : response.data.result.order.type_invoice,
         }
 
-        EventBus.$emit('InvoiceInformation', invoice_information);
+        // EventBus.$emit('InvoiceInformation', invoice_information);
         
         ///agregar detalle pedido
         let order_detail = response.data.result.order_detail;
@@ -146,6 +146,8 @@ function AddOrder(id_order) {
           }
           
           me.mLoadAddSaleDetail(detail);
+          EventBus.$emit('TotalPaymentCash');
+          EventBus.$emit('ChangeFeesCollectedModal');
 
         }
         

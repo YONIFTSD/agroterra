@@ -5,10 +5,11 @@
                 <thead>
                   <tr>
                     <th width="5%" class="text-center">#</th>
-                    <th width="8%" class="text-center">Codigo</th>
-                    <th width="45%" class="text-center">Nombre</th>
+                    <th width="7%" class="text-center">Codigo</th>
+                    <th width="40%" class="text-center">Nombre</th>
                     <th width="5%" class="text-center">UM</th>
-                    <th width="10%" class="text-center">Cantidad</th>
+                    <th width="8%" class="text-center">C. Barras</th>
+                    <th width="9%" class="text-center">Cantidad</th>
                     <th width="10%" class="text-center">P. Unit</th>
                     <th width="8%" class="text-center">P. Total</th>
                     <th width="5%" class="text-center">Acciones</th>
@@ -18,8 +19,11 @@
                   <tr>
                       <td class="align-middle text-center">{{ it + 1 }}</td>
                       <td class="align-middle text-left">{{ item.code }}</td>
-                      <td class="align-middle text-left">{{ item.name +" - "+item.presentation }}</td>
+                      <td class="align-middle text-left">
+                        <b-input :disabled="!(item.unit_measure == 'ZZ')" type="text" v-model="item.name"></b-input>
+                      </td>
                       <td class="align-middle text-center">{{ item.unit_measure }}</td>
+                      <td class="align-middle text-center">{{ item.barcode }}</td>
                       <td class="align-middle text-center">
                         <input :disabled="type_invoice == '07' && !(reason == '07')" type="number" @change="EditDetail(item.id_product)" class="form-control text-center" v-model="item.quantity">
                       </td>

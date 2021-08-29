@@ -16,7 +16,7 @@
             <tbody  v-for="(item, it) in pos_detail" :key="it" >
               <tr>
                 <td width="5%" class="text-center">{{ it + 1}}</td>
-                <td width="57%" class="text-lefet">{{item.code}}  {{item.name+" - "+item.presentation}}</td>
+                <td width="57%" class="text-lefet">{{item.code}} | {{item.name }}</td>
                 <td width="7%" class="text-center">{{item.quantity}}</td>
                 <td width="13%" class="text-center">{{item.unit_price}}</td>
                 <td width="13%" class="text-right">{{item.total_price}}</td>

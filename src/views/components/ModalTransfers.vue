@@ -29,7 +29,7 @@
                     <td class="text-left"> {{ item.establishment_name }}</td>
                     <td class="text-left"> {{ item.user }}</td>
                     <td class="text-center">
-                      <b-button type="button" @click="ViewOutput(item.id_output)" variant="warning">
+                      <b-button type="button" @click="ViewOutput(item.id_output)" variant="primary">
                         <i class="fas fa-eye"></i>
                       </b-button>
                     </td>
@@ -209,29 +209,5 @@ function ViewOutput(id_output) {
 
   
 }
-//Buscar productos
-function SearchProducts() {
-  let me = this;
-  let search = this.search == "" ? "all" : this.search;
-  let url = this.url_base + "search-products-stock/"+this.id_establishment+"/"+ search;
 
-  axios({
-    method: "GET",
-    url: url,
-    headers: {
-      token: this.token,
-    },
-  })
-    .then(function (response) {
-      if (response.data.status == 200) {
-        me.products = response.data.result;
-      } else {
-        me.products = [];
-      }
-    })
-    .catch((error) => {
-      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-      
-    });
-}
 </script>

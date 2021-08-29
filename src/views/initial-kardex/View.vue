@@ -125,7 +125,10 @@
          
 
                 <b-col md="3"></b-col>
-                <b-col md="6">
+                <b-col md="3">
+                  <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i> EXCEL</b-button>
+                </b-col>
+                <b-col md="3">
                   <b-link class="btn form-control btn-primary" :to="{ path: '/kardex-inicial/listar' }" append >REGRESAR</b-link>
                 </b-col>
               </b-row>
@@ -264,6 +267,8 @@ export default {
     EditKardexInitial,
     Validate,
 
+    ExportExcel,
+
 
 
     ...mapActions('InitialKardex',['mLoadAddInitialKardexDetail','mLoadResetInitialKardexDetail']),
@@ -296,6 +301,11 @@ export default {
     }
   },
 };
+
+function ExportExcel() {  
+  let url = this.url_base + "export-initial-kardex/"+this.initial_kardex.id_initial_kardex;
+  window.open(url,'_blank');
+}
 
 function ListWarehouses() {
   let me = this;

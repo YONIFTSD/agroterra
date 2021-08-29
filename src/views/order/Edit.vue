@@ -4,7 +4,7 @@
       <CCol col>
         <CCard>
           <CCardHeader>
-            <strong> Modulo de Pedidos - Editar</strong>
+            <strong> Modulo de Pedidos - Atender</strong>
           </CCardHeader>
           <CCardBody>
             <b-form id="Form" @submit.prevent="Validate">
@@ -13,12 +13,6 @@
               <b-col md="2">
                   <b-form-group label="N° Pedido :">
                     <b-form-input disabled type="text"  v-model="order.number_of_order"></b-form-input>
-                  </b-form-group>
-              </b-col>
-
-              <b-col md="2">
-                  <b-form-group label="Comprobante :">
-                    <b-form-select disabled v-model="order.type_invoice" :options="type_invoice"></b-form-select>
                   </b-form-group>
               </b-col>
 
@@ -34,6 +28,14 @@
                   </b-form-group>
               </b-col>
 
+
+              <b-col md="2">
+                  <b-form-group label="Estado de Pago :">
+                    <b-form-select disabled v-model="order.payment_state" :options="payment_state"></b-form-select>
+                  </b-form-group>
+              </b-col>
+
+              
               <b-col md="2">
                   <b-form-group label="Fecha del Pedido :">
                     <b-form-input class="text-center" disabled type="text"  :value="order.date"></b-form-input>
@@ -47,28 +49,48 @@
               </b-col>
 
 
-              <b-col md="6">
+              <b-col v-if="order.id_client != 1" md="6">
                   <b-form-group label="Cliente :">
                     <b-form-input disabled type="text"  :value="order.client_name+' - '+ order.client_document_number"></b-form-input>
                   </b-form-group>
               </b-col>
 
-              <b-col md="4">
+              <b-col v-if="order.id_client != 1" md="4">
                   <b-form-group label="Email :">
                     <b-form-input disabled type="text"  :value="order.client_email"></b-form-input>
                   </b-form-group>
               </b-col>
 
-              <b-col md="2">
+              <b-col v-if="order.id_client != 1" md="2">
                   <b-form-group label="Teléfono :">
                     <b-form-input disabled type="text"  :value="order.client_phone"></b-form-input>
                   </b-form-group>
               </b-col>
+      
+
+              <b-col v-if="order.id_client == 1" md="6">
+                  <b-form-group label="Cliente :">
+                    <b-form-input disabled type="text"  :value="order.customer_name"></b-form-input>
+                  </b-form-group>
+              </b-col>
+
+              <b-col v-if="order.id_client == 1" md="4">
+                  <b-form-group label="Email :">
+                    <b-form-input disabled type="text"  :value="order.email"></b-form-input>
+                  </b-form-group>
+              </b-col>
+
+              <b-col v-if="order.id_client == 1" md="2">
+                  <b-form-group label="Teléfono :">
+                    <b-form-input disabled type="text"  :value="order.phone"></b-form-input>
+                  </b-form-group>
+              </b-col>
+          
 
 
           
 
-              <b-col md="2">
+              <b-col md="2"  v-if="order.shipping_method == 1 || order.shipping_method == 2">
                   <b-form-group label="Metodo de Envío :">
                     <b-form-select disabled v-model="order.shipping_method" :options="shipping_method"></b-form-select>
                   </b-form-group>
@@ -87,20 +109,11 @@
               </b-col>
 
 
-              <b-col md="6" v-if="order.shipping_method == 2">
-                  <b-form-group label="Dirección :">
-                    <b-form-input v-if="order.pickup_store == '01'" disabled type="text"  value="Aeropuerto Carlos Ciriani Tienda 6 - 7, Tacna - Perú"></b-form-input>
-                    <b-form-input v-if="order.pickup_store == '02'" disabled type="text"  value="Av. San Martín 631 - 637, Tacna - Perú"></b-form-input>
+              <b-col md="10" v-if="order.shipping_method == 2">
+                  <b-form-group label="Sucursal :">
+                    <b-form-input disabled type="text"  v-model="order.pickup_store"></b-form-input>
                   </b-form-group>
               </b-col>
-
-              <b-col md="4" v-if="order.shipping_method == 2">
-                  <b-form-group label="Referencia :">
-                    <b-form-input disabled type="text"  :value="order.description"></b-form-input>
-                  </b-form-group>
-              </b-col>
-
-          
 
               
                 <div class="col-md-12">
@@ -210,8 +223,8 @@ export default {
   },
   data() {
     return {
-      module: 'Sale',
-      role: 2,
+      module: 'Order',
+      role: 3,
       order: {
         id_order: 0,
         id_client: 0,
@@ -232,6 +245,10 @@ export default {
         c_amount_to_deposit: "",
         created_at: "",
       },
+      payment_state:[
+        {value: "0", text : "Sin pago"},
+        {value: "1", text : "Pagado"},
+      ],
       order_detail:[],
       type_invoice:[
         {value: "01", text : "Factura"},
@@ -242,12 +259,14 @@ export default {
         {value: "01", text : "Culqi"},
         {value: "02", text : "Contra Entrega"},
         {value: "03", text : "Yape"},
+        {value: "04", text : "Izipay"},
       ],
       states:[
-        {value: "0", text : "Anulado"},
+        {value: "0", text : "Abandonado"},
         {value: "1", text : "Pendientes"},
         {value: "2", text : "En Proceso"},
         {value: "3", text : "Finalizado"},
+        {value: "4", text : "Anulado"},
       ],
       shipping_method:[
         {value:"1", text: 'Entrega a Domicilio'},
@@ -304,6 +323,7 @@ export default {
     }
   },
 };
+
 function Validate() {
   
 }
@@ -335,9 +355,11 @@ function ViewOrder() {
         me.order.client_email = response.data.result.order.client_email,
         me.order.client_phone = response.data.result.order.client_phone,
         me.order.client_address = response.data.result.order.client_address,
-        me.order.client_phone = response.data.result.order.client_phone,
+        me.order.email = response.data.result.order.email,
+        me.order.customer_name = response.data.result.order.customer_name,
+        me.order.phone = response.data.result.order.phone,
         me.order.number_of_order = response.data.result.order.number_of_order;
-        me.order.date = response.data.result.order.date;
+        me.order.date = response.data.result.order.created_at;
         me.order.description = response.data.result.order.description;
         me.order.subtotal = response.data.result.order.subtotal;
         me.order.discount = response.data.result.order.discount;
@@ -354,7 +376,7 @@ function ViewOrder() {
         me.order.c_amount_to_deposit = response.data.result.order.c_amount_to_deposit;
         me.order.created_at = response.data.result.order.created_at;
         me.order.updated_at = response.data.result.order.updated_at;
-        me.order.payment_method = "01";
+        me.order.payment_method = "04";
         me.order_detail = response.data.result.order_detail;
   
       } else {
@@ -401,7 +423,7 @@ function Cancel() {
     confirmButtonText: 'Si, Estoy de Acuerdo!'
   }).then((result) => {
     if (result.isConfirmed) {
-      EditOrder(me,0);
+      EditOrder(me,4);
     }
   })
 }

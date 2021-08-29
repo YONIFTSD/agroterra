@@ -256,11 +256,15 @@ function ExportExcelGeneral() {
 function SearchProduct(search, loading) {
   
     let me = this;
-    let url = this.url_base + "search-products-select/" + search;
+    let url = this.url_base + "search-products-select";
+    let data = {
+      search:search
+    }
     if (search !== "") {
       loading(true);
       axios({
-        method: "GET",
+        method: "POST",
+        data:data,
         url: url,
       }).then(function (response) {
             me.products = response.data.result;

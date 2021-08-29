@@ -76,9 +76,24 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="6">
+                
+                <b-col  v-if="type_business == 1 || type_business == 2" md="6">
                   <b-form-group label="Dirección :">
-                    <b-form-input  disabled type="text" ref="address"  v-model="sale.address"></b-form-input>
+                    <b-form-input disabled type="text" ref="address"  v-model="sale.address"></b-form-input>
+                    <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col  v-if="type_business == 3" md="4">
+                  <b-form-group label="Dirección :">
+                    <b-form-input disabled type="text" ref="address"  v-model="sale.address"></b-form-input>
+                    <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col  v-if="type_business == 3" md="2">
+                  <b-form-group label="Placa:">
+                    <b-form-input disabled type="text" v-model="sale.license_plate"></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -97,20 +112,22 @@
                               <tr>
                                 <th width="5%" class="text-center">#</th>
                                 <th width="8%" class="text-center">Codigo</th>
-                                <th width="50%" class="text-center">Nombre</th>
+                                <th width="45%" class="text-center">Nombre</th>
                                 <th width="5%" class="text-center">UM</th>
+                                <th width="5%" class="text-center">C. Barras</th>
                                 <th width="10%" class="text-center">Cantidad</th>
                                 <th width="10%" class="text-center">P. Unit</th>
                                 <th width="8%" class="text-center">P. Total</th>
                           
                               </tr>
                             </thead>
-                            <tbody v-for="(item, it) in sale_detail" :key="item.id_product">
+                            <tbody v-for="(item, it) in sale_detail" :key="it">
                               <tr>
                                   <td class="align-middle text-center">{{ it + 1 }}</td>
                                   <td class="align-middle text-left">{{ item.code }}</td>
-                                  <td class="align-middle text-left">{{ item.name + " - " +item.presentation }}</td>
+                                  <td class="align-middle text-left">{{ item.name }}</td>
                                   <td class="align-middle text-center">{{ item.unit_measure }}</td>
+                                  <td class="align-middle text-center">{{ item.barcode }}</td>
                                   <td class="align-middle text-center">{{ item.quantity }}</td>
                                   <td class="align-middle text-right">{{ item.unit_price }}</td>
                                   <td class="align-middle text-right">{{ item.total_price }}</td>
@@ -332,6 +349,7 @@ export default {
         payment_method: "008",
         payment_deadline: "0",
         observation: "",
+        license_plate:"",
         modified_document_type: "",
         modified_serie: "",
         modified_number: "",
@@ -452,6 +470,11 @@ export default {
       business = JSON.parse(JSON.parse(je.decrypt(business)));
       return business.type_print;
     },
+    type_business: function () {
+      let type_business = window.localStorage.getItem("type_business");
+      type_business = JSON.parse(JSON.parse(je.decrypt(type_business)));
+      return type_business.type_business;
+    },
     id_establishment: function () {
       let establishment = window.localStorage.getItem("id_establishment");
       establishment = JSON.parse(je.decrypt(establishment));
@@ -554,6 +577,7 @@ function ViewSale() {
         me.sale.payment_method = response.data.result.payment_method;
         me.sale.payment_deadline = response.data.result.payment_deadline;
         me.sale.observation = response.data.result.observation;
+        me.sale.license_plate = response.data.result.license_plate;
         me.sale.modified_document_type = response.data.result.modified_document_type;
         me.sale.modified_serie = response.data.result.modified_serie;
         me.sale.modified_number = response.data.result.modified_number;

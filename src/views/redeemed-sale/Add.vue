@@ -9,17 +9,24 @@
           <CCardBody>
             <b-form id="Form" @submit.prevent="Validate">
               <b-row>
-       
+
+                <b-col md="2">
+                  <b-form-group>
+                    <b-form-select v-model="sale.id_warehouse" :options="warehouses"></b-form-select>
+                    <small  v-if="errors.id_warehouse"  class="form-text text-danger">Seleccione un almacen</small>
+                  </b-form-group>
+                </b-col>
+
               
 
                 <b-col md="2">
                   <b-form-group label="">
-                    <b-form-select v-model="sale.coin" :options="coins"></b-form-select>
+                    <b-form-select @change="ChangeCoin" v-model="sale.coin" :options="coins"></b-form-select>
                     <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
                   </b-form-group>
                 </b-col>
     
-                <b-col md="6"></b-col>
+                <b-col md="4"></b-col>
               
                 <b-col md="2">
                   <b-form-group>
@@ -56,7 +63,7 @@
 
                 <b-col md="2">
                   <b-form-group label="Fecha Emision:">
-                    <b-form-input class="text-center" type="date" ref="broadcast_date" v-model="sale.broadcast_date"></b-form-input>
+                    <b-form-input disabled class="text-center" type="date" ref="broadcast_date" v-model="sale.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>
                 </b-col>
@@ -80,12 +87,26 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="6">
+                 <b-col  v-if="type_business == 1 || type_business == 2" md="6">
                   <b-form-group label="Dirección :">
                     <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
+
+                <b-col  v-if="type_business == 3" md="4">
+                  <b-form-group label="Dirección :">
+                    <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
+                    <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col  v-if="type_business == 3" md="2">
+                  <b-form-group label="Placa:">
+                    <b-form-input type="text" v-model="sale.license_plate"></b-form-input>
+                  </b-form-group>
+                </b-col>
+
 
                  
 
@@ -135,23 +156,32 @@
                       </b-form-group>
                     </b-col>
                   </b-row>
-                  
-                
                 </b-col>
 
-                <b-col md="4">
-                  <b-form-group label-cols-lg="8" label="Subtotal:" label-align="right" >
-                    <b-form-input readonly class="text-right" v-model="total_sale.subtotal"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group   label-cols-lg="8" label="IGV (18%):"  label-align="right">
-                    <b-form-input readonly class="text-right" v-model="total_sale.igv"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group  label-cols-lg="8" label="Total:" label-align="right">
-                    <b-form-input readonly class="text-right" v-model="total_sale.total"></b-form-input>
-                    <small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small>
-                  </b-form-group>
+                <b-col md="2"></b-col>
+                <b-col md="2">
+                  <div class="table-responsive">
+                    <table  class="table   table-hover table-lg mt-lg mb-0">
+                      <tbody>
+                        <tr>
+                            <td width="40%" class="align-middle text-right text-total">SUBTOTAL:</td>
+                            <td width="60%" class="align-middle text-right text-total">{{ total_sale.subtotal }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">IGV:</td>
+                            <td class="align-middle text-right text-total">{{ total_sale.igv }}</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">TOTAL:</td>
+                            <td class="align-middle text-right text-total">{{ total_sale.total }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="align-middle text-center"><small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
 
                 </b-col>
 
@@ -166,63 +196,29 @@
       </CCol>
     </CRow>
 
-    <!-- Modal Products -->
+
     <ModalProducts />
-    <!-- Modal Products -->
-    <!-- Modal Clients -->
     <ModalClients />
-    <!-- Modal Clients -->
     <ModalOrders/>
     <LoadingComponent :is-visible="isLoading"/>
-
-
-    <b-modal size="md" id="modal_fees_collected" hide-footer v-model="modal_fees_collected" class="w-100" title="CUOTAS">
-      <b-form @submit.prevent="AddFeedCollected">
+    <b-modal hide-title hide-footer ref="modal-confirm-sale">
+      <b-form @submit.prevent="AddSale">
+        
         <b-row>
-          <b-col md="5">
-            <b-form-group label="Fecha">
-              <b-form-input class="text-center" :max="fee_collected.max_date" :min="fee_collected.min_date" v-model="fee_collected.date" type="date"></b-form-input>
-            </b-form-group>
+          <b-col class="text-center" md="12">
+              <div class="w-100"><i  class="fas fa-question-circle fa-5x"></i></div>
+              <p class="my-4 h3">Esta seguro de emitir la venta?</p>
           </b-col>
-          <b-col md="4">
-            <b-form-group label="Monto">
-              <b-form-input class="text-right" v-model="fee_collected.total" type="number" step="any"></b-form-input>
-            </b-form-group>
-          </b-col>
-          <b-col md="3">
-            <b-form-group label=".">
-              <b-button type="submit" class="form-control" variant="info"><i class="fas fa-plus-circle"></i></b-button>
-            </b-form-group>
-          </b-col>
+          <b-col md="6"> <b-form-select autofocus class="text-form-control" :options="quantity_vouchers" v-model="print_voucher"></b-form-select></b-col>
+          <b-col md="6"><b-button  ref="buttonconfirmsale" type="submit" variant="primary" class="form-control">Si, Estoy de Acuerdo !</b-button></b-col>
         </b-row>
-
-
-             <div class="table-responsive mt-3">
-              <table class="table table-hover table-bordered">
-                <thead>
-                  <tr>
-                    <th width="5%" class="text-center">#</th>
-                    <th width="40%" class="text-center">Fecha</th>
-                    <th width="45%" class="text-center">Total</th>
-                    <th width="10%" class="text-center"></th>
-                  </tr>
-                </thead>
-  
-                <tbody v-for="(item, it) in fees_collected" :key="it">
-                  <tr>
-                    <td class="text-center">{{ it + 1 }}</td>
-                    <td class="text-center"> {{ item.date }}</td>
-                    <td class="text-right"> {{ item.total }} </td>
-                    <td class="text-center">
-                       <b-button @click="DeleteFeedCollected(it)" type="button" class="form-control" variant="danger"><i class="fas fa-trash"></i></b-button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
       </b-form>
     </b-modal>
+
+
+
+
+
   </div>
 </template>
 
@@ -262,6 +258,13 @@ export default {
   },
   data() {
     return {
+      quantity_vouchers:[
+        {value:0, text:'No imprimir'},
+        {value:1, text:'Imp. 1 Comprobante'},
+        {value:2, text:'Imp. 2 Comprobantes'},
+        {value:3, text:'Imp. 2 Comprobantes'},
+      ],
+      print_voucher: 1,
       isLoading: false,
       module: 'Sale',
       role: 2,
@@ -283,12 +286,13 @@ export default {
         web_pay: 0,
         coin: "PEN",
         address: '',
-        way_to_pay: "01-008",
+        way_to_pay: "01-000",
         payment_type: "01",
         payment_method: "008",
         payment_deadline: "0",
         fees_collected:[],
         observation: "",
+        license_plate: "",
         modified_document_type: "",
         modified_serie: "",
         modified_number: "",
@@ -323,10 +327,8 @@ export default {
         {value: "USD", text : "Dolares"},
       ],
       way_to_pay:[
-        {value:"01-008", text: 'Contado - Efectivo'},
-        {value:"01-001", text: 'Contado - Depósito en Cuenta'},
-        {value:"01-002", text: 'Contado - Giro'},
-        {value:"01-005", text: 'Contado - Tarjeta de Débito'},
+        {value:"01-000", text: 'Contado'},
+
       ],
 
   
@@ -393,8 +395,12 @@ export default {
     AddFeedCollected,
     DeleteFeedCollected,
 
+    modalConfirmSale,
+
+    ChangeCoin,
+
     DeleteLinkeage,
-    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages','mLoadAddSaleDetail']),
+    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages','mLoadAddSaleDetail','mLoadEditCoin']),
   },
 
   computed: {
@@ -410,6 +416,16 @@ export default {
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user;
     },
+    type_print: function () {
+      let business = window.localStorage.getItem("business");
+      business = JSON.parse(JSON.parse(je.decrypt(business)));
+      return business.type_print;
+    },
+    type_business: function () {
+      let type_business = window.localStorage.getItem("type_business");
+      type_business = JSON.parse(JSON.parse(je.decrypt(type_business)));
+      return type_business.type_business;
+    },
     id_establishment: function () {
       let establishment = window.localStorage.getItem("id_establishment");
       establishment = JSON.parse(je.decrypt(establishment));
@@ -417,6 +433,11 @@ export default {
     }
   },
 };
+
+function ChangeCoin() {
+  this.mLoadEditCoin(this.sale.coin);
+}
+
 
 function AddressClient() {
   if (this.client == null) {
@@ -597,8 +618,8 @@ function DeleteLinkeage(index) {
   this.mLoadDeleteLinkages(index);
 }
 
-function AddSale(me,print) {
-  
+function AddSale() {
+  let me = this;
   me.isLoading = true;
   let url = me.url_base + "redeemed-sale/add";
   me.sale.id_user = me.user.id_user;
@@ -639,7 +660,7 @@ function AddSale(me,print) {
         me.sale.broadcast_time = "";
         me.sale.expiration_date = moment(new Date()).local().format("YYYY-MM-DD");
         me.sale.coin = "PEN";
-        me.sale.way_to_pay = "01-008";
+        me.sale.way_to_pay = "01-000";
         me.sale.payment_type = "01";
         me.sale.payment_method = "008";
         me.sale.payment_deadline = "0";
@@ -667,10 +688,20 @@ function AddSale(me,print) {
         me.mLoadResetSaleDetail();
         me.mLoadResetLinkages();
   
-        if (print == "Yes") {
-
-          me.DataPrint(me,response.data.result.id_sale);
+        if (me.print_voucher == 1) {
+          me.DataPrint(me,response.data.result.id_redeemed_sale);
         }
+        if (me.print_voucher == 2) {
+          me.DataPrint(me,response.data.result.id_redeemed_sale);
+          me.DataPrint(me,response.data.result.id_redeemed_sale);
+        }
+        if (me.print_voucher == 3) {
+          me.DataPrint(me,response.data.result.id_redeemed_sale);
+          me.DataPrint(me,response.data.result.id_redeemed_sale);
+          me.DataPrint(me,response.data.result.id_redeemed_sale);
+        }
+
+        me.$refs['modal-confirm-sale'].hide()
         Swal.fire({ icon: 'success', text: 'Se ha emitido correctamente la venta', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: response.data.response, timer: 3000,})
@@ -707,40 +738,52 @@ function Validate() {
   if (this.errors.sale_detail == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
-  let me = this;
-    Swal.fire({
-    title: 'Esta seguro de emitir la venta?',
-    icon: 'warning',
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: `Guardar e Imprimir`,
-    denyButtonText: `Guardar`,
-    denyButtonColor: '#000',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      AddSale(me,'Yes');
-    } else if (result.isDenied) {
-      AddSale(me,'No');
-    }
-  })
+  
+  if (this.type_print == 1) {
+    this.quantity_vouchers = [
+      {value:0, text:'No imprimir'},
+      {value:1, text:'Imp. 1 Comprobante'},
+      {value:2, text:'Imp. 2 Comprobantes'},
+      {value:2, text:'Imp. 3 Comprobantes'},
+    ];
+  }
+  if (this.type_print == 2) {
+    this.quantity_vouchers = [
+      {value:0, text:'No imprimir'},
+      {value:1, text:'Imp. 1 Comprobante'},
+    ];
+  }
+  
+
+  this.modalConfirmSale();
 }
 
-function DataPrint(me,id_sale) {
-    // me.isLoading = true;
-  let url = me.url_base + "sale/data-print/"+id_sale;
-  let data = me.sale;
-  axios({
-    method: "GET",
-    url: url,
-    data: data,
-    headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
-  })
-  .then(function (response) {
-    if (response.data.status == 200) {
-      me.Print(response.data.result);
-    } 
+function modalConfirmSale() {
+  this.$refs['modal-confirm-sale'].show();
+}
 
-  })
+function DataPrint(me,id_redeemed_sale) {
+  if (this.type_print == 1) {
+    let url = me.url_base + "redeemed-sale/data-print/"+id_redeemed_sale;
+    let data = me.sale;
+    axios({
+      method: "GET",
+      url: url,
+      data: data,
+      headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
+    })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.Print(response.data.result);
+      } 
+
+    })
+  }
+  if (this.type_print == 2) {
+    let url = this.url_base + "voucher-redeemed-sale/"+id_redeemed_sale;
+    window.open(url,'_blank');
+  }
+  
 }
 
 function Print(info) {
@@ -764,6 +807,7 @@ function Print(info) {
       console.log(error);
     });
 }
+
 
 // CUOTAS DE PAGO
 function BntFeesCollected() {

@@ -101,9 +101,15 @@
                 </b-col>
 
 
-                <b-col md="10">
+                <b-col md="8">
                   <b-form-group label="Observación:">
                     <b-form-input rows="1"  v-model="shopping.observation" max-rows="3"></b-form-input>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
+                  <b-form-group label="Doc. Referencia:">
+                    <b-form-input v-model="shopping.reference" ></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -241,6 +247,7 @@ export default {
         broadcast_date:moment(new Date()).local().format("YYYY-MM-DD"),
         arrival_date:moment(new Date()).local().format("YYYY-MM-DD"),
         coin:'PEN',
+        reference:'',
         exchange_rate: '1.00',
         way_to_pay: '01-008',
         payment_type:'01',
@@ -486,6 +493,7 @@ function ViewShopping() {
           me.shopping.broadcast_date = response.data.result.shopping.broadcast_date;
           me.shopping.arrival_date = response.data.result.shopping.arrival_date;
           me.shopping.coin = response.data.result.shopping.coin;
+          me.shopping.reference = response.data.result.shopping.reference;
           me.shopping.exchange_rate = response.data.result.shopping.exchange_rate;
           me.shopping.affection_for_detraction = response.data.result.shopping.affection_for_detraction;
           me.shopping.unit_value = response.data.result.shopping.unit_value;

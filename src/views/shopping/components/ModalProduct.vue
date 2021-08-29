@@ -166,11 +166,14 @@ function AddProduct(id_product) {
 function SearchProducts() {
   let me = this;
   let search = this.search_product == "" ? "all" : this.search_product;
-  let url = this.url_base + "search-products/"+search;
-
+  let url = this.url_base + "search-products";
+  let data = {
+    search : search
+  };
   axios({
-    method: "GET",
+    method: "POST",
     url: url,
+    data:data,
     headers: {
       token: this.token,
     },

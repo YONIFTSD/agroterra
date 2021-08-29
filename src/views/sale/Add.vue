@@ -8,6 +8,7 @@
           </CCardHeader>
           <CCardBody>
             <b-form id="Form" @submit.prevent="Validate">
+            
               <b-row>
                 <b-col md="2">
                   <b-form-group>
@@ -88,12 +89,26 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="6">
+                <b-col  v-if="type_business == 1 || type_business == 2" md="6">
                   <b-form-group label="Dirección :">
                     <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
+
+                <b-col  v-if="type_business == 3" md="4">
+                  <b-form-group label="Dirección :">
+                    <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
+                    <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
+                  </b-form-group>
+                </b-col>
+
+                <b-col  v-if="type_business == 3" md="2">
+                  <b-form-group label="Placa:">
+                    <b-form-input type="text" v-model="sale.license_plate"></b-form-input>
+                  </b-form-group>
+                </b-col>
+                
                 <!-- Detalle venta -->
                 <b-col md="12">
                     <SaleDetail :type_invoice="sale.type_invoice" :reason="sale.reason"/>
@@ -131,9 +146,10 @@
                         </div>
                     </b-col>
                     <b-col md="5" class="mt-2">
-                      <b-form-group label="Observación:">
+                      <b-form-group  label="Observación:">
                         <b-form-textarea v-model="sale.observation"></b-form-textarea>
                       </b-form-group>
+                      
                     </b-col>
                   </b-row>
                   
@@ -262,6 +278,7 @@ input[type=number] {
 
 </style>
 <script>
+// importando paquetes
 import vSelect from "vue-select";
 import 'vue-select/dist/vue-select.css';
 import "vue-select/src/scss/vue-select.scss";
@@ -271,10 +288,9 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 var moment = require("moment");
 import EventBus from '@/assets/js/EventBus';
-import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
 
-// components
+// importando components
 import ModalClients from './../components/ModalClient'
 import ModalProducts from './components/ModalProduct'
 import SaleDetail from './components/SaleDetail'
@@ -284,7 +300,7 @@ import LoadingComponent from './../pages/Loading'
 import ModalCurrencyConverter from './../components/ModalCurrencyConverter'
 
 export default {
-  name: "UsuarioAdd",
+  name: "SaleAdd",
   components:{
       vSelect,  
       ModalProducts,
@@ -302,7 +318,7 @@ export default {
         {value:0, text:'No imprimir'},
         {value:1, text:'Imp. 1 Comprobante'},
         {value:2, text:'Imp. 2 Comprobantes'},
-        {value:3, text:'Imp. 2 Comprobantes'},
+        {value:3, text:'Imp. 3 Comprobantes'},
       ],
       print_voucher: 1,
       isLoading: false,
@@ -332,6 +348,7 @@ export default {
         payment_deadline: "0",
         fees_collected:[],
         observation: "",
+        license_plate: "",
         modified_document_type: "",
         modified_serie: "",
         modified_number: "",
@@ -408,6 +425,8 @@ export default {
     };
   },
   mounted() {
+    
+    
     EventBus.$on('InvoiceInformation', (data) => {
       this.client = data.client;
       this.sale.type_invoice = data.type_invoice;
@@ -502,6 +521,12 @@ export default {
       business = JSON.parse(JSON.parse(je.decrypt(business)));
       return business.type_print;
     },
+    type_business: function () {
+      let type_business = window.localStorage.getItem("type_business");
+      type_business = JSON.parse(JSON.parse(je.decrypt(type_business)));
+      return type_business.type_business;
+    },
+    
     id_establishment: function () {
       let establishment = window.localStorage.getItem("id_establishment");
       establishment = JSON.parse(je.decrypt(establishment));
@@ -803,6 +828,7 @@ function AddSale() {
         if (me.print_voucher == 3) {
           me.DataPrint(me,response.data.result.id_sale);
           me.DataPrint(me,response.data.result.id_sale);
+          me.DataPrint(me,response.data.result.id_sale);
         }
         me.$refs['modal-confirm-sale'].hide()
         Swal.fire({ icon: 'success', text: 'Se ha emitido correctamente la venta', timer: 3000,})
@@ -898,7 +924,7 @@ function Validate() {
       {value:0, text:'No imprimir'},
       {value:1, text:'Imp. 1 Comprobante'},
       {value:2, text:'Imp. 2 Comprobantes'},
-      {value:2, text:'Imp. 3 Comprobantes'},
+      {value:3, text:'Imp. 3 Comprobantes'},
     ];
   }
   if (this.type_print == 2) {

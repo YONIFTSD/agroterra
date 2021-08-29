@@ -17,8 +17,10 @@
                 </b-col>
 
                 <b-col md="9">
-
-                  <b-row>
+                  
+                  <b-tabs content-class="mt-3">
+                    <b-tab title="Datos Principales" active>
+                      <b-row>
                     <b-col md="3">
                       <b-form-group label="Categoria :">
                         <b-form-select disabled v-model="product.id_category" :options="categories"></b-form-select>
@@ -106,91 +108,106 @@
                       </b-form-group>
                     </b-col>
 
-                    <b-col md="3">
-                      <b-form-group label="Comisionable :">
-                        <b-form-select disabled type="text" v-model="product.commissionable" :options="commissionable"></b-form-select>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="3">
-                      <b-form-group label="Comisión :">
-                        <b-form-input disabled type="number" class="text-right" step="any" ref="commission" v-model="product.commission"></b-form-input>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="3">
+                     <b-col md="3">
                       <b-form-group label="Producto Interno :">
                         <b-form-select disabled type="text" v-model="product.internal_product" :options="internal_product"></b-form-select>
                       </b-form-group>
                     </b-col>
 
                     <b-col md="3">
-                      <b-form-group label="Peso Bruto :">
-                        <b-form-input disabled type="number" class="text-right" step="any" ref="gross_weight" v-model="product.gross_weight"></b-form-input>
-                      </b-form-group>
-                    </b-col>
-                    
-                    <b-col md="3">
                       <b-form-group label="Codigo de Barras:">
                         <b-form-input disabled type="text" v-model="product.barcode"></b-form-input>
                       </b-form-group>
                     </b-col>
 
-                    <b-col md="3">
-                      <b-form-group label="Web:">
-                        <b-form-select disabled type="text" v-model="product.web" :options="web"></b-form-select>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="3">
-                      <b-form-group label="P. destacado:">
-                        <b-form-select disabled type="text" v-model="product.outstanding" :options="outstanding"></b-form-select>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="3">
-                      <b-form-group label="Oferta:">
-                        <b-form-select disabled type="text" v-model="product.offer" :options="offer"></b-form-select>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="3">
-                      <b-form-group label="Compraron esto:">
-                        <b-form-input disabled type="number" step="any" v-model="product.people_who_bought_this"></b-form-input>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="3">
-                      <b-form-group label="Vieron esto:">
-                        <b-form-input disabled type="number" step="any" v-model="product.people_who_see_this"></b-form-input>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="9">
-                      <b-form-group label="Proveedor :">
-                      <v-select disabled placeholder="Seleccione un proveedor" class="w-100" :filterable="false" label="name" v-model="mprovider" @search="SearchProvider" :options="providers"></v-select>
-                      <small v-if="errors.id_provider" class="form-text text-danger">Seleccione un proveedor</small>
-                      </b-form-group>
-                    </b-col>
-
-                    <b-col md="3">
-                      <b-form-group label="Estado :">
-                        <select disabled ref="state" v-model="product.state" class="form-control">
-                          <option value="1">Activo</option>
-                          <option value="0">Inactivo</option>
-                        </select>
-                      </b-form-group>
-                    </b-col>
-
-                        
-
                         <b-col md="5"></b-col>
                         <b-col md="2">
-                  
                           <b-link  class="btn form-control btn-primary" :to="{ path: '/producto/listar' }" append >REGRESAR</b-link>
                         </b-col>
 
-                    </b-row>
+                  </b-row>
+                    </b-tab>
+                    <b-tab title="Datos Secundarios">
+                      <b-row>
+                          <b-col md="3">
+                            <b-form-group label="Comisionable :">
+                              <b-form-select disabled type="text" v-model="product.commissionable" :options="commissionable"></b-form-select>
+                            </b-form-group>
+                          </b-col>
+
+                          <b-col md="3">
+                            <b-form-group label="Comisión :">
+                              <b-form-input disabled type="number" class="text-right" step="any" ref="commission" v-model="product.commission"></b-form-input>
+                            </b-form-group>
+                          </b-col>
+
+                        
+
+                          <b-col md="3">
+                            <b-form-group label="Peso Bruto :">
+                              <b-form-input disabled type="number" class="text-right" step="any" ref="gross_weight" v-model="product.gross_weight"></b-form-input>
+                            </b-form-group>
+                          </b-col>
+                          
+                          
+
+                          <b-col md="3">
+                            <b-form-group label="Web:">
+                              <b-form-select disabled type="text" v-model="product.web" :options="web"></b-form-select>
+                            </b-form-group>
+                          </b-col>
+
+                          <b-col md="3">
+                            <b-form-group label="P. destacado:">
+                              <b-form-select disabled type="text" v-model="product.outstanding" :options="outstanding"></b-form-select>
+                            </b-form-group>
+                          </b-col>
+
+                          <b-col md="3">
+                            <b-form-group label="Oferta:">
+                              <b-form-select disabled type="text" v-model="product.offer" :options="offer"></b-form-select>
+                            </b-form-group>
+                          </b-col>
+
+                          <b-col md="3">
+                            <b-form-group label="Compraron esto:">
+                              <b-form-input disabled type="number" step="any" v-model="product.people_who_bought_this"></b-form-input>
+                            </b-form-group>
+                          </b-col>
+
+                          <b-col md="3">
+                            <b-form-group label="Vieron esto:">
+                              <b-form-input disabled type="number" step="any" v-model="product.people_who_see_this"></b-form-input>
+                            </b-form-group>
+                          </b-col>
+
+                          <b-col md="9">
+                            <b-form-group label="Proveedor :">
+                            <v-select disabled placeholder="Seleccione un proveedor" class="w-100" :filterable="false" label="name" v-model="mprovider" @search="SearchProvider" :options="providers"></v-select>
+                            <small v-if="errors.id_provider" class="form-text text-danger">Seleccione un proveedor</small>
+                            </b-form-group>
+                          </b-col>
+
+                          <b-col md="3">
+                            <b-form-group label="Estado :">
+                              <select disabled ref="state" v-model="product.state" class="form-control">
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                              </select>
+                            </b-form-group>
+                          </b-col>
+
+                          <b-col md="5"></b-col>
+                          <b-col md="2">
+                            <b-link  class="btn form-control btn-primary" :to="{ path: '/producto/listar' }" append >REGRESAR</b-link>
+                          </b-col>
+                      </b-row>
+
+                    </b-tab>
+                  </b-tabs>
+
+
+                  
 
                     
                 </b-col>
@@ -268,7 +285,8 @@ export default {
       photo: null,
       commissionable:[
         {value:0,text:'NO'},
-        {value:1,text:'SI'},
+        {value:1,text:'SI - Importe'},
+        {value:2,text:'SI - Porcentaje'},
       ],
       internal_product :[
         {value:0,text:'NO'},

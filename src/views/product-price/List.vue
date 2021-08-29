@@ -8,7 +8,10 @@
           </CCardHeader>
           <CCardBody>
             <b-row>
-              <b-col sm="12" md="8"></b-col>
+              <b-col sm="12" md="7"></b-col>
+              <b-col sm="12" md="1">
+                  <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i></b-button>
+              </b-col>
               <b-col sm="6" md="2">
                 <b-input-group>
                   <b-form-input type="number" step="any" v-model="exchange_rate" class="form-control text-center"></b-form-input>
@@ -131,6 +134,7 @@ export default {
     ConfirmDeterminatePriceGlobal,
     DeterminatePriceGlobal,
     Permission,
+    ExportExcel,
   },
 
   computed: {
@@ -198,6 +202,12 @@ function ListPriceByProduct(id_product) {
 function modalProductPriceShow(id_product) {
     EventBus.$emit('ModalProductPriceShow',id_product);
 }
+
+function ExportExcel() {  
+  let url = this.url_base + "excel-products-price/"+this.id_establishment;
+  window.open(url,'_blank');
+}
+
 
 function GetExchangeRate() {
   let me = this;

@@ -18,7 +18,9 @@
                   <tr>
                       <td class="align-middle text-center">{{ it + 1 }}</td>
                       <td class="align-middle text-left">{{ item.code }}</td>
-                      <td class="align-middle text-left">{{ item.name +" - "+item.presentation }}</td>
+                      <td class="align-middle text-left">
+                        <b-input  type="text" v-model="item.name"></b-input>
+                      </td>
                       <td class="align-middle text-center">{{ item.unit_measure }}</td>
                       <td class="align-middle text-center">
                         <input :disabled="type_invoice == '07' && !(reason == '07')" type="number" @change="EditDetail(item.id_product)" class="form-control text-center" v-model="item.quantity">

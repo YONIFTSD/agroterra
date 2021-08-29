@@ -212,29 +212,5 @@ function ViewOutput(id_output) {
 
   
 }
-//Buscar productos
-function SearchProducts() {
-  let me = this;
-  let search = this.search == "" ? "all" : this.search;
-  let url = this.url_base + "search-products-stock/"+this.id_establishment+"/"+ search;
 
-  axios({
-    method: "GET",
-    url: url,
-    headers: {
-      token: this.token,
-    },
-  })
-    .then(function (response) {
-      if (response.data.status == 200) {
-        me.products = response.data.result;
-      } else {
-        me.products = [];
-      }
-    })
-    .catch((error) => {
-      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-      
-    });
-}
 </script>

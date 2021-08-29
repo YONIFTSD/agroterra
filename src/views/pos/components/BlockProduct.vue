@@ -227,12 +227,20 @@ function SearchProducts() {
   }
   let search_product = this.search.search_product == "" ? "all" : this.search.search_product;
   let search_category = this.search.search_category == "" ? "all" : this.search.search_category;
-  let url = this.url_base + "search-products-stock-pos/"+this.search.id_warehouse+"/"+ search_category+"/"+ 
-  search_product + "/1"+ "?page=" + this.currentPage;
+  let url = this.url_base + "search-products-stock-pos";
+
+  let data = {
+    id_warehouse : this.search.id_warehouse,
+    search_category : search_category,
+    search_product: search_product,
+    stock:1,
+    page:this.currentPage
+  };
 
   axios({
-    method: "GET",
+    method: "POST",
     url: url,
+    data:data,
     headers: {
       token: this.token,
     },
@@ -266,7 +274,7 @@ function AddProduct(id_product) {
           code: response.data.result.code,
           name: response.data.result.name,
           presentation: response.data.result.presentation,
-          unit_measure: response.data.result.unit_measure,
+          unit_measure: "",
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
           quantity: 1,

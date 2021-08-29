@@ -294,18 +294,58 @@ function CalculatePriceCost() {
 }
 
 function DeterminatePriceFinal(type) {
-  
+  this.product_price.real_cost = this.product_price.real_cost.length == 0 ? 0 : parseFloat(this.product_price.real_cost);
+  this.product_price.minimal_price = this.product_price.minimal_price.length == 0 ? 0 : parseFloat(this.product_price.minimal_price);
+  this.product_price.sale_price = this.product_price.sale_price.length == 0 ? 0 : parseFloat(this.product_price.sale_price);
+  this.product_price.fixed_costs = this.product_price.fixed_costs.length == 0 ? 0 : parseFloat(this.product_price.fixed_costs);
+  this.product_price.minimal_utility = this.product_price.minimal_utility.length == 0 ? 0 : parseFloat(this.product_price.minimal_utility);
+  this.product_price.maximum_utility = this.product_price.maximum_utility.length == 0 ? 0 : parseFloat(this.product_price.maximum_utility);
+
   let price_final =  parseFloat(this.product_price.price_final);
 
   if (type == 1) {
-      this.product_price.real_cost = price_final / (1 - (parseFloat(this.product_price.fixed_costs) / 100));
-      this.product_price.minimal_price = price_final / (1 - (parseFloat(this.product_price.minimal_utility) / 100));
-      this.product_price.sale_price = price_final / (1 - (parseFloat(this.product_price.maximum_utility) / 100));
+      if (parseFloat(this.product_price.fixed_costs) == 0) {
+        this.product_price.real_cost = 0;
+      }else{
+        this.product_price.real_cost = price_final / (1 - (parseFloat(this.product_price.fixed_costs) / 100));
+      }
+
+      if (parseFloat(this.product_price.minimal_utility) == 0) {
+        this.product_price.minimal_price = 0;
+      }else{
+        this.product_price.minimal_price = price_final / (1 - (parseFloat(this.product_price.minimal_utility) / 100));
+      }
+
+      if (parseFloat(this.product_price.maximum_utility) == 0) {
+        this.product_price.sale_price = 0;
+      }else{
+        this.product_price.sale_price = price_final / (1 - (parseFloat(this.product_price.maximum_utility) / 100));
+      }
+      
+      
   }
   if (type == 2) {
-      this.product_price.fixed_costs = (1 - (price_final / parseFloat(this.product_price.real_cost)) )  * 100;
-      this.product_price.minimal_utility = (1 - (price_final / parseFloat(this.product_price.minimal_price)) )  * 100;
-      this.product_price.maximum_utility = (1 - (price_final / parseFloat(this.product_price.sale_price)) )  * 100;
+      if (parseFloat(this.product_price.real_cost) == 0) {
+        this.product_price.fixed_costs = 0;
+      }else{
+        this.product_price.fixed_costs = (1 - (price_final / parseFloat(this.product_price.real_cost)) )  * 100;
+      }
+
+      if (parseFloat(this.product_price.minimal_price) == 0) {
+        this.product_price.minimal_utility = 0;
+      }else{
+        this.product_price.minimal_utility = (1 - (price_final / parseFloat(this.product_price.minimal_price)) )  * 100;
+      }
+
+      if (parseFloat(this.product_price.sale_price) == 0) {
+        this.product_price.maximum_utility = 0;
+      }else{
+        this.product_price.maximum_utility = (1 - (price_final / parseFloat(this.product_price.sale_price)) )  * 100;
+      }
+      
+     
+      
+      
   }
 
   this.product_price.real_cost = parseFloat(this.product_price.real_cost).toFixed(2);
@@ -320,8 +360,19 @@ function DeterminatePriceFinal(type) {
 
 //Buscar productos
 function SaveProductPrice(_this) {
-  
+
+
   let me = _this;
+
+  me.product_price.real_cost = me.product_price.real_cost.length == 0 ? 0 : parseFloat(me.product_price.real_cost);
+  me.product_price.minimal_price = me.product_price.minimal_price.length == 0 ? 0 : parseFloat(me.product_price.minimal_price);
+  me.product_price.sale_price = me.product_price.sale_price.length == 0 ? 0 : parseFloat(me.product_price.sale_price);
+  me.product_price.fixed_costs = me.product_price.fixed_costs.length == 0 ? 0 : parseFloat(me.product_price.fixed_costs);
+  me.product_price.minimal_utility = me.product_price.minimal_utility.length == 0 ? 0 : parseFloat(me.product_price.minimal_utility);
+  me.product_price.maximum_utility = me.product_price.maximum_utility.length == 0 ? 0 : parseFloat(me.product_price.maximum_utility);
+  me.product_price.regular_price = me.product_price.regular_price.length == 0 ? 0 : parseFloat(me.product_price.regular_price);
+  me.product_price.online_price = me.product_price.online_price.length == 0 ? 0 : parseFloat(me.product_price.online_price);
+
   let url = me.url_base + "product/determine-price";
   me.product_price.id_establishment = me.id_establishment;
   let data = me.product_price;
