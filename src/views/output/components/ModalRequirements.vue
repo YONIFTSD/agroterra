@@ -103,6 +103,7 @@ export default {
   },
   computed: {
     ...mapState(["url_base"]),
+    ...mapState('Output',['linkages']),
     token: function () {
       let user = window.localStorage.getItem("user");
       user = JSON.parse(JSON.parse(je.decrypt(user)));
@@ -163,32 +164,46 @@ function AddRequirement(id_requirement) {
     })
     .then(function (response) {
       if (response.data.status == 200) {
-          
-        let linkage = {
-          id_module: response.data.result.requirement.id_requirement,
-          module: 'Requerimiento',
-          broadcast_date: response.data.result.requirement.broadcast_date,
-          reference: CodeInvoice(response.data.result.requirement.type_invoice) + " " + response.data.result.requirement.serie + "-"+response.data.result.requirement.number,
-        }
-        EventBus.$emit('Select_Establishment_Destination',response.data.result.requirement.id_establishment);
-        me.mLoadAddLinkageOutput(linkage);
-
-        let requirement_detail = response.data.result.requirement_detail;
-        for (let index = 0; index < requirement_detail.length; index++) {
-          const element = requirement_detail[index];
-          let detail = {
-            id_product: element.id_product,
-            code: element.code,
-            name: element.name,
-            presentation: element.presentation,
-            unit_measure: element.unit_measure,
-            igv: element.igv,
-            existence_type: element.existence_type,
-            quantity: element.quantity,
+        let val_add = true;
+        for (let index = 0; index < me.linkages.length; index++) {
+          const element =  me.linkages[index];
+          if (element.module == "Requerimiento" && element.id_module == response.data.result.requirement.id_requirement) {
+            val_add = false;
           }
-          
-          me.mLoadAddOutputDetail(detail);
         }
+
+        if (val_add) {
+          let linkage = {
+            id_module: response.data.result.requirement.id_requirement,
+            module: 'Requerimiento',
+            broadcast_date: response.data.result.requirement.broadcast_date,
+            reference: CodeInvoice(response.data.result.requirement.type_invoice) + " " + response.data.result.requirement.serie + "-"+response.data.result.requirement.number,
+          }
+          EventBus.$emit('Select_Establishment_Destination',response.data.result.requirement.id_establishment);
+          me.mLoadAddLinkageOutput(linkage);
+
+          let requirement_detail = response.data.result.requirement_detail;
+          for (let index = 0; index < requirement_detail.length; index++) {
+            const element = requirement_detail[index];
+            let detail = {
+              id_product: element.id_product,
+              code: element.code,
+              name: element.name,
+              presentation: element.presentation,
+              unit_measure: element.unit_measure,
+              igv: element.igv,
+              existence_type: element.existence_type,
+              quantity: element.quantity,
+            }
+            
+            me.mLoadAddOutputDetail(detail);
+          }
+
+          me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha adjuntado el requerimiento ', type: 'success'})
+        }else{
+          me.$notify({ group: 'alert', title: 'Sistema', text:'El requerimiento seleccionado ya se adjunto', type: 'warn'})
+        }
+        
         
 
         

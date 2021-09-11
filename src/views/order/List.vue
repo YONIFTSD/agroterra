@@ -33,6 +33,7 @@
                     <th width="15%" class="text-center">Email</th>
                     <th width="10%" class="text-center">Teléfono</th>
                     <th width="8%" class="text-center">Total</th>
+                    <th width="4%" class="text-center">Pago</th>
                     <th width="7%" class="text-center">Estado</th>
                     <th width="7%" class="text-center">Acciones</th>
                   </tr>
@@ -47,6 +48,10 @@
                     <td class="text-left"> {{ item.id_client == 1 ? item.phone: item.client_phone }} </td>
                     <td class="text-right"> {{ item.total }} </td>
                     <td class="text-center">
+                          <b-badge v-if="item.payment_state == 0" variant="danger">NO</b-badge>
+                          <b-badge v-if="item.payment_state == 1" variant="success">SI</b-badge>
+                    </td>
+                    <td class="text-center">
                           <b-badge v-if="item.state == 0" variant="danger">Abandonado</b-badge>
                           <b-badge v-if="item.state == 1" variant="warning">Pendiente</b-badge>
                           <b-badge v-if="item.state == 2" variant="info">En Proceso</b-badge>
@@ -55,9 +60,9 @@
                     </td>
                     <td class="text-center">
                       <b-dropdown bloque size="sm" text="Acciones" right>
-                        <b-dropdown-item v-if="Permission('OrderEdit') && item.state == 1" @click="EditOrder(item.id_order)">Editar</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('OrderEdit')" @click="EditOrder(item.id_order)">Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('OrderView')"  @click="ViewOrder(item.id_order)">Ver</b-dropdown-item>
-                        <!-- <b-dropdown-item v-if="Permission('OrderDelete')" @click="ConfirmDeleteOrder(item.id_order)">Eliminar</b-dropdown-item> -->
+                        <b-dropdown-item v-if="Permission('OrderDelete')" @click="ConfirmDeleteOrder(item.id_order)">Eliminar</b-dropdown-item>
                       </b-dropdown>
                     </td>
                   </tr>
@@ -174,7 +179,7 @@ function ViewOrder(id_order) {
 // Confirmar eliminar
 function ConfirmDeleteOrder(id_order) {
   Swal.fire({
-    title: "Esta seguro de eliminar el registro?",
+    title: "Esta seguro de eliminar el pedido?",
     text: "No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,
@@ -206,7 +211,7 @@ function DeleteOrder(id_order) {
             break;
           }
         }
-        Swal.fire("Eliminado!", "El registro ha sido eliminado", "success");
+        Swal.fire("Eliminado!", "El pedido se ha sido eliminado", "success");
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }

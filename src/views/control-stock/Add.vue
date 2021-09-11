@@ -317,6 +317,8 @@ function GetProductByBarcodeAdd() {
         }
         EventBus.$emit('ControlStockAddProduct',data);
         me.barcode = '';
+        const barcode = me.$refs.barcode;
+        barcode.focus();
         me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado el stock del producto', type: 'success'});
       }
     })

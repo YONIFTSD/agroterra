@@ -102,6 +102,7 @@ export default {
   },
   computed: {
     ...mapState(["url_base"]),
+    ...mapState('Input',['linkages']),
     token: function () {
       let user = window.localStorage.getItem("user");
       user = JSON.parse(JSON.parse(je.decrypt(user)));
@@ -155,39 +156,52 @@ function AddTransfer(id_output) {
     })
     .then(function (response) {
       if (response.data.status == 200) {
-          
-        let linkage = {
-          id_module: response.data.result.output.id_output,
-          module: 'Salida',
-          broadcast_date: response.data.result.output.broadcast_date,
-          reference: CodeInvoice(response.data.result.output.type_invoice) + " " + response.data.result.output.serie + "-"+response.data.result.output.number,
-        }
-        let data = {
-          type_invoice :  response.data.result.output.type_invoice,
-          serie :  response.data.result.output.serie,
-          number :  response.data.result.output.number,
-          provider : {id:response.data.result.output.id_provider, name : response.data.result.output.provider_name + " - "+ response.data.result.output.provider_document_number} ,
-        };
-        EventBus.$emit('DataTransference',data);
-
-        me.mLoadAddLinkageInput(linkage);
-
-        let output_detail = response.data.result.output_detail;
-        for (let index = 0; index < output_detail.length; index++) {
-          const element = output_detail[index];
-          let detail = {
-            id_product: element.id_product,
-            code: element.code,
-            name: element.name,
-            presentation: element.presentation,
-            unit_measure: element.unit_measure,
-            igv: element.igv,
-            existence_type: element.existence_type,
-            quantity: element.quantity,
+         let val_add = true;
+        for (let index = 0; index < me.linkages.length; index++) {
+          const element =  me.linkages[index];
+          if (element.module == "Salida" && element.id_module == response.data.result.output.id_output) {
+            val_add = false;
           }
-          
-          me.mLoadAddInputDetail(detail);
         }
+        if (val_add) {
+          let linkage = {
+            id_module: response.data.result.output.id_output,
+            module: 'Salida',
+            broadcast_date: response.data.result.output.broadcast_date,
+            reference: CodeInvoice(response.data.result.output.type_invoice) + " " + response.data.result.output.serie + "-"+response.data.result.output.number,
+          }
+          let data = {
+            type_invoice :  response.data.result.output.type_invoice,
+            serie :  response.data.result.output.serie,
+            number :  response.data.result.output.number,
+            provider : {id:response.data.result.output.id_provider, name : response.data.result.output.provider_name + " - "+ response.data.result.output.provider_document_number} ,
+          };
+          EventBus.$emit('DataTransference',data);
+
+          me.mLoadAddLinkageInput(linkage);
+
+          let output_detail = response.data.result.output_detail;
+          for (let index = 0; index < output_detail.length; index++) {
+            const element = output_detail[index];
+            let detail = {
+              id_product: element.id_product,
+              code: element.code,
+              name: element.name,
+              presentation: element.presentation,
+              unit_measure: element.unit_measure,
+              igv: element.igv,
+              existence_type: element.existence_type,
+              quantity: element.quantity,
+            }
+            
+            me.mLoadAddInputDetail(detail);
+          }   
+          
+          me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha adjuntado la transferencia ', type: 'success'})
+        }else{
+          me.$notify({ group: 'alert', title: 'Sistema', text:'La transferencia seleccionado ya se adjunto', type: 'warn'})
+        }
+        
         
 
         

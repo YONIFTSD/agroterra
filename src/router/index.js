@@ -1186,6 +1186,12 @@ function configRoutes() {
           component: () => import("@/views/kardex/StockGeneral"),
           beforeEnter: userGuard,
         },
+        {
+          path: "diferencia-stock",
+          name: "StockDiferenceList",
+          component: () => import("@/views/kardex/StockDiference"),
+          beforeEnter: userGuard,
+        },
       ],
     },
 

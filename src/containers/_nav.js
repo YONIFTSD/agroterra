@@ -237,6 +237,9 @@ if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('Cont
   if (user_permissions.indexOf('StockGeneralList') > -1) {
     item.push({ name: 'Stock General', to: '/kardex/stock-general'});
   }
+  if (user_permissions.indexOf('StockDiferenceList') > -1) {
+    item.push({ name: 'Diferencia Stock', to: '/kardex/diferencia-stock'});
+  }
   if (user_permissions.indexOf('ControlStockList') > -1) {
     item.push({ name: 'Control Stock', to: '/control-stock/listar'});
   }

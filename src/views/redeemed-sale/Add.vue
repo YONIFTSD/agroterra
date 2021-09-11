@@ -30,7 +30,7 @@
               
                 <b-col md="2">
                   <b-form-group>
-                    <b-form-input @change="SearchBarcode" ref="search_barcode" v-model="search_barcode" placeholder="Código de barras" type="text"></b-form-input>
+                    <b-form-input @keyup="SearchBarcode" ref="search_barcode" v-model="search_barcode" placeholder="Código de barras" type="text"></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -480,6 +480,7 @@ function SearchBarcode() {
     if (barcode.length == 0) {
       return false;
     }
+    this.search_barcode = "";
     let me = this;
     let url = this.url_base + "product/view-cost-barcode/" + barcode +"/"+ this.id_establishment;
 
@@ -506,7 +507,8 @@ function SearchBarcode() {
         }
         me.mLoadAddSaleDetail(detail);
         me.search_barcode = '';
-        
+        const search_barcode = me.$refs.search_barcode;
+        search_barcode.focus();
       }
     })
 }

@@ -12,7 +12,7 @@
         <b-row>
           <b-col md="3">
             <b-link class="text-decoration-none" @click="modalTransformsShow" append>
-            <b-card no-body class="text-center bg-primary height-card">
+            <b-card no-body :class="'text-center ' + (number_home.transfers > 0 ? 'bg-warning':'bg-primary')+ ' height-card'">
               <b-row class="no-gutters h-100">
                 <b-col md="8" class="text-light align-self-center text-center">
                   <span>Transferencias <br> Pendientes</span>
@@ -27,7 +27,7 @@
           <b-col md="3">
             <b-row></b-row>
             <b-link class="text-decoration-none" @click="modalRequirementsShow" append>
-            <b-card no-body class="text-center bg-primary height-card">
+            <b-card no-body :class="'text-center ' + (number_home.requirements > 0 ? 'bg-warning':'bg-primary')+ ' height-card'">
               <b-row class="no-gutters h-100">
                 <b-col md="8" class="text-light align-self-center text-center">
                   <span>Requerimientos <br> Pendientes</span>
@@ -41,7 +41,7 @@
           </b-col>
           <b-col md="3">
             <b-link class="text-decoration-none"  @click="modalProductsDeliveredShow">
-            <b-card no-body class="text-center bg-primary height-card">
+            <b-card no-body :class="'text-center ' + (number_home.products_delivered > 0 ? 'bg-warning':'bg-primary')+ ' height-card'">
               <b-row class="no-gutters h-100">
                 <b-col md="8" class="text-light align-self-center text-center">
                   <span>Productos por <br> Entregar</span>
@@ -55,7 +55,7 @@
           </b-col>
           <b-col md="3">
             <b-link class="text-decoration-none"  @click="modalObserverVouchersShow">
-            <b-card no-body class="text-center bg-primary height-card">
+            <b-card no-body :class="'text-center ' + (number_home.voucher_observer > 0 ? 'bg-danger':'bg-primary')+ ' height-card'">
               <b-row class="no-gutters h-100">
                 <b-col md="8" class="text-light align-self-center text-center">
                   <span>Cantidad de <br> Comprobantes <br> Observados</span>
@@ -218,12 +218,12 @@ function NumberHome() {
   })
   .then(function (response) {
       if (response.data.status == 200) {
-        me.number_home.products_delivered = response.data.products_delivered;
-        me.number_home.voucher_observer = response.data.voucher_observer;
-        me.number_home.products = response.data.products;
-        me.number_home.clients = response.data.clients;
-        me.number_home.requirements = response.data.requirements;
-        me.number_home.transfers = response.data.transfers;
+        me.number_home.products_delivered = parseFloat(response.data.products_delivered);
+        me.number_home.voucher_observer = parseFloat(response.data.voucher_observer);
+        me.number_home.products = parseFloat(response.data.products);
+        me.number_home.clients = parseFloat(response.data.clients);
+        me.number_home.requirements = parseFloat(response.data.requirements);
+        me.number_home.transfers = parseFloat(response.data.transfers);
         
         EventBus.$emit('DataChartSale',response.data.data_chart);
       }

@@ -55,8 +55,13 @@
                           <b-form-select id="per-page-select" v-model="perPage" :options="pageOptions"></b-form-select>
                         </b-form-group>
                       </b-col>
-                      <b-col md="5">
+                      <b-col md="2">
                       </b-col>
+                       <b-col md="3">
+                          <b-form-group>
+                            <b-form-input type="text" ref="barcode" placeholder="Ingrese el codigo de barras"  v-model="barcode" @keyup="GetProductByBarcodeAdd"></b-form-input>
+                          </b-form-group>
+                        </b-col>
                       <b-col md="3">
                         <b-form-group label="" >
                           <b-input-group>
@@ -214,7 +219,7 @@ export default {
         total: false,
       },
       validate: false,
-     
+      barcode:'',
       // detail 
       fields: [
         { key: 'code', label: 'Código', sortable: true, class: 'text-center th-code', sortDirection: 'desc' },
@@ -267,6 +272,7 @@ export default {
     EditControlStock,
     Validate,
     AddQuantity,
+    GetProductByBarcodeAdd,
 
   },
 
@@ -297,6 +303,33 @@ export default {
     }
   },
 };
+
+function GetProductByBarcodeAdd() {
+  if (this.barcode.length == 0) {
+    return false;
+  }
+  let me  = this;
+  let url = this.url_base + "get-product-by-barcode/"+this.barcode;
+  this.barcode = '';
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role:this.role, },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        let data = {
+          id_product: response.data.result.id_product,
+          quantity: 1,
+        }
+        EventBus.$emit('ControlStockAddProduct',data);
+        me.barcode = '';
+        const barcode = me.$refs.barcode;
+        barcode.focus();
+        me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado el stock del producto', type: 'success'});
+      }
+    })
+}
 
 function ListWarehouses() {
   let me = this;

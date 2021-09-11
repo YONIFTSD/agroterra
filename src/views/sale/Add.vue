@@ -7,7 +7,7 @@
             <strong> Modulo de Venta - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form">
             
               <b-row>
                 <b-col md="2">
@@ -215,7 +215,7 @@
 
                 <b-col md="5"></b-col>
                 <b-col md="2">
-                  <b-button  type="submit" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
+                  <b-button  type="button" @click="Validate" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
 
             
@@ -485,14 +485,9 @@ export default {
     Print,
 
     modalConfirmSale,
-
     BntFeesCollected,
     ModalFeedCollected,
-  
-
     DeleteLinkeage,
-    Teclado,
-
 
     AddPaymentCash,
     DeletePaymentCash,
@@ -547,7 +542,6 @@ function AddPaymentCash() {
     )
     EventBus.$emit('TotalPaymentCash');
   }
-  
 }
 
 function  DeletePaymentCash(index) {
@@ -558,8 +552,6 @@ function  DeletePaymentCash(index) {
 function  modalCurrecyConverterShow() {
   EventBus.$emit('ModalCurrecyConverterShow');
 }
-
-
 
 function AddressClient() {
   if (this.client == null) {
@@ -579,9 +571,7 @@ function AddressClient() {
       } 
     })
 }
-function Teclado() {
-  alert("f2")
-}
+
 
 function SearchClients(search, loading) {
   
@@ -605,6 +595,7 @@ function SearchBarcode() {
     if (barcode.length == 0) {
       return false;
     }
+    this.search_barcode = "";
     let me = this;
     let url = this.url_base + "product/view-cost-barcode/" + barcode +"/"+ this.id_establishment;
 
@@ -622,6 +613,7 @@ function SearchBarcode() {
           code: response.data.result.code,
           name: response.data.result.name,
           presentation: response.data.result.presentation,
+          barcode: response.data.result.barcode,
           unit_measure: response.data.result.unit_measure,
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
@@ -631,7 +623,17 @@ function SearchBarcode() {
         }
         me.mLoadAddSaleDetail(detail);
         me.search_barcode = '';
+
+        const search_barcode = me.$refs.search_barcode;
+        search_barcode.focus();
+
+        EventBus.$emit('TotalPaymentCash');
+        EventBus.$emit('ChangeFeesCollectedModal');
         
+      }else{
+        me.search_barcode = '';
+        const search_barcode = me.$refs.search_barcode;
+        search_barcode.focus();
       }
     })
 }

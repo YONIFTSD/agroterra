@@ -337,6 +337,16 @@ function ViewReferralGuide(id_sale) {
 }
 function modalCPESunat(id_sale) {
   EventBus.$emit('ModalCPESunatShow',id_sale);
+  // let me = this;
+  // let url = this.url_base + "sale/consult-cdr/" + id_sale;
+  // axios({
+  //   method: "get",
+  //   url: url,
+  //   headers: { token: this.token, module: this.module,role: 1 },
+  // })
+  //   .then(function (response) {
+      
+  //   })
 }
 
 function SendXML(id_sale) {
