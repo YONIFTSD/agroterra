@@ -385,7 +385,7 @@ function CancelOutput(id_output) {
     headers: {
       token: this.token,
       module: this.module,
-      role: 3,
+      role: 4,
     },
   })
     .then(function (response) {
