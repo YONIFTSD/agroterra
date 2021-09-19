@@ -33,7 +33,7 @@
 
                 <b-col md="3">
                   <b-form-group label="Fecha Emision:">
-                    <b-form-input class="text-center" disabled type="date" ref="broadcast_date" v-model="initial_kardex.broadcast_date"></b-form-input>
+                    <b-form-input class="text-center" type="date" ref="broadcast_date" v-model="initial_kardex.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>
                 </b-col>
@@ -455,7 +455,7 @@ function EditKardexInitial(_this) {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-        
+        me.ViewInitialKardex();
         Swal.fire({ icon: 'success', text: 'Se ha modificado correctamente el kardex inicial', timer: 3000,})
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
