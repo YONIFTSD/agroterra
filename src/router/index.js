@@ -1421,6 +1421,13 @@ function configRoutes() {
           beforeEnter: userGuard,
         },
         {
+          path: "utilidad",
+          name: "ReportUtilityList",
+          component: () => import("@/views/report/Utility"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
           path: "productos-comisionables",
           name: "ReportCommissionableProductsList",
           component: () => import("@/views/report/CommissionableProducts"),

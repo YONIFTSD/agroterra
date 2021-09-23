@@ -8,9 +8,12 @@
           </CCardHeader>
           <CCardBody>
             <b-row>
-              <b-col sm="12" md="7"></b-col>
+              <b-col sm="12" md="6"></b-col>
               <b-col sm="12" md="1">
                   <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i></b-button>
+              </b-col>
+              <b-col sm="12" md="1">
+                  <b-button type="button" title="Exportar Excel General" @click="ExportExcelGeneral" class="form-control" variant="primary"><i class="fas fa-file-excel"></i></b-button>
               </b-col>
               <b-col sm="6" md="2">
                 <b-input-group>
@@ -135,6 +138,7 @@ export default {
     DeterminatePriceGlobal,
     Permission,
     ExportExcel,
+    ExportExcelGeneral,
   },
 
   computed: {
@@ -205,6 +209,12 @@ function modalProductPriceShow(id_product) {
 
 function ExportExcel() {  
   let url = this.url_base + "excel-products-price/"+this.id_establishment;
+  window.open(url,'_blank');
+}
+
+
+function ExportExcelGeneral() {  
+  let url = this.url_base + "excel-products-price-general";
   window.open(url,'_blank');
 }
 

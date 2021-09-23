@@ -231,11 +231,11 @@ function ViewCar(id_car) {
 function Validate() {
   this.errors.brand = this.car.brand.length == 0 ? true : false;
   this.errors.plate = this.car.plate.length == 0 ? true : false;
-  this.errors.record_number = this.car.record_number.length == 0 ? true : false;
+  // this.errors.record_number = this.car.record_number.length == 0 ? true : false;
 
   if (this.errors.brand == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.plate == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
-  if (this.errors.record_number == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  // if (this.errors.record_number == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
   let me = this;
   if (this.car.id_car.length == 0) {

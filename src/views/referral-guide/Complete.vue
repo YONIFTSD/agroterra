@@ -210,6 +210,7 @@ export default {
       module: 'ReferralGuide',
       role: 3,
       referral_guide: {
+        type_serie:'',
         id_referral_guide: "",
         id_user: "",
         id_serie: "",
@@ -559,9 +560,9 @@ function EditReferralGuide(me) {
 
   let url = me.url_base + "referral-guide/complete";
   me.referral_guide.ubigee_destination = me.ubigee_destination.value;
-  me.referral_guide.id_carrier = me.carrier.id;
-  me.referral_guide.id_car = me.car.id;
-  me.referral_guide.id_drive = me.drive.id;
+  me.referral_guide.id_carrier = me.carrier == null ? '' : me.carrier.id;
+  me.referral_guide.id_car = me.car == null ? '' : me.car.id;
+  me.referral_guide.id_drive = me.drive == null ? '' : me.drive.id;
   me.referral_guide.total_weight = me.total_weight;
   me.referral_guide.referral_guide_detail = me.referral_guide_detail;
   let data = me.referral_guide;
@@ -589,14 +590,35 @@ function Validate() {
   this.errors.transfer_date = this.referral_guide.transfer_date.length == 0 ? true : false;
   this.errors.ubigee_destination = this.ubigee_destination == null ? true : false;
   this.errors.address_destination = this.referral_guide.address_destination.length == 0 ? true : false;
-  this.errors.total_weight = parseFloat(this.total_weight) == 0 ? true : false;
-  this.errors.number_packages = parseFloat(this.referral_guide.number_packages) == 0 ? true : false;
-  this.errors.carrier_type = this.referral_guide.carrier_type.length == 0 ? true : false;
-  this.errors.id_carrier = this.carrier == null ? true : false;
-  this.errors.id_car = this.car == null ? true : false;
-  this.errors.id_drive = this.drive == null ? true : false;
   this.errors.referral_guide_detail = this.referral_guide_detail.length == 0 ? true : false;
 
+
+  this.errors.total_weight = false;
+  this.errors.number_packages = false;
+  this.errors.id_car = false;
+  this.errors.id_drive = false;
+  this.errors.id_carrier = false;
+
+
+  if (this.referral_guide.type_serie == 1) {
+      this.errors.total_weight = parseFloat(this.total_weight) == 0 ? true : false;
+      this.errors.number_packages = parseFloat(this.referral_guide.number_packages) == 0 ? true : false;
+      this.errors.carrier_type = this.referral_guide.carrier_type.length == 0 ? true : false;
+      if (this.referral_guide.carrier_type == "01") {
+        this.errors.id_car = this.car == null ? true : false;
+        this.errors.id_drive = this.drive == null ? true : false;
+      }else{
+        this.errors.id_carrier = this.carrier == null ? true : false;
+      }
+      
+  }else{
+      if (this.referral_guide.carrier_type == "01") {
+        this.errors.id_car = this.car == null ? true : false;
+        this.errors.id_drive = this.drive == null ? true : false;
+      }else{
+        this.errors.id_carrier = this.carrier == null ? true : false;
+      }
+  }
   
   if (this.errors.transfer_date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.ubigee_destination == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }

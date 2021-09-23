@@ -8,14 +8,14 @@
 
 
     <b-row>
-      <b-col md="10">
+      <b-col md="12">
         <b-row>
-          <b-col md="3">
+          <b-col md="2">
             <b-link class="text-decoration-none" @click="modalTransformsShow" append>
             <b-card no-body :class="'text-center ' + (number_home.transfers > 0 ? 'bg-warning':'bg-primary')+ ' height-card'">
               <b-row class="no-gutters h-100">
                 <b-col md="8" class="text-light align-self-center text-center">
-                  <span>Transferencias <br> Pendientes</span>
+                  <span>Transferencias <br>Pendientes</span>
                 </b-col>
                 <b-col md="4" class="text-light align-self-center text-center">
                   <span class="align-middle h3">{{number_home.transfers}}</span>
@@ -24,13 +24,14 @@
             </b-card>
             </b-link>
           </b-col>
-          <b-col md="3">
+      
+          <b-col md="2">
             <b-row></b-row>
             <b-link class="text-decoration-none" @click="modalRequirementsShow" append>
             <b-card no-body :class="'text-center ' + (number_home.requirements > 0 ? 'bg-warning':'bg-primary')+ ' height-card'">
               <b-row class="no-gutters h-100">
                 <b-col md="8" class="text-light align-self-center text-center">
-                  <span>Requerimientos <br> Pendientes</span>
+                  <span>Requerimientos <br>Pendientes</span>
                 </b-col>
                 <b-col md="4" class="text-light align-self-center text-center">
                   <span class="align-middle h3">{{number_home.requirements}}</span>
@@ -39,7 +40,21 @@
             </b-card>
             </b-link>
           </b-col>
-          <b-col md="3">
+          <b-col md="2">
+            <b-link class="text-decoration-none" @click="modalOrders" append>
+            <b-card no-body :class="'text-center ' + (number_home.orders > 0 ? 'bg-success':'bg-primary')+ ' height-card'">
+              <b-row class="no-gutters h-100">
+                <b-col md="8" class="text-light align-self-center text-center">
+                  <span>Nuevos <br>Pedidos</span>
+                </b-col>
+                <b-col md="4" class="text-light align-self-center text-center">
+                  <span class="align-middle h3">{{number_home.orders}}</span>
+                </b-col>
+              </b-row>
+            </b-card>
+            </b-link>
+          </b-col>
+          <b-col md="2">
             <b-link class="text-decoration-none"  @click="modalProductsDeliveredShow">
             <b-card no-body :class="'text-center ' + (number_home.products_delivered > 0 ? 'bg-warning':'bg-primary')+ ' height-card'">
               <b-row class="no-gutters h-100">
@@ -53,12 +68,12 @@
             </b-card>
             </b-link>
           </b-col>
-          <b-col md="3">
+          <b-col md="2">
             <b-link class="text-decoration-none"  @click="modalObserverVouchersShow">
             <b-card no-body :class="'text-center ' + (number_home.voucher_observer > 0 ? 'bg-danger':'bg-primary')+ ' height-card'">
               <b-row class="no-gutters h-100">
                 <b-col md="8" class="text-light align-self-center text-center">
-                  <span>Cantidad de <br> Comprobantes <br> Observados</span>
+                  <span>Compr. <br> Observados</span>
                 </b-col>
                 <b-col md="4" class="text-light align-self-center text-center">
                   <span class="align-middle h3">{{number_home.voucher_observer}}</span>
@@ -69,42 +84,42 @@
           </b-col>
 
 
-          <b-col md="12" class="bg-white" >
+          
+        </b-row>
+      </b-col>
+          <b-col md="10" class="bg-white" >
               <div class="small">
                 <ChartSales  />
               </div>
           </b-col>
-        </b-row>
-      </b-col>
-
-      <b-col md="2">
-        <b-row>
-          <b-col md="12" class="mb-1">
-            <div class="w-100 text-center">Accesos Directos</div>
+          <b-col md="2">
+              <b-row>
+                <b-col md="12" class="mb-1">
+                  <div class="w-100 text-center">Accesos Directos</div>
+                </b-col>
+                <b-col md="12">
+                  <b-link class="text-decoration-none" :disabled="!Permission('SaleAdd')" :to="{ path: '/venta/nuevo' }" append>
+                  <CWidgetIcon header="Nueva" text="Venta" color="gradient-primary">
+                    <img src="@/assets/icons/ventas.png" class="" />
+                  </CWidgetIcon>
+                  </b-link>
+                </b-col>
+                <b-col md="12">
+                  <b-link class="text-decoration-none" :disabled="!Permission('CashAdd')" :to="{ path: '/caja/nuevo' }" append>
+                  <CWidgetIcon header="Nueva" text="Caja" color="gradient-success">
+                    <img src="@/assets/icons/caja.png" class="" />
+                  </CWidgetIcon>
+                  </b-link>
+                </b-col>
+                <b-col md="12">
+                  <b-link class="text-decoration-none" @click="modalCPEShow" >
+                  <CWidgetIcon header="CPE" text="Sunat" color="gradient-info">
+                    <img src="@/assets/icons/cpe.png" class="" />
+                  </CWidgetIcon>
+                  </b-link>
+                </b-col>
+              </b-row>
           </b-col>
-          <b-col md="12">
-            <b-link class="text-decoration-none" :disabled="!Permission('SaleAdd')" :to="{ path: '/venta/nuevo' }" append>
-            <CWidgetIcon header="Nueva" text="Venta" color="gradient-primary">
-              <img src="@/assets/icons/ventas.png" class="" />
-            </CWidgetIcon>
-            </b-link>
-          </b-col>
-          <b-col md="12">
-            <b-link class="text-decoration-none" :disabled="!Permission('CashAdd')" :to="{ path: '/caja/nuevo' }" append>
-            <CWidgetIcon header="Nueva" text="Caja" color="gradient-success">
-              <img src="@/assets/icons/caja.png" class="" />
-            </CWidgetIcon>
-            </b-link>
-          </b-col>
-          <b-col md="12">
-            <b-link class="text-decoration-none" @click="modalCPEShow" >
-            <CWidgetIcon header="CPE" text="Sunat" color="gradient-info">
-              <img src="@/assets/icons/cpe.png" class="" />
-            </CWidgetIcon>
-            </b-link>
-          </b-col>
-        </b-row>
-      </b-col>
     </b-row>
 
 
@@ -155,6 +170,7 @@ export default {
         clients:0,
         requirements:0,
         transfers:0,
+        orders:0,
       },
       name :'',
      
@@ -174,6 +190,7 @@ export default {
     modalTransformsShow,
     Permission,
     NumberHome,
+    modalOrders,
   },
   computed: {
     ...mapState(["url_base"]),
@@ -206,7 +223,12 @@ function modalRequirementsShow() {
 function modalTransformsShow() {
   EventBus.$emit('ModalTransfersShow');
 }
-
+function modalOrders() {
+  this.$router.push({
+    name: "OrderList",
+  });
+  
+}
 
 function NumberHome() {
   let me = this;
@@ -224,6 +246,7 @@ function NumberHome() {
         me.number_home.clients = parseFloat(response.data.clients);
         me.number_home.requirements = parseFloat(response.data.requirements);
         me.number_home.transfers = parseFloat(response.data.transfers);
+        me.number_home.orders = parseFloat(response.data.orders);
         
         EventBus.$emit('DataChartSale',response.data.data_chart);
       }

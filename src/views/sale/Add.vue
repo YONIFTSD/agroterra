@@ -342,6 +342,7 @@ export default {
         web_pay: 0,
         coin: "PEN",
         address: '',
+    
         way_to_pay: "01-000",
         payment_type: "01",
         payment_method: "008",

@@ -90,7 +90,7 @@ export default {
     return {
         modalProviders: false,
         provider: {
-          document_type: "1",
+          document_type: "6",
           document_number: "",
           name: "",
           ubigee: "",

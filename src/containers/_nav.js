@@ -261,6 +261,7 @@ if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('Cont
 if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('ReportSaleDetailList') > -1 || 
   user_permissions.indexOf('ReportShoppingList') > -1 || user_permissions.indexOf('ReportShoppingDetailList') > -1
   || user_permissions.indexOf('ReportIncomeSettlementList') > -1 || user_permissions.indexOf('ReportDayliIncomeSettlementList') > -1
+  || user_permissions.indexOf('ReportUtilityList') > -1
   ){
   let me = this;
   let item = [];
@@ -278,6 +279,10 @@ if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('
   }
   if (user_permissions.indexOf('ReportShoppingDetailList') > -1) {
     item.push({ name: 'Detalle de Compra', to: '/reporte/compra-detallado'});
+  }
+
+  if (user_permissions.indexOf('ReportUtilityList') > -1) {
+    item.push({ name: 'Utilidad', to: '/reporte/utilidad'});
   }
   if (user_permissions.indexOf('ReportCommissionableProductsList') > -1) {
     item.push({ name: 'Prod. Comisionables', to: '/reporte/productos-comisionables'});

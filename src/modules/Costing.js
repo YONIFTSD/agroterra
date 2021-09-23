@@ -99,7 +99,7 @@ const actions = {
                 let distribution_factor = parseFloat(base_expense) / parseFloat(packages);
                 for (let index = 0; index < detail.length; index++) {
                   detail[index].total_freight_value = parseFloat(detail[index].package) * parseFloat(distribution_factor);
-                  detail[index].unit_freight_value = distribution_factor;
+                  detail[index].unit_freight_value = parseFloat(distribution_factor) / parseFloat(detail[index].quantity);
                   detail[index].total_cost = parseFloat(detail[index].net_total_value) + parseFloat(detail[index].total_freight_value);
                   detail[index].unit_cost = parseFloat(detail[index].total_cost) / parseFloat(detail[index].quantity);
                   

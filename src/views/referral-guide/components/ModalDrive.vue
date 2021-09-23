@@ -139,7 +139,7 @@ export default {
         role:0,
         drive:{
           id_drive:'',
-          document_type:'6',
+          document_type:'1',
           document_number:'',
           name:'',
           address:'',
@@ -156,10 +156,10 @@ export default {
         },
         document_type: [
           {value: 1 , text : 'DNI'},
-          {value: 6 , text : 'RUC'},
-          {value: 4 , text : 'CARNET DE EXTRANJERIA'},
-          {value: 7 , text : 'PASAPORTE'},
-          {value: 0 , text : 'OTROS'},
+          // {value: 6 , text : 'RUC'},
+          // {value: 4 , text : 'CARNET DE EXTRANJERIA'},
+          // {value: 7 , text : 'PASAPORTE'},
+          // {value: 0 , text : 'OTROS'},
         ],
 
 
