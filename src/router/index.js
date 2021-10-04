@@ -377,6 +377,11 @@ function configRoutes() {
           props: true,
           beforeEnter: userGuard,
         },
+        {
+          path: "importar",
+          name: "ProductImport",
+          component: () => import("@/views/product/Import"),
+        },
       ],
     },
 

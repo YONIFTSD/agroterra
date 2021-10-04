@@ -86,6 +86,55 @@ const actions = {
             }
         }
         if (validate) {
+
+            product.quantity = parseFloat(product.quantity) + parseFloat(product.quantity);
+            product.unit_value = product.unit_value.length == 0 ? (0).toFixed(5) : parseFloat(product.unit_value).toFixed(5);
+            product.percentage_discount = product.percentage_discount.length == 0 ? (0).toFixed(2) : parseFloat(product.percentage_discount).toFixed(2);
+            product.unit_discount = (parseFloat(product.percentage_discount) * parseFloat(product.unit_value)) / 100;
+            product.total_discount = (parseFloat(product.unit_discount) * parseFloat(product.quantity));
+            
+            
+            if (unit_value == "1") {
+                let net_unit_value = (parseFloat(product.unit_value) - parseFloat(product.unit_discount));
+                if (product.igv == "10") {
+                    product.unit_price = net_unit_value;
+                    product.net_unit_value = net_unit_value / 1.18;
+                    product.unit_igv = parseFloat(product.unit_price) - parseFloat(product.net_unit_value);
+                }else{
+                    product.unit_igv = 0;
+                    product.net_unit_value = net_unit_value;
+                    product.unit_price = net_unit_value;
+                }
+            }else{
+                let net_unit_value = (parseFloat(product.unit_value) - parseFloat(product.unit_discount));
+                if (product.igv == "10") {
+                    product.unit_igv = net_unit_value * 0.18;
+                    product.net_unit_value = net_unit_value;
+                    product.unit_price = parseFloat(product.net_unit_value) + parseFloat(product.unit_igv);
+                }else{
+                    product.unit_igv = 0;
+                    product.net_unit_value = net_unit_value;
+                    product.unit_price = net_unit_value;
+                }
+            }
+
+            product.total_value = parseFloat(product.unit_value) * parseFloat(product.quantity);
+            product.net_total_value = parseFloat(product.net_unit_value) * parseFloat(product.quantity);
+            product.total_igv = parseFloat(product.unit_igv) * parseFloat(product.quantity);
+            product.total_price = parseFloat(product.unit_price) * parseFloat(product.quantity);
+            
+
+            product.unit_discount = product.unit_discount.toFixed(5);
+            product.net_unit_value = product.net_unit_value.toFixed(5);
+            product.unit_igv = product.unit_igv.toFixed(5);
+            product.unit_price = product.unit_price.toFixed(5);
+            
+            product.total_value = product.total_value.toFixed(5);
+            product.total_discount = product.total_discount.toFixed(5);
+            product.net_total_value = product.net_total_value.toFixed(5);
+            product.total_igv = product.total_igv.toFixed(5);
+            product.total_price = product.total_price.toFixed(5);
+
             context.commit('mAddShoppingDetail',product);
             context.dispatch('mLoadTotalsShoppingDetail');
         }
@@ -191,7 +240,7 @@ const actions = {
             total:0
         }
         let detail = context.state.shopping_detail;
-
+        console.log(detail)
         for (let index = 0; index < detail.length; index++) {
             total.discount += parseFloat(detail[index].total_discount);
             if (detail[index].igv == '10') {

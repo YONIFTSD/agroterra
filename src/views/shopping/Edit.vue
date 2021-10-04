@@ -167,8 +167,13 @@
                     <b-form-input class="text-right" type="number" step="any" readonly v-model="total_shopping.total"></b-form-input>
                   </b-form-group>
                 </b-col>
+                
 
-                <b-col md="5"></b-col>
+                <b-col md="4">
+                </b-col>
+                <b-col md="2">
+                  <b-button type="button" @click="Export" class="form-control" variant="success" ><i class="fas fa-file-excel"></i> Exportar</b-button>
+                </b-col>
                 <b-col md="2">
                   <b-button type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
                 </b-col>
@@ -381,7 +386,7 @@ export default {
     ChangeUnitValue,
     ChangeExpensesValue, 
     
-
+    Export,
     GetExchangeRateByDate,
 
     ...mapActions('Shopping',['mLoadUnitValue','mLoadExpensesValue']),
@@ -428,6 +433,11 @@ function modalExachangeRate() {
   EventBus.$emit('ModalExchangeRateShow');
 }
 
+function Export() {
+  let id_shopping = je.decrypt(this.id_shopping);
+  let url = this.url_base + "shopping-excel/"+id_shopping;
+  window.open(url,'_blank');
+}
 
 function ListWarehouse() {
    

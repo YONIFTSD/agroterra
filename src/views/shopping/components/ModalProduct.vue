@@ -19,12 +19,13 @@
             <table class="table table-hover table-bordered">
               <thead>
                 <tr>
-                  <th width="5%"  class="text-center align-middle">#</th>
+                  <th width="3%"  class="text-center align-middle">#</th>
                   <th width="8%"  class="text-center align-middle">Código</th>
-                  <th width="55%"  class="text-center align-middle">Nombre</th>
+                  <th width="50%"  class="text-center align-middle">Nombre</th>
                   <th width="10%"  class="text-center align-middle">Categoria</th>
                   <th width="10%"  class="text-center align-middle">Cantidad</th>
-                  <th width="10%"  class="text-center align-middle">Acciones</th>
+                  <th width="13%"  class="text-center align-middle">P. Unit</th>
+                  <th width="7%"  class="text-center align-middle">Acciones</th>
 
                 </tr>
               </thead>
@@ -36,6 +37,9 @@
                   <td class="text-left">{{ item.category_name }}</td>
                   <td class="text-center">
                     <input type="number" value="1" :ref="'mIDCantidad'+item.id_product" class="form-control">
+                  </td>
+                  <td class="text-center">
+                    <input type="number" step="any" value="0.00" :ref="'mIDUnitPrice'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-center">
                       <button type="button" @click="AddProduct(item.id_product)" class="btn btn-primary">
@@ -112,6 +116,8 @@ export default {
 function AddProduct(id_product) {
   
   let quantity = this.$refs['mIDCantidad'+id_product][0]['value'];
+  let unit_price = this.$refs['mIDUnitPrice'+id_product][0]['value'];
+  
   let me = this;
   let url = this.url_base + "product/view/"+id_product;
 
@@ -128,6 +134,7 @@ function AddProduct(id_product) {
       
       if (response.data.status == 200) {
         
+        let total_value = parseFloat(quantity) *  parseFloat(unit_price);
         let detail = {
           id_product : response.data.result.id_product,
           code : response.data.result.code,
@@ -139,20 +146,21 @@ function AddProduct(id_product) {
           percentage_discount: (0).toFixed(2),
           package: (1).toFixed(0),
 
-          unit_value: (0).toFixed(5),
+          unit_value: parseFloat(unit_price).toFixed(5),
           unit_discount: (0).toFixed(5),
-          net_unit_value: (0).toFixed(5),
+          net_unit_value: parseFloat(unit_price).toFixed(5),
           unit_igv: (0).toFixed(5),
           unit_price: (0).toFixed(5),
 
-          total_value: (0).toFixed(5),
+          total_value: (total_value).toFixed(5),
           total_discount: (0).toFixed(5),
-          net_total_value: (0).toFixed(5),
+          net_total_value: (total_value).toFixed(5),
           total_igv: (0).toFixed(5),
           total_price: (0).toFixed(5),
         }
 
         me.mLoadAddShoppingDetail(detail);
+        me.mLoadTotalsShoppingDetail();
         me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado el producto '+ detail.name + ' - ' + detail.presentation, type: 'success'});
       } else {
         

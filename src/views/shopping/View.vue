@@ -183,7 +183,10 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="5"></b-col>
+                <b-col md="4"></b-col>
+                <b-col md="2">
+                  <b-button type="button" @click="Export" class="form-control" variant="success" ><i class="fas fa-file-excel"></i> Exportar</b-button>
+                </b-col>
                 <b-col md="2">
                   <b-link class="btn form-control btn-primary" :to="{ path: '/compra/listar' }" append>Regresar</b-link >
                 </b-col>
@@ -393,7 +396,7 @@ export default {
 
     ChangeUnitValue,
     ChangeExpensesValue, 
-    
+    Export,
 
     GetExchangeRateByDate,
 
@@ -424,6 +427,12 @@ export default {
     }
   },
 };
+
+function Export() {
+  let id_shopping = je.decrypt(this.id_shopping);
+  let url = this.url_base + "shopping-excel/"+id_shopping;
+  window.open(url,'_blank');
+}
 
 function ChangeUnitValue() {
   this.mLoadUnitValue(this.shopping.unit_value);

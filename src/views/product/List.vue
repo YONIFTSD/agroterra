@@ -8,7 +8,13 @@
           </CCardHeader>
           <CCardBody>
             <b-row>
-              <b-col sm="12" md="8"></b-col>
+              <b-col sm="12" md="7"></b-col>
+
+              
+               <b-col sm="12" md="1">
+                  <b-link v-if="Permission('ProductAdd')" class="btn form-control btn-warning" :to="{ path: '/producto/importar' }" title="Importar Productos" append><i class="fas fa-file-upload"></i></b-link>
+              </b-col>
+
               <b-col sm="12" md="1">
                   <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i></b-button>
               </b-col>
