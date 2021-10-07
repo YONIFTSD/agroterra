@@ -87,12 +87,11 @@ const actions = {
         }
         if (validate) {
 
-            product.quantity = parseFloat(product.quantity) + parseFloat(product.quantity);
+            product.quantity = parseFloat(product.quantity);
             product.unit_value = product.unit_value.length == 0 ? (0).toFixed(5) : parseFloat(product.unit_value).toFixed(5);
             product.percentage_discount = product.percentage_discount.length == 0 ? (0).toFixed(2) : parseFloat(product.percentage_discount).toFixed(2);
             product.unit_discount = (parseFloat(product.percentage_discount) * parseFloat(product.unit_value)) / 100;
             product.total_discount = (parseFloat(product.unit_discount) * parseFloat(product.quantity));
-            
             
             if (unit_value == "1") {
                 let net_unit_value = (parseFloat(product.unit_value) - parseFloat(product.unit_discount));

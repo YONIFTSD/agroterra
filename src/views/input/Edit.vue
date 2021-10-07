@@ -401,7 +401,7 @@ function ViewInput() {
         me.input.observation = response.data.result.input.observation; 
         me.input.state = response.data.result.input.state; 
         me.provider = {id:response.data.result.input.id_provider, name: response.data.result.input.provider_name + ' - '+response.data.result.input.provider_document_number}; 
-        me.carrier_provider = response.data.result.carrier_id_provider == "" ? null : {id:response.data.result.input.carrier_id_provider, name: response.data.result.input.carrier_name + ' - '+response.data.result.input.carrier_document_number};
+        me.carrier_provider = response.data.result.input.carrier_id_provider == "0" ? null : {id:response.data.result.input.carrier_id_provider, name: response.data.result.input.carrier_name + ' - '+response.data.result.input.carrier_document_number};
 
         me.input.carrier_id_provider = response.data.result.input.carrier_id_provider;
         me.input.carrier_type_invoice = response.data.result.input.carrier_type_invoice;
@@ -474,7 +474,7 @@ function modalProviders() {
 }
 
 function NumberPadStart() {
-  if (this.input.numbe.length > 0) {
+  if (this.input.number.length > 0) {
      var number = String(this.input.number);
     number = number.padStart(8,"0");
     this.input.number = number;

@@ -78,7 +78,7 @@
               <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
-                    <th class="text-center" colspan="19">VENTAS  DETALLADO ( {{report.from}} -  {{report.to}}) </th>
+                    <th class="text-center" colspan="19">REPORTE DE UTILIDAD  ( {{report.from}} -  {{report.to}}) </th>
                   </tr>
                   <tr>
                     <th width="5%" class="text-center">#</th>
