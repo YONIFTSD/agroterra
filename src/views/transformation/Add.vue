@@ -586,13 +586,31 @@ function Validate() {
   this.errors.id_serie_input = this.transformation.id_serie_input == 0 ? true : false;
   this.errors.number_input = this.transformation.number_input.length == 0 ? true : false;
   this.errors.id_warehouse_input = this.transformation.id_warehouse_input.length == 0 ? true : false;
+  this.errors.transform_output_detail = this.transform_output_detail.length == 0 ? true : false;
   this.errors.transform_input_detail = this.transform_input_detail.length == 0 ? true : false;
- 
+  let total_capacity_transform_output_detail = 0;
+  for (let index = 0; index < this.transform_output_detail.length; index++) {
+    const element = this.transform_output_detail[index];
+    total_capacity_transform_output_detail += parseFloat(element.total_capacity);
+  }
+
+  let total_capacity_transform_input_detail = 0;
+  for (let index = 0; index < this.transform_input_detail.length; index++) {
+    const element = this.transform_input_detail[index];
+    total_capacity_transform_input_detail += parseFloat(element.total_capacity);
+  }
 
   if (this.errors.type_invoice_input == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.id_serie_input == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.id_warehouse_input == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.transform_output_detail == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.transform_input_detail == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  
+  if (parseFloat(total_capacity_transform_input_detail) != parseFloat(total_capacity_transform_output_detail)) {
+    this.validate = true; 
+    Swal.fire({ icon: 'warning', text: 'Verifique que las capacidades totales coincidan', timer: 2000,}); 
+    return false;
+  }
 
   let me = this;
 

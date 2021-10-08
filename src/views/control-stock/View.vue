@@ -112,10 +112,13 @@
          
 
                 <b-col md="3"></b-col>
-                <b-col md="3">
+                <b-col md="2">
+                  <b-form-select v-model="control_stock.type_stock" :options="type_stock"></b-form-select>
+                </b-col>
+                <b-col md="2">
                   <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i> EXCEL</b-button>
                 </b-col>
-                <b-col md="3">
+                <b-col md="2">
                   <b-link class="btn form-control btn-primary" :to="{ path: '/control-stock/listar' }" append >REGRESAR</b-link>
                 </b-col>
               </b-row>
@@ -189,12 +192,17 @@ export default {
         broadcast_date: moment(new Date()).local().format("YYYY-MM-DD"),
         observation: "",
         state: '1',
+        type_stock: 'all'
       },
       control_stock_detail : [],
       series: null,
       warehouses: [],
       type_invoice:[
         {value: "NE", text : "Nota de Entrada"},
+      ],
+      type_stock:[
+        {value: "all", text : "Todos"},
+        {value: "stock", text : "Con Diferencia"},
       ],
       //errors
       errors: {
@@ -291,7 +299,7 @@ export default {
 };
 
 function ExportExcel() {  
-  let url = this.url_base + "excel-control-stock/"+this.control_stock.id_control_stock;
+  let url = this.url_base + "excel-control-stock/"+this.control_stock.id_control_stock +"/" + this.control_stock.type_stock;
   window.open(url,'_blank');
 }
 function ListWarehouses() {

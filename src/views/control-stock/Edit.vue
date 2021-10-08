@@ -40,13 +40,18 @@
 
 
 
-               <b-col md="12">
+               <b-col md="10">
                   <b-form-group label="Observación:">
                     <b-form-input rows="1"  v-model="control_stock.observation" max-rows="2"></b-form-input>
                   </b-form-group>
                 </b-col>
 
-                 
+                <b-col md="2">
+                  <b-form-group label="Estado:">
+                    <b-form-select v-model="control_stock.state" :options="state"></b-form-select>
+                  </b-form-group>
+                </b-col>
+
 
                 <b-col md="12">
                   <b-row>
@@ -210,6 +215,11 @@ export default {
       type_invoice:[
         {value: "NE", text : "Nota de Entrada"},
       ],
+      state:[
+        {value:0, text:'Anulado'},
+        {value:1, text:'Pendiente'},
+        {value:2, text:'Finalizado'},
+      ],
       //errors
       errors: {
         type_invoice: false,
@@ -253,6 +263,7 @@ export default {
     this.totalRows = this.control_stock_detail.length
     this.ListWarehouses();
     this.ViewControlStock();
+    
   },
   methods: {
     UpdateQuantity(index){
@@ -366,7 +377,6 @@ function ViewControlStock() {
   let id_control_stock = je.decrypt(this.id_control_stock);
   let me = this;
   let url = this.url_base + "control-stock/view/"+id_control_stock;
-
   axios({
     method: "GET",
     url: url,

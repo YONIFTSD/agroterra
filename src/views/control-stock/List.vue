@@ -52,7 +52,8 @@
                     <td class="text-center"> {{ item.number }}</td>
                     <td class="text-left"> {{ item.warehouse_name }}</td>
                     <td class="text-center">
-                        <b-badge v-if="item.state == 1" variant="success">Activo</b-badge>
+                        <b-badge v-if="item.state == 2" variant="success">Finalizado</b-badge>
+                        <b-badge v-if="item.state == 1" variant="info">Pendiente</b-badge>
                         <b-badge v-if="item.state == 0" variant="danger">Anulado</b-badge>
                     </td>
                     <td class="text-center">
