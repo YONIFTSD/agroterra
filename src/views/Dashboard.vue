@@ -1,12 +1,6 @@
 <template>
   <div>
 
-
-
-
-
-
-
     <b-row>
       <b-col md="12">
         <b-row>
@@ -124,6 +118,32 @@
 
 
 
+     <b-modal size="lg" hide-footer v-model="modal_expiration" class="w-100" title="SERVICIOS POR VENCER">
+          <div class="table-responsive mt-3 mb-3">
+              <table class="table table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th width="10%" class="text-center">#</th>
+                    <th width="65%" class="text-center">Descripción</th>
+                    <th width="15%" class="text-center">F. Venc.</th>
+                    <th width="10%" class="text-center">Total</th>
+                  </tr>
+                </thead>
+                <tbody v-for="(item, it) in service_expiration" :key="it">
+                  <tr>
+                    <td class="text-center">{{ item.order }}</td>
+                    <td class="text-left"> {{ item.description }}</td>
+                    <td class="text-center"> {{ item.expiration_date }}</td>
+                    
+                    <td class="text-right"> {{ item.total }}</td>
+ 
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+ 
+    </b-modal>
+
     <ModalCPESunat />
     <ModalObserverVouchers />
     <ModalProductsDelivered />
@@ -173,7 +193,10 @@ export default {
         orders:0,
       },
       name :'',
-     
+
+
+      service_expiration : [],
+      modal_expiration: false,
     }
   },
    mounted () {
@@ -191,6 +214,8 @@ export default {
     Permission,
     NumberHome,
     modalOrders,
+
+    ServiceExpiration,
   },
   computed: {
     ...mapState(["url_base"]),
@@ -247,10 +272,16 @@ function NumberHome() {
         me.number_home.requirements = parseFloat(response.data.requirements);
         me.number_home.transfers = parseFloat(response.data.transfers);
         me.number_home.orders = parseFloat(response.data.orders);
+        me.modal_expiration = response.data.expiration;
+        me.service_expiration = response.data.service_expiration;
         
         EventBus.$emit('DataChartSale',response.data.data_chart);
       }
   })
+}
+
+function ServiceExpiration() {
+
 }
 
 function Permission(module_permission) {

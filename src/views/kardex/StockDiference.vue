@@ -45,11 +45,12 @@
                   <tr>
                     <th width="5%" class="text-center">#</th>
                     <th width="10%" class="text-center">Codigo</th>
-                    <th width="40%" class="text-center">Nombre</th>
+                    <th width="35%" class="text-center">Nombre</th>
                     <th width="10%" class="text-center">Categoria</th>
                     <th width="10%" class="text-center">Stock Kardex</th>
                     <th width="10%" class="text-center">Stock</th>
                     <th width="10%" class="text-center">Diferencia</th>
+                    <th width="5%" class="text-center"></th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in data_table" :key="it">
@@ -61,6 +62,9 @@
                     <td class="text-center"> {{ item.balance }}</td>
                     <td class="text-center"> {{ item.stock }}</td>
                     <td class="text-center"> {{ item.diference }}</td>
+                    <td class="text-center">
+                      <b-button type="button" @click="RefreshStock(item.id_product)" title="Actualizar" variant="primary"><i class="fas fa-sync-alt"></i></b-button>
+                    </td>
                    
                   </tr>
                 </tbody>
@@ -126,6 +130,7 @@ export default {
     ListEstablishment,
     ListWarehouse,
     ListStockDiference,
+    RefreshStock,
     ExportExcel,
   },
 
@@ -144,6 +149,37 @@ export default {
   },
 };
 
+function RefreshStock(id_product) {
+  this.isLoading = true;
+  let me = this;
+  let url = this.url_base + "kardex/stock-diference-update";
+  let data = {
+    id_product:id_product,
+    id_warehouse:this.id_warehouse,
+  }
+  axios({
+    method: "POST",
+    url: url,
+    data: data,
+    headers: { token: this.token, module: this.module,role: 1,},
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        const index = me.data_table.map(item => item.id_product).indexOf(response.data.result.id_product);
+        me.data_table[index].stock = response.data.result.quantity;
+        me.data_table.splice(index, 1);
+        Swal.fire({ icon: 'success', text: 'Se ha modificado el stock', timer: 3000,})
+        me.isLoading = false;
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+        me.isLoading = false;
+      }
+    })
+    .catch((error) => {
+      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      me.isLoading = false;
+    });
+}
 
 //listar usuario
 function ListEstablishment() {

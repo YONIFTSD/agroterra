@@ -167,8 +167,10 @@ function Login() {
       window.localStorage.setItem( "user_permissions", user_permissions);
       me.$router.push({ name: "Home"})
       Swal.fire({ icon: "success", title: "Hola "+response.data.result.user.name+ " "+response.data.result.user.last_name+", Bienvenido al sistema", showConfirmButton: false, timer: 3000,});
+    }else if(response.data.status == 400){
+      Swal.fire({ icon: "error", title: "Sistema",text:response.data.message, showConfirmButton: true,timer: 10000,});
     }else{
-      Swal.fire({ icon: "error", title: "Datos incorrectos", showConfirmButton: false,timer: 1500,});
+      Swal.fire({ icon: "error", title: "Sistema",text:response.data.message, showConfirmButton: false,timer: 1500,});
     }
   });
 
