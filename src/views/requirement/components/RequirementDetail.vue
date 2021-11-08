@@ -6,8 +6,8 @@
                   <tr>
                     <th width="5%" class="text-center">#</th>
                     <th width="8%" class="text-center">Codigo</th>
-                    <th width="60%" class="text-center">Nombre</th>
-                    <th width="5%" class="text-center">UM</th>
+                    <th width="45%" class="text-center">Nombre</th>
+                    <th width="15%" class="text-center">UM</th>
                     <th width="10%" class="text-center">Cantidad</th>
                     <th width="5%" class="text-center">Acciones</th>
                   </tr>
@@ -15,11 +15,11 @@
                 <tbody v-for="(item, it) in requirement_detail" :key="item.id_product">
                   <tr>
                       <td class="align-middle text-center">{{ it + 1 }}</td>
-                      <td class="align-middle text-left">{{ item.code }}</td>
+                      <td class="align-middle text-center">{{ item.code }}</td>
                       <td class="align-middle text-left">{{ item.name + " - "+item.presentation }}</td>
-                      <td class="align-middle text-center">{{ item.unit_measure }}</td>
+                      <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
                       <td class="align-middle text-center">
-                        <input type="number" @change="EditDetail(it)" class="form-control text-center" v-model="item.quantity">
+                        <input type="number" step="any" @change="EditDetail(it)" class="form-control text-right" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
                         <button type="button" @click="DeleteDetail(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
@@ -42,7 +42,7 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from '@/assets/js/EventBus';
-
+import CodeToName from "@/assets/js/CodeToName";
 export default {
   name: "SaleDetail",
   data() {
@@ -56,6 +56,7 @@ export default {
   methods: {
     EditDetail,
     DeleteDetail,
+    NameUnitMeasure,
     ...mapActions('Requirement',['mLoadEditRequirementDetail']),
     ...mapActions('Requirement',['mLoadDeleteRequirementDetail']),
     
@@ -77,7 +78,9 @@ export default {
     }
   },
 };
-
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function EditDetail(index) {
   this.mLoadEditRequirementDetail(index)

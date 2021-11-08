@@ -19,13 +19,14 @@
             <table class="table table-hover table-bordered">
               <thead>
                 <tr>
-                  <th width="5%"  class="text-center align-middle">#</th>
+                  <th width="3%"  class="text-center align-middle">#</th>
                   <th width="8%"  class="text-center align-middle">Código</th>
-                  <th width="55%"  class="text-center align-middle">Nombre</th>
+                  <th width="43%"  class="text-center align-middle">Nombre</th>
                   <th width="10%"  class="text-center align-middle">Por <br> canjear</th>
+                  <th width="12%"  class="text-center align-middle">U. M.</th>
                   <th width="10%"  class="text-center align-middle">Cantidad</th>
                   <th width="10%"  class="text-center align-middle">P. Unit.</th>
-                  <th width="7%"  class="text-center align-middle">Acciones</th>
+                  <th width="5%"  class="text-center align-middle">Acc.</th>
                 </tr>
               </thead>
               <tbody v-for="(item, it) in products" :key="it">
@@ -33,17 +34,18 @@
                   <td class="text-center">{{ it + 1 }}</td>
                   <td class="text-left">{{ item.code }}</td>
                   <td class="text-left">{{ item.name + (item.presentation.length == 0 ? "": " - "+item.presentation)  }}</td>
-                  <td class="text-center">{{ item.stock }}</td>
+                  <td class="text-right">{{ item.stock }}</td>
+                  <td class="text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
                   <td class="text-center">
-                    <input type="number" value="1" :ref="'mSDCantidad'+item.id_product" class="form-control">
+                    <input type="number" step="any" value="1.00" :ref="'mSDCantidad'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-center">
                     <input type="number" step="any" :value="item.sale_price" :ref="'mSDPUnit'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-center">
-                      <button type="button" @click="AddProduct(item.id_product)" class="btn btn-info">
+                      <b-button type="button" @click="AddProduct(item.id_product)" variant="primary">
                         <i class="fas fa-plus-square"></i>
-                      </button>
+                      </b-button>
                   </td>
                 </tr>
               </tbody>
@@ -57,8 +59,14 @@
     </b-modal>
   </div>
 </template>
-<style>
+<style scoped>
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
 
+input[type=number] { -moz-appearance:textfield; }
 </style>
 
 
@@ -69,7 +77,7 @@ const je = require("json-encrypt");
 import { mapState,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // import Notifications from 'vue-notification/dist/ssr.js';
-
+import CodeToName from "@/assets/js/CodeToName";
 
 export default {
   name: "ModalsProduct",
@@ -101,6 +109,7 @@ export default {
       SearchProducts,
       AddProduct,
       BackgroundColor,
+      NameUnitMeasure,
 
         ...mapActions('Sale',['mLoadAddSaleDetail']),
       
@@ -119,6 +128,10 @@ export default {
     // }
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function BackgroundColor(internal_product,commissionable) {
   if (commissionable == 1) {
@@ -153,7 +166,7 @@ function AddProduct(id_product) {
           unit_measure: response.data.result.unit_measure,
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
-          quantity: quantity,
+          quantity: parseFloat(quantity).toFixed(2),
           unit_price: parseFloat(unit_price).toFixed(2),
           total_price: total_price.toFixed(2),
         }

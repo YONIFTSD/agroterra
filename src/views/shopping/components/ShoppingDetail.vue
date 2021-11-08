@@ -7,10 +7,10 @@
                     <th rowspan="2" width="3%" class="text-center">#</th>
                     <th rowspan="2" width="5%" class="text-center">Cod.</th>
                     <th rowspan="2" width="35%" class="text-center">Nombre</th>
-                    <th rowspan="2" width="5%" class="text-center">UM</th>
+                    <th rowspan="2" width="8%" class="text-center">UM</th>
                     <th rowspan="2" width="8%" class="text-center">Cantidad</th>
-                    <th rowspan="2" width="10%" class="text-center">Imp. Unit.</th>
-                    <th colspan="2" width="10%" class="text-center">Descuento</th>
+                    <th rowspan="2" width="9%" class="text-center">Imp. Unit.</th>
+                    <th colspan="2" width="9%" class="text-center">Descuento</th>
                     <th rowspan="2" width="7%" class="text-center">V. Unit. <br> Neto</th>
                     <th rowspan="2" width="7%" class="text-center">Valor Total</th>
                     <th rowspan="2" width="5%" class="text-center">Bultos</th>
@@ -25,10 +25,10 @@
                   <tr>
                       <td class="align-middle text-center">{{ it + 1 }}</td>
                       <td class="align-middle text-left">{{ item.code }}</td>
-                      <td class="align-middle text-left">{{ item.name +" - "+item.presentation }}</td>
-                      <td class="align-middle text-center">{{ item.unit_measure }}</td>
+                      <td class="text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation) }}</td>
+                      <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
                       <td class="align-middle text-center">
-                        <input type="number" @change="EditDetail(item.id_product)" class="form-control text-center" v-model="item.quantity">
+                        <input type="number" step="any" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
                         <input type="number" step="any" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.unit_value">
@@ -78,6 +78,7 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from '@/assets/js/EventBus';
+import CodeToName from "@/assets/js/CodeToName";
 
 export default {
   name: "ShoppingDetail",
@@ -101,6 +102,7 @@ export default {
   methods: {
     EditDetail,
     DeleteDetail,
+    NameUnitMeasure,
     ...mapActions('Shopping',['mLoadEditShoppingDetail']),
     ...mapActions('Shopping',['mLoadDeleteShoppingDetail']),
     
@@ -122,7 +124,9 @@ export default {
     }
   },
 };
-
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function EditDetail(id_product) {
   let name = '';

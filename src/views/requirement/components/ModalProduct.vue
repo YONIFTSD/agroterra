@@ -14,10 +14,11 @@
                 <tr>
                   <th width="5%"  rowspan="2" class="text-center align-middle">#</th>
                   <th width="8%"  rowspan="2" class="text-center align-middle">Código</th>
-                  <th width="55%"  rowspan="2" class="text-center align-middle">Nombre</th>
+                  <th width="43%"  rowspan="2" class="text-center align-middle">Nombre</th>
                   <th width="10%"  :colspan="warehouses.length" class="text-center align-middle">{{establishment.name }}</th>
+                  <th width="12%"  rowspan="2" class="text-center align-middle">U. M.</th>
                   <th width="10%"  rowspan="2" class="text-center align-middle">Cantidad</th>
-                  <th width="10%"  rowspan="2" class="text-center align-middle">Acciones</th>
+                  <th width="5%"  rowspan="2" class="text-center align-middle">Acciones</th>
                 </tr>
                 <tr>
                   <th class="text-center" v-for="item in warehouses" :key="item.id_warehouse">{{item.name}}</th>
@@ -27,17 +28,18 @@
                 <tr>
                   <td class="text-center">{{ it + 1 }}</td>
                   <td class="text-left">{{ item.code }}</td>
-                  <td class="text-left">{{ item.name +  " - " + item.presentation }}</td>
-                  <td class="text-center" v-for="stock in item.stock" :key="stock.id_warehouse+stock.quantity">
+                  <td class="text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation) }}</td>
+                  <td class="text-right" v-for="stock in item.stock" :key="stock.id_warehouse+stock.quantity">
                   {{ stock.quantity }}
                   </td>
+                  <td class="text-left">{{ NameUnitMeasure(item.unit_measure) }}</td>
                   <td class="text-center">
-                    <input type="number" value="1" :ref="'mODCantidad'+item.id_product" class="form-control">
+                    <input type="number" step="any" value="1.00" :ref="'mODCantidad'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-center">
-                      <button type="button" @click="AddProduct(item.id_product)" class="btn btn-info">
+                      <b-button type="button" @click="AddProduct(item.id_product)" variant="primary">
                         <i class="fas fa-plus-square"></i>
-                      </button>
+                      </b-button>
                   </td>
                 </tr>
               </tbody>
@@ -60,7 +62,7 @@ const je = require("json-encrypt");
 import { mapState,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // import Notifications from 'vue-notification/dist/ssr.js';
-
+import CodeToName from "@/assets/js/CodeToName";
 
 export default {
   name: "ModalsProduct",
@@ -94,6 +96,7 @@ export default {
       AddProduct,
       ViewEstablishment,
       ListWarehouse,
+      NameUnitMeasure,
 
         ...mapActions('Requirement',['mLoadAddRequirementDetail']),
       
@@ -107,6 +110,10 @@ export default {
     },
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function ViewEstablishment() {
   

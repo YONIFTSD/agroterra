@@ -30,7 +30,7 @@
               <span class="text-left">{{ row.item.name }}</span>
             </template>
             <template #cell(quantity)="row">
-              <b-input class="text-center" @change="UpdatePrices(row.item.index)" v-model="row.item.quantity"></b-input>
+              <b-input class="text-right" @change="UpdatePrices(row.item.index)" v-model="row.item.quantity"></b-input>
             </template>
             <template #cell(unit_price)="row">
               <b-input class="text-right" @change="UpdatePrices(row.item.index)" v-model="row.item.unit_price"></b-input>

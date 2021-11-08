@@ -83,7 +83,7 @@
                                 <td class="align-middle text-left">{{ item.code }}</td>
                                 <td class="align-middle text-left">{{ item.name + " - "+item.presentation }}</td>
                                 <td class="align-middle text-center">{{ item.unit_measure }}</td>
-                                <td class="align-middle text-center">{{ item.quantity }}</td>
+                                <td class="align-middle text-right">{{ item.quantity }}</td>
                                 <td class="align-middle text-right">{{ item.capacity }}</td>
                                 <td class="align-middle text-right">{{ item.total_capacity }}</td>
                             </tr>
@@ -142,8 +142,8 @@
                                 <td class="align-middle text-center">{{ it + 1 }}</td>
                                 <td class="align-middle text-left">{{ item.code }}</td>
                                 <td class="align-middle text-left">{{ item.name + " - "+item.presentation }}</td>
-                                <td class="align-middle text-center">{{ item.unit_measure }}</td>
-                                <td class="align-middle text-center">{{ item.quantity }}</td>
+                                <td class="align-middle text-center">{{  item.unit_measure }}</td>
+                                <td class="align-middle text-right">{{ item.quantity }}</td>
                                 <td class="align-middle text-right">{{ item.capacity }}</td>
                                 <td class="align-middle text-right">{{ item.total_capacity }}</td>
                             </tr>

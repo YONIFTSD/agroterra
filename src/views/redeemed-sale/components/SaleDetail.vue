@@ -4,14 +4,14 @@
               <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                 <thead>
                   <tr>
-                    <th width="5%" class="text-center">#</th>
+                    <th width="3%" class="text-center">#</th>
                     <th width="8%" class="text-center">Codigo</th>
-                    <th width="45%" class="text-center">Nombre</th>
-                    <th width="5%" class="text-center">UM</th>
+                    <th width="40%" class="text-center">Nombre</th>
+                    <th width="12%" class="text-center">UM</th>
                     <th width="10%" class="text-center">Cantidad</th>
                     <th width="10%" class="text-center">P. Unit</th>
                     <th width="8%" class="text-center">P. Total</th>
-                    <th width="5%" class="text-center">Acciones</th>
+                    <th width="5%" class="text-center">Acc.</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in sale_detail" :key="item.id_product">
@@ -21,9 +21,9 @@
                       <td class="align-middle text-left">
                         <b-input  type="text" v-model="item.name"></b-input>
                       </td>
-                      <td class="align-middle text-center">{{ item.unit_measure }}</td>
+                      <td class="text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
                       <td class="align-middle text-center">
-                        <input :disabled="type_invoice == '07' && !(reason == '07')" type="number" @change="EditDetail(item.id_product)" class="form-control text-center" v-model="item.quantity">
+                        <input :disabled="type_invoice == '07' && !(reason == '07')" type="number" step="any" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
                         <input :disabled="(type_invoice == '07')" type="number" step="any" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.unit_price">
@@ -47,7 +47,7 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from '@/assets/js/EventBus';
-
+import CodeToName from "@/assets/js/CodeToName";
 export default {
   name: "SaleDetail",
    props: ["type_invoice","reason"],
@@ -63,6 +63,7 @@ export default {
   methods: {
     EditDetail,
     DeleteDetail,
+    NameUnitMeasure,
     ...mapActions('Sale',['mLoadEditSaleDetail']),
     ...mapActions('Sale',['mLoadDeleteSaleDetail']),
     
@@ -85,6 +86,9 @@ export default {
   },
 };
 
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function EditDetail(id_product) {
   let name = '';

@@ -72,14 +72,17 @@
                       <template #cell(name)="row">
                         <span class="text-left">{{ row.item.name  }}</span>
                       </template>
+                      <template #cell(unit_measure)="row">
+                        <span class="text-left">{{ NameUnitMeasure(row.item.unit_measure) }}</span>
+                      </template>
                       <template #cell(stock)="row">
-                        <span class="text-left">{{ row.item.stock }}</span>
+                        <span class="text-right">{{ row.item.stock }}</span>
                       </template>
                       <template #cell(quantity)="row">
-                        <span class="text-left">{{ row.item.quantity }}</span>
+                        <span class="text-right">{{ row.item.quantity }}</span>
                       </template>
                       <template #cell(balance)="row">
-                        <span :class="'pr-2'">{{ row.item.balance }}</span>
+                        <span :class="'pr-2 text-right'">{{ row.item.balance }}</span>
                       </template>
 
                       <template #row-details="row">
@@ -147,7 +150,10 @@ tr .th-code {
   width: 7% !important;
 }
 tr .th-name {
-  width: 65% !important;
+  width: 52% !important;
+}
+tr .th-um {
+  width: 13% !important;
 }
 tr .th-input {
   width: 10% !important;
@@ -170,6 +176,7 @@ import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
 import LoadingComponent from './../pages/Loading'
 import ModalProducts from './components/ModalProduct'
+import CodeToName from "@/assets/js/CodeToName";
 export default {
   name: "UsuarioAdd",
   props: ["id_control_stock"],
@@ -218,6 +225,7 @@ export default {
       fields: [
         { key: 'code', label: 'Código', sortable: true, class: 'text-center th-code', sortDirection: 'desc' },
         { key: 'name', label: 'Nombre', sortable: true, class: 'text-left th-name' },
+        { key: 'unit_measure', label: 'U. M.', sortable: true, class: 'text-left th-um' },
         { key: 'Stock', label: 'Stock', sortable: true, class: 'text-center th-stock' },
         { key: 'quantity', label: 'Cantidad', sortable: true, class: 'text-center th-input' },
         { key: 'balance', label: 'Diferencia', sortable: true, class: 'text-right th-total-price'},
@@ -267,6 +275,7 @@ export default {
     Validate,
     AddQuantity,
     ExportExcel,
+    NameUnitMeasure,
 
   },
 
@@ -297,6 +306,10 @@ export default {
     }
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function ExportExcel() {  
   let url = this.url_base + "excel-control-stock/"+this.control_stock.id_control_stock +"/" + this.control_stock.type_stock;

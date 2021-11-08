@@ -103,8 +103,11 @@
                       <template #cell(name)="row">
                         <span class="text-left">{{ row.item.name }}</span>
                       </template>
+                      <template #cell(unit_measure)="row">
+                        <span class="text-left">{{ NameUnitMeasure(row.item.unit_measure) }}</span>
+                      </template>
                       <template #cell(quantity)="row">
-                        <b-input class="text-center" type="number" @change="UpdatePrices(row.item.index)" v-model="row.item.quantity"></b-input>
+                        <b-input class="text-right" step="any" type="number" @change="UpdatePrices(row.item.index)" v-model="row.item.quantity"></b-input>
                       </template>
                       <template #cell(unit_price)="row">
                         <b-input class="text-right" type="number" step="any" @change="UpdatePrices(row.item.index)" v-model="row.item.unit_price"></b-input>
@@ -172,7 +175,10 @@ tr .th-code {
   width: 7% !important;
 }
 tr .th-name {
-  width: 65% !important;
+  width: 52% !important;
+}
+tr .th-um {
+  width: 13% !important;
 }
 tr .th-input {
   width: 10% !important;
@@ -194,6 +200,7 @@ import EventBus from '@/assets/js/EventBus';
 import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
 import LoadingComponent from './../pages/Loading'
+import CodeToName from "@/assets/js/CodeToName";
 export default {
   name: "UsuarioAdd",
   components:{
@@ -240,8 +247,9 @@ export default {
       fields: [
         { key: 'code', label: 'Código', sortable: true, class: 'text-center th-code', sortDirection: 'desc' },
         { key: 'name', label: 'Nombre', sortable: true, class: 'text-left th-name' },
-        { key: 'quantity', label: 'Cantidad', sortable: true, class: 'text-center th-input' },
-        { key: 'unit_price', label: 'P. Unit', sortable: true, class: 'text-center th-input' },
+        { key: 'unit_measure', label: 'U. M.', sortable: true, class: 'text-center th-um' },
+        { key: 'quantity', label: 'Cantidad', sortable: true, class: 'text-right th-input' },
+        { key: 'unit_price', label: 'P. Unit', sortable: true, class: 'text-right th-input' },
         { key: 'total_price', label: 'P. Total', sortable: true, class: 'text-right th-total-price'},
       ],
       totalRows: 1,
@@ -264,9 +272,11 @@ export default {
   },
   methods: {
     UpdatePrices(index){
-      this.initial_kardex_detail[index].quantity = parseFloat(this.initial_kardex_detail[index].quantity);
-      this.initial_kardex_detail[index].unit_price = parseFloat(this.initial_kardex_detail[index].unit_price);
+      this.initial_kardex_detail[index].quantity = this.initial_kardex_detail[index].quantity.length == 0 ? 0:parseFloat(this.initial_kardex_detail[index].quantity);
+      this.initial_kardex_detail[index].unit_price = this.initial_kardex_detail[index].unit_price.length == 0 ? 0:parseFloat(this.initial_kardex_detail[index].unit_price);
       this.initial_kardex_detail[index].total_price = this.initial_kardex_detail[index].quantity * this.initial_kardex_detail[index].unit_price;
+
+      this.initial_kardex_detail[index].quantity = this.initial_kardex_detail[index].quantity.toFixed(2);
       this.initial_kardex_detail[index].unit_price = this.initial_kardex_detail[index].unit_price.toFixed(2);
       this.initial_kardex_detail[index].total_price = this.initial_kardex_detail[index].total_price.toFixed(2);
     },
@@ -288,6 +298,8 @@ export default {
     UploadFile,
     UploadExcel,
 
+
+    NameUnitMeasure,
 
     ...mapActions('InitialKardex',['mLoadAddInitialKardexDetail','mLoadResetInitialKardexDetail']),
   },
@@ -319,6 +331,10 @@ export default {
     }
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function ExportExcel() {
   

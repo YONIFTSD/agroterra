@@ -86,14 +86,17 @@
                       <template #cell(name)="row">
                         <span class="text-left">{{ row.item.name }}</span>
                       </template>
+                      <template #cell(unit_measure)="row">
+                        <span class="text-left">{{ NameUnitMeasure(row.item.unit_measure) }}</span>
+                      </template>
                       <template #cell(stock)="row">
-                        <span class="text-left">{{ row.item.stock }}</span>
+                        <span class="text-right">{{ row.item.stock }}</span>
                       </template>
                       <template #cell(quantity)="row">
                         <b-input class="text-right" type="number" step="any" @change="UpdateQuantity(row.item.index)" v-model="row.item.quantity"></b-input>
                       </template>
                       <template #cell(balance)="row">
-                        <span :class="'pr-2'">{{ row.item.balance }}</span>
+                        <span :class="'pr-2 text-right'">{{ row.item.balance }}</span>
                       </template>
 
                       <template #row-details="row">
@@ -156,7 +159,10 @@ tr .th-code {
   width: 7% !important;
 }
 tr .th-name {
-  width: 65% !important;
+  width: 52% !important;
+}
+tr .th-um {
+  width: 13% !important;
 }
 tr .th-input {
   width: 10% !important;
@@ -179,6 +185,7 @@ import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
 import LoadingComponent from './../pages/Loading'
 import ModalProducts from './components/ModalProduct'
+import CodeToName from "@/assets/js/CodeToName";
 export default {
   name: "UsuarioAdd",
   components:{
@@ -218,6 +225,7 @@ export default {
       fields: [
         { key: 'code', label: 'Código', sortable: true, class: 'text-center th-code', sortDirection: 'desc' },
         { key: 'name', label: 'Nombre', sortable: true, class: 'text-left th-name' },
+        { key: 'unit_measure', label: 'U. M.', sortable: true, class: 'text-left th-um' },
         { key: 'Stock', label: 'Stock', sortable: true, class: 'text-center th-stock' },
         { key: 'quantity', label: 'Cantidad', sortable: true, class: 'text-center th-input' },
         { key: 'balance', label: 'Diferencia', sortable: true, class: 'text-right th-total-price'},
@@ -249,6 +257,10 @@ export default {
     UpdateQuantity(index){
       this.control_stock_detail[index].quantity = this.control_stock_detail[index].quantity.length == 0 ? 0 :parseFloat(this.control_stock_detail[index].quantity);
       this.control_stock_detail[index].balance = parseFloat(this.control_stock_detail[index].quantity) - parseFloat(this.control_stock_detail[index].stock);
+
+      this.control_stock_detail[index].quantity = parseFloat(this.control_stock_detail[index].quantity).toFixed(2);
+      this.control_stock_detail[index].balance = parseFloat(this.control_stock_detail[index].balance).toFixed(2);
+
     },
     onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -266,6 +278,7 @@ export default {
 
     AddQuantity,
     GetProductByBarcodeAdd,
+    NameUnitMeasure,
 
     // ...mapActions('InitialKardex',['mLoadAddInitialKardexDetail','mLoadResetInitialKardexDetail']),
   },
@@ -297,6 +310,12 @@ export default {
     }
   },
 };
+
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
+
 function GetProductByBarcodeAdd() {
   if (this.barcode.length == 0) {
     return false;
@@ -313,7 +332,7 @@ function GetProductByBarcodeAdd() {
       if (response.data.status == 200) {
         let data = {
           id_product: response.data.result.id_product,
-          quantity: 1,
+          quantity: parseFloat(1).toFixed(2),
         }
         EventBus.$emit('ControlStockAddProduct',data);
         me.barcode = '';
@@ -325,11 +344,15 @@ function GetProductByBarcodeAdd() {
 }
 
 function AddQuantity(id_product,quantity) {
+  
   for (let index = 0; index < this.control_stock_detail.length; index++) {
     const element = this.control_stock_detail[index];
     if (element.id_product == id_product) {
-      element.quantity += parseFloat(quantity);
+      element.quantity = parseFloat(element.quantity) + parseFloat(quantity);
       element.balance = parseFloat(element.quantity) - parseFloat(element.stock);
+
+      element.quantity = parseFloat(element.quantity).toFixed(2);
+      element.balance = parseFloat(element.balance).toFixed(2);
       break;
     }
   }

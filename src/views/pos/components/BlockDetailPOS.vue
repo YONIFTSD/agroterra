@@ -17,7 +17,7 @@
             <td width="5%" class="text-center">{{ it + 1}}</td>
             <td width="52%" class="text-lefet">{{item.code}} | {{item.name }}</td>
             <td width="15%" class="text-center">
-              <b-form-input @change="UpdateDetail(it)" class="form-control text-center" type="number" v-model="item.quantity"></b-form-input>
+              <b-form-input @change="UpdateDetail(it)" class="form-control text-right" type="number" step="any" v-model="item.quantity"></b-form-input>
             </td>
             <td width="17%" class="text-center">
               <b-form-input @change="UpdateDetail(it)"  class="form-control text-right" type="number" step="any" v-model="item.unit_price"></b-form-input>

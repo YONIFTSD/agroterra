@@ -94,6 +94,7 @@
                         <b-dropdown-item v-if="item.state == 3 || item.state == 5" @click="SendXML(item.id_sale)">Enviar XML</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 4" @click="modalCPESunat(item.id_sale)">Ver CPE</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 1 || item.state == 3 || item.state == 4"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 1"  @click="TradeSale(item.id_sale)">Canjear Venta</b-dropdown-item>
                       </b-dropdown>
                     </td>
                   </tr>
@@ -236,6 +237,8 @@ export default {
     showModalSaleLow,
     ValidateSaleLow,
     SaleLow,
+
+    TradeSale,
   },
 
   computed: {
@@ -317,6 +320,13 @@ function EditSale(id_sale) {
   });
 }
 
+
+function TradeSale(id_sale) {
+  this.$router.push({
+    name: "RedeemedSaleTrade",
+    params: { id_sale: je.encrypt(id_sale) },
+  });
+}
 // Ver Usuario
 function ViewSale(id_sale) {
   this.$router.push({
@@ -422,7 +432,7 @@ function DeleteSale(id_sale) {
         }
         Swal.fire("Eliminado!", "El registro ha sido eliminado", "success");
       } else {
-        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+        Swal.fire({ icon: 'error', text: response.data.message, timer: 3000,})
       }
     })
     .catch((error) => {

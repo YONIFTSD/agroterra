@@ -8,14 +8,29 @@
           </CCardHeader>
           <CCardBody>
             <b-row>
-              <b-col sm="12" md="6"></b-col>
-              <b-col sm="12" md="1">
-                  <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i></b-button>
+              <b-col sm="12" md="4">
+                  <b-form-group label="Proveedor"> 
+                    <v-select @input="ListProduct" placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider" @search="SearchProvider" :options="providers"></v-select>
+                  </b-form-group>
               </b-col>
-              <b-col sm="12" md="1">
-                  <b-button type="button" title="Exportar Excel General" @click="ExportExcelGeneral" class="form-control" variant="primary"><i class="fas fa-file-excel"></i></b-button>
+              <b-col sm="12" md="2">
+                  <b-form-group label="Categoria">
+                    <b-form-select @change="ListProduct" v-model="id_category" :options="categories"></b-form-select>
+                  </b-form-group>
               </b-col>
+
               <b-col sm="6" md="2">
+                <label for="">.</label>
+                <b-input-group >
+                  <b-form-input  v-model="search" class="form-control"></b-form-input>
+                  <b-input-group-append>
+                    <b-button variant="primary" @click="ListProduct"><b-icon icon="search"></b-icon></b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </b-col>
+
+              <b-col sm="6" md="2">
+                <label for="">.</label>
                 <b-input-group>
                   <b-form-input type="number" step="any" v-model="exchange_rate" class="form-control text-center"></b-form-input>
                   <b-input-group-append>
@@ -23,12 +38,16 @@
                   </b-input-group-append>
                 </b-input-group>
               </b-col>
-              <b-col sm="6" md="2">
+              <b-col sm="12" md="1">
+                <label for="">.</label>
                 <b-input-group>
-                  <b-form-input  v-model="search" class="form-control"></b-form-input>
-                  <b-input-group-append>
-                    <b-button variant="primary" @click="ListProduct"><b-icon icon="search"></b-icon></b-button>
-                  </b-input-group-append>
+                  <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i></b-button>
+                </b-input-group>
+              </b-col>
+              <b-col sm="12" md="1">
+                <label for="">.</label>
+                <b-input-group>
+                  <b-button type="button" title="Exportar Excel General" @click="ExportExcelGeneral" class="form-control" variant="primary"><i class="fas fa-file-excel"></i></b-button>
                 </b-input-group>
               </b-col>
             </b-row>
@@ -60,7 +79,7 @@
                     <td class="text-right"> {{ item.minimal_price }}</td>
                     <td class="text-right"> {{ item.sale_price }}</td>
                     <td class="text-center">
-                      <b-button type="button" @click="modalProductPriceShow(item.id_product)" variant="info" ><i class="fas fa-eye"></i></b-button>
+                      <b-button type="button" @click="modalProductPriceShow(item.id_product)" variant="primary" ><i class="fas fa-eye"></i></b-button>
                     </td>
                   </tr>
                 </tbody>
@@ -92,6 +111,10 @@
 </template>
 
 <script>
+import vSelect from "vue-select";
+import 'vue-select/dist/vue-select.css';
+import "vue-select/src/scss/vue-select.scss";
+
 const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
@@ -106,6 +129,8 @@ export default {
   components:{
     ModalProductPrice,
     LoadingComponent,
+    vSelect,
+
   },
   data() {
     return {
@@ -116,6 +141,10 @@ export default {
       rows: 0,
       search: "",
       data_table: [],
+      providers: [],
+      provider:null,
+      categories:[],
+      id_category:'all',
 
       exchange_rate:'',
       isLoading:false,
@@ -125,6 +154,7 @@ export default {
     EventBus.$on('ListPriceProduct', () => {7
       this.ListProduct();
     });
+    this.ListCategories();
     this.GetExchangeRate();
     this.ListProduct();
   },
@@ -132,6 +162,8 @@ export default {
     ListProduct,
     ListPriceByProduct,
     modalProductPriceShow,
+    SearchProvider,
+    ListCategories,
 
     GetExchangeRate,
     ConfirmDeterminatePriceGlobal,
@@ -139,6 +171,7 @@ export default {
     Permission,
     ExportExcel,
     ExportExcelGeneral,
+
   },
 
   computed: {
@@ -155,12 +188,57 @@ export default {
     }
   },
 };
+function SearchProvider(search, loading) {
+  
+    let me = this;
+    let url = this.url_base + "search-providers/" + search;
+    if (search !== "") {
+      loading(true);
+      axios({
+        method: "GET",
+        url: url,
+      }).then(function (response) {
+            me.providers = response.data.result;
+            loading(false);
+      })
+    }
+    
+}
+
+function ListCategories() {
+  let me = this;
+  let url = this.url_base + "active-categories";
+
+  axios({
+    method: "GET",
+    url: url,
+    headers: {
+      token: this.token,
+    },
+  })
+    .then(function (response) {
+      me.categories = [{value:'all',text:'-- Todos --'}];
+      if (response.data.status == 200) {
+        for (let index = 0; index < response.data.result.length; index++) {
+          const element = response.data.result[index];
+           me.categories.push({value:element.id_category,text:element.name});
+        }
+       
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      }
+    })
+    .catch((error) => {
+      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+    });
+}
 
 //listar usuario
 function ListProduct() {
   let search = this.search == "" ? "all" : this.search;
+  let id_provider = this.provider == null ? 'all':this.provider.id;
   let me = this;
-  let url = this.url_base + "product/list-determine-price/" + search +"/"+ this.id_establishment + "?page=" + this.currentPage;
+  let url = this.url_base + "product/list-determine-price/"+id_provider+"/"+this.id_category+"/" + search +"/"+ this.id_establishment + "?page=" + this.currentPage;
 
   axios({
     method: "GET",

@@ -69,6 +69,7 @@ const actions = {
                 detail[index].total_price = parseFloat(detail[index].unit_price) * parseFloat(detail[index].quantity);
                 
 
+                detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
                 detail[index].unit_discount = detail[index].unit_discount.toFixed(5);
                 detail[index].net_unit_value = detail[index].net_unit_value.toFixed(5);
                 detail[index].unit_igv = detail[index].unit_igv.toFixed(5);
@@ -122,7 +123,7 @@ const actions = {
             product.total_igv = parseFloat(product.unit_igv) * parseFloat(product.quantity);
             product.total_price = parseFloat(product.unit_price) * parseFloat(product.quantity);
             
-
+            product.quantity = parseFloat(product.quantity).toFixed(2);
             product.unit_discount = product.unit_discount.toFixed(5);
             product.net_unit_value = product.net_unit_value.toFixed(5);
             product.unit_igv = product.unit_igv.toFixed(5);
@@ -192,6 +193,7 @@ const actions = {
                 detail[index].total_price = parseFloat(detail[index].unit_price) * parseFloat(detail[index].quantity);
                 
 
+                detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
                 detail[index].unit_discount = detail[index].unit_discount.toFixed(5);
                 detail[index].net_unit_value = detail[index].net_unit_value.toFixed(5);
                 detail[index].unit_igv = detail[index].unit_igv.toFixed(5);

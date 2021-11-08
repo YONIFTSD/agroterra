@@ -69,10 +69,11 @@
                     <td class="text-center">
                       <b-dropdown bloque size="sm" text="Acciones" right>
 
-                        <b-dropdown-item v-if="Permission('ReferralGuideEdit')" @click="CompleteReferralGuide(item.id_referral_guide)">Completar</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('ReferralGuideEdit') && (item.state == 1 || item.state == 3)" @click="CompleteReferralGuide(item.id_referral_guide)">Completar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('ReferralGuideView')"  @click="ViewReferralGuide(item.id_referral_guide)">Ver</b-dropdown-item>
                         <b-dropdown-item v-if="item.state != 1" @click="PDFReferralGuide(item.id_referral_guide)">PDF</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 3 || item.state == 5 ||item.state == 6" @click="SendXML(item.id_referral_guide)">Enviar XML</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 2" @click="NewComplete(item.id_referral_guide)">Completar de nuevo </b-dropdown-item>
                         <!-- <b-dropdown-item v-if="Permission('ReferralGuideDelete') && item.state != 1" @click="ConfirmDeleteReferralGuide(item.id_referral_guide)">Eliminar</b-dropdown-item> -->
                       </b-dropdown>
                     </td>
@@ -147,6 +148,7 @@ export default {
     CodeInvoice,
     SearchProvider,
     SendXML,
+    NewComplete,
   },
 
   computed: {
@@ -203,6 +205,31 @@ function SendXML(id_referral_guide) {
           Swal.fire({ icon: 'success', text: 'El comprobante, ha sido aceptado', timer: 3000,})
         }else if(response.data.result.state == 5){
           Swal.fire({ icon: 'error', text: response.data.result.sunat_message, timer: 3000,})
+        }
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      }
+      me.isLoading = false;
+    })
+}
+
+
+function NewComplete(id_referral_guide) {
+  this.isLoading = true;
+  let me = this;
+  let url = this.url_base + "referral-guide/new-complete/" + id_referral_guide;
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module,role: 1 },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        for (var i = 0; i < me.data_table.length; i++) {
+          if (me.data_table[i].id_referral_guide == id_referral_guide) {
+            me.data_table[i].state = response.data.result.state;
+            break;
+          }
         }
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})

@@ -21,30 +21,32 @@
                 <tr>
                   <th width="3%"  class="text-center align-middle">#</th>
                   <th width="8%"  class="text-center align-middle">Código</th>
-                  <th width="50%"  class="text-center align-middle">Nombre</th>
+                  <th width="38%"  class="text-center align-middle">Nombre</th>
                   <th width="10%"  class="text-center align-middle">Categoria</th>
+                  <th width="12%"  class="text-center align-middle">U. M.</th>
                   <th width="10%"  class="text-center align-middle">Cantidad</th>
                   <th width="13%"  class="text-center align-middle">P. Unit</th>
-                  <th width="7%"  class="text-center align-middle">Acciones</th>
+                  <th width="5%"  class="text-center align-middle">Acciones</th>
 
                 </tr>
               </thead>
               <tbody v-for="(item, it) in products" :key="item.id_product">
                 <tr>
                   <td class="text-center">{{ it + 1 }}</td>
-                  <td class="text-left">{{ item.code }}</td>
-                  <td class="text-left">{{ item.name +" - "+item.presentation }}</td>
+                  <td class="text-center">{{ item.code }}</td>
+                  <td class="text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation) }}</td>
                   <td class="text-left">{{ item.category_name }}</td>
+                  <td class="text-left">{{ NameUnitMeasure(item.unit_measure) }}</td>
                   <td class="text-center">
-                    <input type="number" value="1" :ref="'mIDCantidad'+item.id_product" class="form-control">
+                    <input type="number" step="any" value="1.00" :ref="'mIDCantidad'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-center">
                     <input type="number" step="any" value="0.00" :ref="'mIDUnitPrice'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-center">
-                      <button type="button" @click="AddProduct(item.id_product)" class="btn btn-primary">
+                      <b-button type="button" @click="AddProduct(item.id_product)" variant="primary">
                         <i class="fas fa-plus-square"></i>
-                      </button>
+                      </b-button>
                   </td>
                 </tr>
               </tbody>
@@ -68,7 +70,7 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState,mapMutations,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
-
+import CodeToName from "@/assets/js/CodeToName";
 
 export default {
   name: "ModalsProduct",
@@ -94,6 +96,7 @@ export default {
   methods: {
       SearchProducts,
       AddProduct,
+      NameUnitMeasure,
       ...mapActions('Shopping',['mLoadAddShoppingDetail']),
       ...mapActions('Shopping',['mLoadTotalsShoppingDetail']),
       
@@ -112,6 +115,10 @@ export default {
     }
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function AddProduct(id_product) {
   
@@ -142,7 +149,7 @@ function AddProduct(id_product) {
           presentation : response.data.result.presentation,
           unit_measure : response.data.result.unit_measure,
           igv : response.data.result.igv,
-          quantity : quantity,
+          quantity : parseFloat(quantity).toFixed(2),
           percentage_discount: (0).toFixed(2),
           package: (1).toFixed(0),
 

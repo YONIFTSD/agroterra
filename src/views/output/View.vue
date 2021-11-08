@@ -89,18 +89,18 @@
                         <tr>
                           <th width="5%" class="text-center">#</th>
                           <th width="8%" class="text-center">Codigo</th>
-                          <th width="60%" class="text-center">Nombre</th>
-                          <th width="7%" class="text-center">UM</th>
+                          <th width="57%" class="text-center">Nombre</th>
+                          <th width="13%" class="text-center">UM</th>
                           <th width="10%" class="text-center">Cantidad</th>
                         </tr>
                       </thead>
                       <tbody v-for="(item, it) in output_detail" :key="item.id_product">
                         <tr>
                             <td class="align-middle text-center">{{ it + 1 }}</td>
-                            <td class="align-middle text-left">{{ item.code }}</td>
-                            <td class="align-middle text-left">{{ item.name + " - " + item.presentation }}</td>
-                            <td class="align-middle text-center">{{ item.unit_measure }}</td>
-                            <td class="align-middle text-center">{{ item.quantity }}</td>
+                            <td class="align-middle text-center">{{ item.code }}</td>
+                            <td class="align-middle text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation) }}</td>
+                            <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
+                            <td class="align-middle text-right">{{ item.quantity }}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -171,7 +171,7 @@ var moment = require("moment");
 import EventBus from '@/assets/js/EventBus';
 import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
-
+import CodeToName from "@/assets/js/CodeToName";
 
 // components
 import ModalProducts from './components/ModalProduct'
@@ -275,6 +275,7 @@ export default {
     ListEstablishment,
     EditOutput,
     Validate,
+    NameUnitMeasure,
 
     ...mapActions('Output',['mLoadResetOutputDetail']),
   },
@@ -299,6 +300,10 @@ export default {
     }
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function ListEstablishment() {
   let me = this;

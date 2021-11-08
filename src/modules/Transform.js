@@ -19,6 +19,7 @@ const actions = {
                 detail[index].total_capacity = parseFloat(detail[index].quantity) *  parseFloat(detail[index].capacity);
                 detail[index].remaining_capacity = parseFloat(detail[index].quantity) *  parseFloat(detail[index].capacity);
                 
+                detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
                 detail[index].capacity = detail[index].capacity.toFixed(2);
                 detail[index].total_capacity = detail[index].total_capacity.toFixed(2);
                 detail[index].remaining_capacity = detail[index].remaining_capacity.toFixed(2);

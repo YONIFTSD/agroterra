@@ -67,18 +67,18 @@
                       <tr>
                         <th width="5%" class="text-center">#</th>
                         <th width="8%" class="text-center">Codigo</th>
-                        <th width="65%" class="text-center">Nombre</th>
-                        <th width="5%" class="text-center">UM</th>
+                        <th width="50%" class="text-center">Nombre</th>
+                        <th width="15%" class="text-center">UM</th>
                         <th width="10%" class="text-center">Cantidad</th>
                       </tr>
                     </thead>
                     <tbody v-for="(item, it) in requirement_detail" :key="item.id_product">
                       <tr>
                           <td class="align-middle text-center">{{ it + 1 }}</td>
-                          <td class="align-middle text-left">{{ item.code }}</td>
+                          <td class="align-middle text-center">{{ item.code }}</td>
                           <td class="align-middle text-left">{{ item.name + " - "+item.presentation }}</td>
-                          <td class="align-middle text-center">{{ item.unit_measure }}</td>
-                          <td class="align-middle text-center">{{ item.quantity }}</td>
+                          <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
+                          <td class="align-middle text-right">{{ item.quantity }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -137,6 +137,7 @@ import ModalClients from './../components/ModalClient'
 import ModalProducts from './components/ModalProduct'
 import RequirementDetail from './components/RequirementDetail'
 import LoadingComponent from './../pages/Loading'
+import CodeToName from "@/assets/js/CodeToName";
 export default {
   name: "UsuarioAdd",
   props: ["id_requirement"],
@@ -193,6 +194,7 @@ export default {
     modalProducts,
     EditRequirement,
     Validate,
+    NameUnitMeasure,
 
     ...mapActions('Requirement',['mLoadResetRequirementDetail','mLoadAddRequirementDetail']),
   },
@@ -216,6 +218,10 @@ export default {
     }
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function ViewRequirement() {
 

@@ -622,7 +622,7 @@ function ViewSale() {
               unit_measure: element.unit_measure,
               igv: element.igv,
               existence_type: element.existence_type,
-              quantity: parseFloat(element.quantity),
+              quantity: parseFloat(element.quantity).toFixed(2),
               unit_price: parseFloat(element.unit_price).toFixed(2),
               total_price: parseFloat(element.total_price).toFixed(2),
             }

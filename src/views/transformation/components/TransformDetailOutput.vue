@@ -21,7 +21,7 @@
                       <td class="align-middle text-left">{{ item.name + " - "+item.presentation }}</td>
                       <td class="align-middle text-center">{{ item.unit_measure }}</td>
                       <td class="align-middle text-center">
-                        <input type="number" min="1" @change="EditDetail(it)" class="form-control text-center" v-model="item.quantity">
+                        <input type="number" step="any" min="1" @change="EditDetail(it)" class="form-control text-right" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
                         <input type="number" min="0" step="any" @change="EditDetail(it)" class="form-control text-right" v-model="item.capacity">

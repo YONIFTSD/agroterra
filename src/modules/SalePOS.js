@@ -102,6 +102,7 @@ const actions = {
         detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity) ;
         detail[index].unit_price = detail[index].unit_price.length == 0 ? (0).toFixed(2) : parseFloat(detail[index].unit_price).toFixed(2);
         detail[index].total_price = parseFloat(detail[index].unit_price) * parseFloat(detail[index].quantity);
+        detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
         detail[index].total_price = parseFloat(detail[index].total_price).toFixed(2);
         context.dispatch('mLoadTotalPOSDetail');
     },

@@ -251,7 +251,54 @@ var NameBank = (function() {
     };
 })();
 
+var NameUnitMeasure = (function() {
+
+    return function NameUnitMeasure(code) {
+        var name = '';
+        switch (code) {
+            case '4A': name = 'BOBINAS'; break;
+            case 'BJ': name = 'BALDE'; break;
+            case 'BLL': name = 'BARRILES'; break;
+            case 'BG': name = 'BOLSA'; break;
+            case 'BO': name = 'BOTELLAS'; break;
+            case 'BX': name = 'CAJA'; break;
+            case 'CMK': name = 'CENTIMETRO CUADRADO'; break;
+            case 'CMQ': name = 'CENTIMETRO CUBICO'; break;
+            case 'CMT': name = 'CENTIMETRO LINEAL'; break;
+            case 'CEN': name = 'CIENTO DE UNIDADES'; break;
+            case 'CY': name = 'CILINDRO'; break;
+            case 'DZN': name = 'DOCENA'; break;
+            case 'DZP': name = 'DOCENA POR 10**6'; break;
+            case 'BE': name = 'FARDO'; break;
+            case 'GLI': name = 'GALON INGLES (4,545956L)'; break;
+            case 'GRM': name = 'GRAMO'; break;
+            case 'KGM': name = 'KILOGRAMO'; break;
+            case 'CA': name = 'LATAS'; break;
+            case 'LBR': name = 'LIBRAS'; break;
+            case 'LTR': name = 'LITRO'; break;
+            case 'MTR': name = 'METRO'; break;
+            case 'MGM': name = 'MILIGRAMOS'; break;
+            case 'MIL': name = 'MILLARES'; break;
+            case 'UM': name = 'MILLON DE UNIDADES'; break;
+            case 'ONZ': name = 'ONZAS'; break;
+            case 'PF': name = 'PALETAS'; break;
+            case 'PK': name = 'PAQUETE'; break;
+            case 'GRM': name = 'GRAMO'; break;
+            case 'PR': name = 'PAR'; break;
+            case 'FOT': name = 'PIES'; break;
+            case 'FTK': name = 'PIES CUADRADOS'; break;
+            case 'FTQ': name = 'PIES CUBICOS'; break;
+            case 'C62': name = 'PIEZAS'; break;
+            case 'NIU': name = 'UNIDAD (BIENES) '; break;
+            case 'ZZ': name = 'UNIDAD (SERVICIOS)'; break;
+            case 'GRM': name = 'US GALON (3,7843 L)'; break;
+            case 'GLL': name = 'GRAMO'; break;
+            default: name = ''; break;
+        }
+        return (name);
+    };
+})();
 
 
 
-export default {NameDocumentType,CodeInvoice,NameInvoice,NameOperationType,NameMethodPayment,NameReasonNCD,NameBank}
+export default {NameDocumentType,CodeInvoice,NameInvoice,NameOperationType,NameMethodPayment,NameReasonNCD,NameBank,NameUnitMeasure}

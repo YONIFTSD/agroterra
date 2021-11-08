@@ -18,6 +18,7 @@ const actions = {
         for (let index = 0; index < detail.length; index++) {
             if (detail[index].id_product == id_product) {
                 detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity) ;
+                detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
                 break;
             }
         }

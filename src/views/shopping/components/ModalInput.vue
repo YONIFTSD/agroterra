@@ -56,9 +56,9 @@
                     <td class="text-center"> {{ CodeInvoice(item.type_invoice)+ ' '+item.serie+'-'+item.number }}</td>
                     <td class="text-left"> {{ item.provider_name + ' - '+item.provider_document_number }}</td>
                     <td class="text-center">
-                      <button type="button" @click="AddLinkages(item.id_input)" class="btn btn-info">
+                      <b-button type="button" @click="AddLinkages(item.id_input)" variant="primary">
                         <i class="fas fa-plus-square"></i>
-                      </button>
+                      </b-button>
                     </td>
                   </tr>
                 </tbody>
@@ -255,7 +255,7 @@ function AddLinkages(id_input) {
             presentation : element.presentation,
             unit_measure : element.unit_measure,
             igv : element.igv,
-            quantity : element.quantity,
+            quantity : parseFloat(element.quantity).toFixed(2),
             percentage_discount: (0).toFixed(2),
             package: (1).toFixed(0),
 

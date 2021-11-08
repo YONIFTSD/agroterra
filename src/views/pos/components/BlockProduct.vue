@@ -277,7 +277,7 @@ function AddProduct(id_product) {
           unit_measure: "",
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
-          quantity: 1,
+          quantity: parseFloat(1).toFixed(2),
           unit_price: response.data.result.sale_price,
           total_price: response.data.result.sale_price,
         }

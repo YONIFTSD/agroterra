@@ -6,20 +6,20 @@
                   <tr>
                     <th width="5%" class="text-center">#</th>
                     <th width="8%" class="text-center">Codigo</th>
-                    <th width="50%" class="text-center">Nombre</th>
-                    <th width="7%" class="text-center">UM</th>
+                    <th width="45%" class="text-center">Nombre</th>
+                    <th width="12%" class="text-center">UM</th>
                     <th width="10%" class="text-center">Cantidad</th>
-                    <th width="10%" class="text-center">Acciones</th>
+                    <th width="8%" class="text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in input_detail" :key="item.id_product">
                   <tr>
                       <td class="align-middle text-center">{{ it + 1 }}</td>
                       <td class="align-middle text-left">{{ item.code }}</td>
-                      <td class="align-middle text-left">{{ item.name + " - " + item.presentation}}</td>
-                      <td class="align-middle text-center">{{ item.unit_measure }}</td>
+                      <td class="align-middle text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation )}}</td>
+                      <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
                       <td class="align-middle text-center">
-                        <input :disabled="type_operation == '21'" type="number" @change="EditDetail(it)" class="form-control text-center" v-model="item.quantity">
+                        <input :disabled="type_operation == '21'" type="number" step="any" @change="EditDetail(it)" class="form-control text-right" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
                         <button :disabled="type_operation == '21'" type="button" @click="DeleteDetail(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
@@ -42,7 +42,7 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState,mapActions } from "vuex";
 import EventBus from '@/assets/js/EventBus';
-
+import CodeToName from "@/assets/js/CodeToName";
 export default {
   name: "InputDetail",
   props: ["type_operation"],
@@ -58,6 +58,7 @@ export default {
   methods: {
     EditDetail,
     DeleteDetail,
+    NameUnitMeasure,
  
     ...mapActions('Input',['mLoadEditInputDetail']),
     ...mapActions('Input',['mLoadDeleteInputDetail']),
@@ -79,6 +80,10 @@ export default {
   },
 };
 
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function EditDetail(index) {
   let name = this.input_detail[index].name + " - " + this.input_detail[index].presentation;

@@ -17,8 +17,8 @@
               <tr>
                 <td width="5%" class="text-center">{{ it + 1}}</td>
                 <td width="57%" class="text-lefet">{{item.code}} | {{item.name }}</td>
-                <td width="7%" class="text-center">{{item.quantity}}</td>
-                <td width="13%" class="text-center">{{item.unit_price}}</td>
+                <td width="7%" class="text-right">{{item.quantity}}</td>
+                <td width="13%" class="text-right">{{item.unit_price}}</td>
                 <td width="13%" class="text-right">{{item.total_price}}</td>
                 <td width="5%" class="text-center">
                   <button type="button" @click="DeleteDetail(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  

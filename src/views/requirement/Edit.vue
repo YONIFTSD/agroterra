@@ -236,7 +236,7 @@ function ViewRequirement() {
                     unit_measure: details[index].unit_measure,
                     igv: details[index].igv,
                     existence_type: details[index].existence_type,
-                    quantity: parseFloat(details[index].quantity)
+                    quantity: parseFloat(details[index].quantity).toFixed(2)
                 }
                 me.mLoadAddRequirementDetail(detail);
           }

@@ -15,6 +15,7 @@ const actions = {
         for (let index = 0; index < detail.length; index++) {
             if (detail[index].id_product == product.id_product) {
                 detail[index].quantity = parseFloat(detail[index].quantity) + parseFloat(product.quantity);
+                detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
                 validate = false;
                 break;
             }
@@ -28,7 +29,7 @@ const actions = {
     mLoadEditRequirementDetail(context,index){
         let detail = context.state.requirement_detail;
         detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity) ;
-         
+        detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
     },
 
     mLoadDeleteRequirementDetail(context,index){

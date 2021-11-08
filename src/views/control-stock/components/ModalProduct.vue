@@ -33,7 +33,7 @@
                   <td class="text-left">{{ item.name +" - "+item.presentation }}</td>
                   <td class="text-left">{{ item.category_name }}</td>
                   <td class="text-center">
-                    <input type="number" value="1" :ref="'mIDCantidad'+item.id_product" class="form-control">
+                    <input type="number" step="any" value="1.00" :ref="'mIDCantidad'+item.id_product" class="form-control">
                   </td>
                   <td class="text-center">
                       <button type="button" @click="AddProduct(item.id_product)" class="btn btn-info">
@@ -114,7 +114,7 @@ function AddProduct(id_product) {
   let quantity = this.$refs['mIDCantidad'+id_product][0]['value'];
   let data = {
     id_product: id_product,
-    quantity: quantity,
+    quantity: parseFloat(quantity),
   }
   EventBus.$emit('ControlStockAddProduct',data);
   this.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado el stock del producto', type: 'success'});
@@ -138,7 +138,7 @@ this.barcode = '';
       if (response.data.status == 200) {
         let data = {
           id_product: response.data.result.id_product,
-          quantity: 1,
+          quantity: parseFloat(1),
         }
         EventBus.$emit('ControlStockAddProduct',data);
         me.barcode = '';

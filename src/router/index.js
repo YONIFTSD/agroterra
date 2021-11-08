@@ -653,6 +653,12 @@ function configRoutes() {
           beforeEnter: userGuard,
         },
         {
+          path: "canjear/:id_sale",
+          name: "RedeemedSaleTrade",
+          component: () => import("@/views/redeemed-sale/Trade"),
+          props: true,
+        },
+        {
           path: "editar/:id_redeemed_sale",
           name: "RedeemedSaleEdit",
           component: () => import("@/views/redeemed-sale/Edit"),

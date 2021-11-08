@@ -78,8 +78,8 @@
                                 <th width="5%" class="text-center">#</th>
                                 <th width="8%" class="text-center">Codigo</th>
                                 <th width="50%" class="text-center">Nombre</th>
-                                <th width="7%" class="text-center">UM</th>
-                                <th width="10%" class="text-center">Cantidad</th>
+                                <th width="10%" class="text-center">UM</th>
+                                <th width="7%" class="text-center">Cantidad</th>
                         
                               </tr>
                             </thead>
@@ -87,9 +87,9 @@
                               <tr>
                                   <td class="align-middle text-center">{{ it + 1 }}</td>
                                   <td class="align-middle text-left">{{ item.code }}</td>
-                                  <td class="align-middle text-left">{{ item.name + " - "+ item.presentation }}</td>
-                                  <td class="align-middle text-center">{{ item.unit_measure }}</td>
-                                  <td class="align-middle text-center">{{ item.quantity }}</td>
+                                  <td class="align-middle text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation ) }}</td>
+                                  <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
+                                  <td class="align-middle text-right">{{ item.quantity }}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -196,7 +196,7 @@ var moment = require("moment");
 import EventBus from '@/assets/js/EventBus';
 import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
-
+import CodeToName from "@/assets/js/CodeToName";
 
 // components
 import ModalProducts from './components/ModalProduct'
@@ -298,6 +298,7 @@ export default {
     InputDetail,
     EditInput,
     Validate,
+    NameUnitMeasure,
 
   },
 
@@ -321,6 +322,9 @@ export default {
     }
   },
 };
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function ViewInput() {
   let id_input = je.decrypt(this.id_input);

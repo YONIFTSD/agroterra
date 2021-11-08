@@ -118,7 +118,7 @@
 
 
 
-     <b-modal size="lg" hide-footer v-model="modal_expiration" class="w-100" title="SERVICIOS POR VENCER">
+     <b-modal size="lg" hide-footer v-model="modal_expiration" class="w-100" title="CORTE DE SERVICIO">
           <div class="table-responsive mt-3 mb-3">
               <table class="table table-hover table-bordered">
                 <thead>

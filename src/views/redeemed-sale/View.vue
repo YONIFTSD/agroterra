@@ -107,10 +107,10 @@
                           <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                             <thead class="">
                               <tr>
-                                <th width="5%" class="text-center">#</th>
+                                <th width="3%" class="text-center">#</th>
                                 <th width="8%" class="text-center">Codigo</th>
-                                <th width="50%" class="text-center">Nombre</th>
-                                <th width="5%" class="text-center">UM</th>
+                                <th width="40%" class="text-center">Nombre</th>
+                                <th width="12%" class="text-center">UM</th>
                                 <th width="10%" class="text-center">Cantidad</th>
                                 <th width="10%" class="text-center">P. Unit</th>
                                 <th width="8%" class="text-center">P. Total</th>
@@ -122,8 +122,8 @@
                                   <td class="align-middle text-center">{{ it + 1 }}</td>
                                   <td class="align-middle text-left">{{ item.code }}</td>
                                   <td class="align-middle text-left">{{ item.name }}</td>
-                                  <td class="align-middle text-center">{{ item.unit_measure }}</td>
-                                  <td class="align-middle text-center">{{ item.quantity }}</td>
+                                  <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
+                                  <td class="align-middle text-right">{{ item.quantity }}</td>
                                   <td class="align-middle text-right">{{ item.unit_price }}</td>
                                   <td class="align-middle text-right">{{ item.total_price }}</td>
                               </tr>
@@ -337,6 +337,7 @@ export default {
 
     DataPrint,
     Print,
+    NameUnitMeasure,
 
     ...mapActions('Sale',['mLoadResetSaleDetail','mLoadAddSaleDetail']),
   },
@@ -370,6 +371,10 @@ export default {
     }
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function CodeReasor(type_invoice,code) {
   return CodeToName.NameReasonNCD(type_invoice,code);

@@ -16,7 +16,7 @@
                 <b-col md="2">
                   <b-form-group label="Nro Documento :">
                     <b-input-group>
-                      <b-form-input v-model="client.document_number" class="form-control" ></b-form-input>
+                      <b-form-input autocomplete="off" v-model="client.document_number" class="form-control" ></b-form-input>
                       <b-input-group-append>
                         <b-button variant="info"  @click="SearchClient"><b-icon icon="search"></b-icon></b-button>
                       </b-input-group-append>
@@ -26,7 +26,7 @@
                 </b-col>
                 <b-col md="6">
                   <b-form-group label="Nombres / Razón Social:" required>
-                    <b-form-input type="text" ref="name" v-model="client.name" placeholder="Ingrese su nombre"></b-form-input>
+                    <b-form-input autocomplete="off" type="text" ref="name" v-model="client.name" placeholder="Ingrese su nombre"></b-form-input>
                     <small v-if="errors.name" class="form-text text-danger" >Ingrese un nombre o razón social</small>
                   </b-form-group>
                 </b-col>
@@ -51,13 +51,13 @@
            
                 <b-col md="4">
                   <b-form-group label="Dirección :" required>
-                    <b-form-input type="text"  ref="address"  v-model="client.address" ></b-form-input>
+                    <b-form-input autocomplete="off" type="text"  ref="address"  v-model="client.address" ></b-form-input>
                   </b-form-group>
                 </b-col>
           
                 <b-col md="2">
                   <b-form-group label="Teléfono :" required>
-                    <b-form-input type="text" ref="phone" v-model="client.phone" placeholder="Ingrese su Telefono"></b-form-input>
+                    <b-form-input autocomplete="off" type="text" ref="phone" v-model="client.phone" placeholder="Ingrese su Telefono"></b-form-input>
                   </b-form-group>
                 </b-col>
 
@@ -76,13 +76,13 @@
 
                 <b-col md="4">
                   <b-form-group label="Email :" required>
-                    <b-form-input type="email"  ref="email" v-model="client.email" placeholder="Ingrese su email" ></b-form-input>
+                    <b-form-input autocomplete="off" type="email"  ref="email" v-model="client.email" placeholder="Ingrese su email" ></b-form-input>
                   </b-form-group>
                 </b-col>
 
                 <b-col md="2">
                   <b-form-group label="Clave :" required>
-                    <b-form-input type="password"  ref="password" v-model="client.password" placeholder="Ingrese su clave" ></b-form-input>
+                    <b-form-input autocomplete="off" type="password"  ref="password" v-model="client.password" placeholder="Ingrese su clave" ></b-form-input>
                   </b-form-group>
                 </b-col>
         

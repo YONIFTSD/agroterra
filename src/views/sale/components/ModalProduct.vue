@@ -2,7 +2,12 @@
   <div>
     <b-modal size="xl" hide-footer v-model="modalProducts" class="w-100" title="Productos">
       <b-row>
-        <b-col md="10">
+        <b-col md="2">
+          <b-form-group label="Categoria :">
+            <b-form-select v-model="id_category" :options="categories" @change="SearchProducts"></b-form-select>
+          </b-form-group>
+        </b-col>
+        <b-col md="8">
           <b-form-group label="Buscar producto :">
             <b-form-input  type="text"  ref="email" autofocus v-model="search_product" @keyup="SearchProducts"></b-form-input>
           </b-form-group>
@@ -19,14 +24,15 @@
             <table class="table table-hover table-bordered">
               <thead>
                 <tr>
-                  <th width="5%"  rowspan="2" class="text-center align-middle">#</th>
+                  <th width="3%"  rowspan="2" class="text-center align-middle">#</th>
                   <th width="8%"  rowspan="2" class="text-center align-middle">Código</th>
-                  <th width="45%"  rowspan="2" class="text-center align-middle">Nombre</th>
+                  <th width="37%"  rowspan="2" class="text-center align-middle">Nombre</th>
                   <th width="13%"  :colspan="warehouses.length" class="text-center align-middle">{{establishment.name }}</th>
+                  <th width="13%"  rowspan="2" class="text-center align-middle">U. M.</th>
                   <th width="8%"  rowspan="2" class="text-center align-middle">Cantidad</th>
                   <th width="8%"  rowspan="2" class="text-center align-middle">P. Minimo</th>
                   <th width="10%"  rowspan="2" class="text-center align-middle">P. Unit.</th>
-                  <th width="7%"  rowspan="2" class="text-center align-middle">Acciones</th>
+                  <th width="5%"  rowspan="2" class="text-center align-middle">Acc.</th>
                 </tr>
                 <tr>
                   <th class="text-center" v-for="item in warehouses" :key="item.id_warehouse">{{item.name}}</th>
@@ -40,17 +46,18 @@
                   <td class="text-center" v-for="stock in item.stock" :key="stock.id_warehouse+stock.quantity">
                   {{ stock.quantity }}
                   </td>
+                  <td class="text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
                   <td class="text-center">
-                    <input type="number" value="1" :ref="'mSDCantidad'+item.id_product" class="form-control">
+                    <input type="number" step="any" value="1.00" :ref="'mSDCantidad'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-right">{{ item.minimal_price }}</td>
                   <td class="text-center">
                     <input type="number" step="any" :value="item.sale_price" :ref="'mSDPUnit'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-center">
-                      <button type="button" @click="AddProduct(item.id_product)" class="btn btn-info">
+                      <b-button type="button" @click="AddProduct(item.id_product)" variant="primary">
                         <i class="fas fa-plus-square"></i>
-                      </button>
+                      </b-button>
                   </td>
                 </tr>
               </tbody>
@@ -64,8 +71,14 @@
     </b-modal>
   </div>
 </template>
-<style>
+<style scoped>
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
 
+input[type=number] { -moz-appearance:textfield; }
 </style>
 
 
@@ -76,7 +89,7 @@ const je = require("json-encrypt");
 import { mapState,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
 // import Notifications from 'vue-notification/dist/ssr.js';
-
+import CodeToName from "@/assets/js/CodeToName";
 
 export default {
   name: "ModalsProduct",
@@ -88,6 +101,8 @@ export default {
         id_establishment:0,
         search_product:'',
         stock:0,
+        categories:[],
+        id_category:'',
         products: [],
         establishment:{},
         warehouses:[]
@@ -107,6 +122,7 @@ export default {
     EventBus.$on('RefreshModalProducts', () => {
       this.SearchProducts();
     });
+    this.ListCategories();
   },
   methods: {
       SearchProducts,
@@ -114,6 +130,8 @@ export default {
       ViewEstablishment,
       ListWarehouse,
       BackgroundColor,
+      NameUnitMeasure,
+      ListCategories,
 
         ...mapActions('Sale',['mLoadAddSaleDetail']),
       
@@ -133,6 +151,10 @@ export default {
   },
 };
 
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
+
 function BackgroundColor(internal_product,commissionable) {
   if (commissionable == 1) {
     return 'bg-success';
@@ -142,6 +164,29 @@ function BackgroundColor(internal_product,commissionable) {
   }
   return '';
 }
+
+function ListCategories() {
+  let me = this;
+  let url = this.url_base + "active-categories";
+  axios({
+    method: "GET",
+    url: url,
+    headers: {token: this.token,module: this.module,role: this.role},
+  })
+    .then(function (response) {
+      me.categories = [{value:'',text:'Todos'}];
+      if (response.data.status == 200) {
+        for (let index = 0; index < response.data.result.length; index++) {
+          const element = response.data.result[index];
+          me.categories.push({value:element.id_category,text:element.name})
+        }
+      }
+    })
+    .catch((error) => {
+      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+    });
+}
+
 function ViewEstablishment() {
   
   let me = this;
@@ -218,7 +263,7 @@ function AddProduct(id_product) {
           unit_measure: response.data.result.unit_measure,
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
-          quantity: quantity,
+          quantity: parseFloat(quantity).toFixed(2),
           unit_price: parseFloat(unit_price).toFixed(2),
           total_price: total_price.toFixed(2),
         }
@@ -237,8 +282,9 @@ function SearchProducts() {
   
   let me = this;
   let search = this.search_product == "" ? "all" : this.search_product;
-  let url = this.url_base + "search-products-stock";
+  let url = this.url_base + "search-products-stock-v2";
   let data = {
+    id_category: this.id_category,
     id_establishment : this.id_establishment,
     search : search,
     stock: this.stock

@@ -27,10 +27,10 @@
                   <td class="text-left">{{ item.code }}</td>
                   <td class="text-left">{{ item.name +  " - " + item.presentation }}</td>
                   <td class="text-center">
-                    <input type="number" min="1" value="1" :ref="'mODCantidad'+item.id_product" class="form-control">
+                    <input type="number" step="any" min="1" value="1.00" :ref="'mODCantidad'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-center">
-                    <input type="number" min="0" value="0" :ref="'mODCapacity'+item.id_product" class="form-control">
+                    <input type="number" min="0" value="0.00" :ref="'mODCapacity'+item.id_product" class="form-control text-right">
                   </td>
                   <td class="text-center">
                       <button type="button" @click="AddProduct(item.id_product)" class="btn btn-info">
@@ -146,7 +146,7 @@ function AddProduct(id_product) {
           unit_measure: response.data.result.unit_measure,
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
-          quantity: quantity,
+          quantity: parseFloat(quantity).toFixed(2),
           capacity: parseFloat(capacity).toFixed(2),
           total_capacity: total_capacity.toFixed(2),
           id_reference: id_reference,

@@ -70,12 +70,9 @@
                     </b-col>
 
                     <b-col md="3">
-                      <b-form-group label="Unidad de Medida :">
-                        <select disabled ref="unit_measure" v-model="product.unit_measure" class="form-control" >
-                          <option value="NIU">UNIDAD (BIENES)</option>
-                          <option value="ZZ">UNIDAD (SERVICIOS)</option>
-                        </select>
-                      </b-form-group>
+                        <b-form-group label="Unidad de Medida :">
+                          <b-form-select v-model="product.unit_measure" :options="unit_measure"></b-form-select>
+                        </b-form-group>
                     </b-col>
 
 
@@ -283,6 +280,45 @@ export default {
       ],
       brands: [],
       photo: null,
+      unit_measure:[
+        {value:'4A',text:'BOBINAS'},
+        {value:'BJ',text:'BALDE'},
+        {value:'BLL',text:'BARRILES'},
+        {value:'BG',text:'BOLSA'},
+        {value:'BO',text:'BOTELLAS'},
+        {value:'BX',text:'CAJA'},
+        {value:'CMK',text:'CENTIMETRO CUADRADO'},
+        {value:'CMQ',text:'CENTIMETRO CUBICO'},
+        {value:'CMT',text:'CENTIMETRO LINEAL'},
+        {value:'CEN',text:'CIENTO DE UNIDADES'},
+        {value:'CY',text:'CILINDRO'},
+        {value:'DZN',text:'DOCENA'},
+        {value:'DZP',text:'DOCENA POR 10**6'},
+        {value:'BE',text:'FARDO'},
+        {value:'GLI',text:'GALON INGLES (4,545956L)'},
+        {value:'GRM',text:'GRAMO'},
+        {value:'KGM',text:'KILOGRAMO'},
+        {value:'CA',text:'LATAS'},
+        {value:'LBR',text:'LIBRAS'},
+        {value:'LTR',text:'LITRO'},
+        {value:'MTR',text:'METRO'},
+        {value:'MGM',text:'MILIGRAMOS'},
+        {value:'MIL',text:'MILLARES'},
+        {value:'UM',text:'MILLON DE UNIDADES'},
+        {value:'ONZ',text:'ONZAS'},
+        {value:'PF',text:'PALETAS'},
+        {value:'PK',text:'PAQUETE'},
+        {value:'GRM',text:'GRAMO'},
+        {value:'PR',text:'PAR'},
+        {value:'FOT',text:'PIES'},
+        {value:'FTK',text:'PIES CUADRADOS'},
+        {value:'FTQ',text:'PIES CUBICOS'},
+        {value:'C62',text:'PIEZAS'},
+        {value:'NIU',text:'UNIDAD (BIENES) '},
+        {value:'ZZ',text:'UNIDAD (SERVICIOS)'},
+        {value:'GRM',text:'US GALON (3,7843 L)'},
+        {value:'GLL',text:'GRAMO'},
+      ],
       commissionable:[
         {value:0,text:'NO'},
         {value:1,text:'SI - Importe'},

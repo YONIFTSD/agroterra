@@ -119,14 +119,14 @@
                             <tr>
                               <th rowspan="2" width="3%" class="text-center">#</th>
                               <th rowspan="2" width="5%" class="text-center">Cod.</th>
-                              <th rowspan="2" width="40%" class="text-center">Nombre</th>
-                              <th rowspan="2" width="5%" class="text-center">UM</th>
+                              <th rowspan="2" width="38%" class="text-center">Nombre</th>
+                              <th rowspan="2" width="8%" class="text-center">UM</th>
                               <th rowspan="2" width="8%" class="text-center">Cantidad</th>
                               <th rowspan="2" width="9%" class="text-center">Imp. Unit.</th>
                               <th colspan="2" width="10%" class="text-center">Descuento</th>
                               <th rowspan="2" width="7%" class="text-center">V. Unit. <br> Neto</th>
                               <th rowspan="2" width="7%" class="text-center">Valor Total</th>
-                              <th rowspan="2" width="8%" class="text-center">Bultos</th>
+                              <th rowspan="2" width="5%" class="text-center">Bultos</th>
                            
                             </tr>
                             <tr>
@@ -138,9 +138,9 @@
                             <tr>
                                 <td class="align-middle text-center">{{ it + 1 }}</td>
                                 <td class="align-middle text-left">{{ item.code }}</td>
-                                <td class="align-middle text-left">{{ item.name + " - "+item.presentation }}</td>
-                                <td class="align-middle text-center">{{ item.unit_measure }}</td>
-                                <td class="align-middle text-center">{{ item.quantity }}</td>
+                                <td class="align-middle text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation) }}</td>
+                                <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
+                                <td class="align-middle text-right">{{ item.quantity }}</td>
                                 <td class="align-middle text-center">{{ item.unit_value }}</td>
                                 <td class="align-middle text-center">{{ item.percentage_discount }}</td>
                                 <td class="align-middle text-right">{{ item.unit_discount }}</td>
@@ -232,7 +232,7 @@ import ModalProducts from './components/ModalProduct'
 import mShoppingDetail from './components/ShoppingDetail'
 import LoadingComponent from './../pages/Loading'
 import ModalExchangeRate from '@/views/components/ModalExchangeRate'
-
+import CodeToName from "@/assets/js/CodeToName";
 export default {
   name: "ShoppingEdit",
   props: ["id_shopping"],
@@ -399,7 +399,7 @@ export default {
     Export,
 
     GetExchangeRateByDate,
-
+    NameUnitMeasure,
     ...mapActions('Shopping',['mLoadUnitValue','mLoadExpensesValue']),
     ...mapActions('Shopping',['mLoadResetShoppingDetail']),
     ...mapActions('Shopping',['mLoadAddShoppingDetail']),
@@ -427,6 +427,10 @@ export default {
     }
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function Export() {
   let id_shopping = je.decrypt(this.id_shopping);

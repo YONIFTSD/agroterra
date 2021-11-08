@@ -59,9 +59,9 @@
                     <td class="text-center"> {{ item.code }}</td>
                     <td class="text-left"> {{ item.name}}</td>
                     <td class="text-left"> {{ item.category_name }}</td>
-                    <td class="text-center"> {{ item.balance }}</td>
-                    <td class="text-center"> {{ item.stock }}</td>
-                    <td class="text-center"> {{ item.diference }}</td>
+                    <td class="text-right"> {{ item.balance }}</td>
+                    <td class="text-right"> {{ item.stock }}</td>
+                    <td class="text-right"> {{ item.diference }}</td>
                     <td class="text-center">
                       <b-button type="button" @click="RefreshStock(item.id_product)" title="Actualizar" variant="primary"><i class="fas fa-sync-alt"></i></b-button>
                     </td>

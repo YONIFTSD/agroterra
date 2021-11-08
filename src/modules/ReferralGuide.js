@@ -16,9 +16,11 @@ const actions = {
         for (let index = 0; index < detail.length; index++) {
             if (detail[index].id_product == product.id_product) {
                 detail[index].quantity = parseFloat(detail[index].quantity) + parseFloat(product.quantity);
+                
                 detail[index].weight_unit = parseFloat(product.weight_unit);
                 detail[index].weight_total = parseFloat(detail[index].weight_unit) * parseFloat(detail[index].quantity);
 
+                detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
                 detail[index].weight_unit = detail[index].weight_unit.toFixed(2);
                 detail[index].weight_total = detail[index].weight_total.toFixed(2);
                 validate = false;
@@ -39,6 +41,7 @@ const actions = {
         detail[index].weight_unit = detail[index].weight_unit.length == 0 ? 0 : parseFloat(detail[index].weight_unit);
         detail[index].weight_total = parseFloat(detail[index].weight_unit) * parseFloat(detail[index].quantity);
 
+        detail[index].quantity = detail[index].quantity.toFixed(2);
         detail[index].weight_unit = detail[index].weight_unit.toFixed(2);
         detail[index].weight_total = detail[index].weight_total.toFixed(2);
 
