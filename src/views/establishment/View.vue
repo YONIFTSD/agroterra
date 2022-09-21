@@ -7,7 +7,7 @@
             <strong> Modulo de Establecimiento - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form">
+            <b-form id="Form" autocomplete="off">
               <b-row>
                
           

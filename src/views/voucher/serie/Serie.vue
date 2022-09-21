@@ -6,7 +6,7 @@
           <b-col md="12">
             <b-row>
 
-              <b-col md="2">
+              <!-- <b-col md="2">
                 <b-form-group label="Comprobante:">
                   <b-form-input
                     type="text"
@@ -14,7 +14,7 @@
                     v-model="voucher.name"
                   ></b-form-input>
                 </b-form-group>
-              </b-col>
+              </b-col> -->
 
 
               <b-col md="2">
@@ -52,6 +52,17 @@
               </b-col>
 
               <b-col md="2">
+                <b-form-group label="Por Defecto ?:">
+                  <select
+                      v-model="serie.default"
+                      class="form-control">
+                      <option value="1">SI</option>
+                      <option value="0">NO</option>
+                    </select>
+                </b-form-group>
+              </b-col>
+
+              <b-col md="2">
                   <b-form-group label="Estado :">
                     <select
                       ref="state"
@@ -80,6 +91,7 @@
                       <th width="5%" class="text-center">#</th>
                       <th width="20%" class="text-center">Serie</th>
                       <th width="30%" class="text-center">Numero</th>
+                      <th width="20%" class="text-center">Por Defecto</th>
                       <th width="20%" class="text-center">C. Electronico</th>
                       <th width="5%" class="text-center">Estado</th>
                       <th width="8%" class="text-center">Acciones</th>
@@ -90,6 +102,7 @@
                     <td class="text-center">{{ it + 1 }}</td>
                     <td class="text-center"> {{ item.serie }}</td>
                     <td class="text-center"> {{ item.number }}</td>
+                    <td class="text-center"> {{ item.default == 1 ? 'Si':'No' }}</td>
                     <td class="text-center"> {{ item.document_type == 1 ? 'Si':'No' }}</td>
                     <td class="text-center">
                       {{ item.state == 1 ? "Activo" : "Inactivo" }}
@@ -172,6 +185,7 @@ export default {
         number: '',
         num: '',
         document_type: 0,
+        default: 0,
         state: 1,
       },
 
@@ -319,6 +333,7 @@ function ViewSerie(id_serie) {
         me.serie.number = response.data.result.number;
         me.serie.num = response.data.result.num;
         me.serie.document_type = response.data.result.document_type;
+        me.serie.default = response.data.result.default;
         me.serie.state = response.data.result.state;
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
@@ -349,6 +364,7 @@ function EditSerie() {
     number: number,
     num: this.serie.num,
     document_type: this.serie.document_type,
+    default: this.serie.default,
     state: this.serie.state,
   };
 
@@ -370,6 +386,7 @@ function EditSerie() {
         me.serie.number = "";
         me.serie.num = "";
         me.serie.document_type = 0;
+        me.serie.default = 0;
         me.serie.state = 1;
         me.ListSerie(me.id_voucher);
         Swal.fire("Sistema", "Se ha modificado la serie", "success");
@@ -469,6 +486,7 @@ function AddSerie() {
     number: number,
     num: this.serie.num,
     document_type: this.serie.document_type,
+    default: this.serie.default,
     state: this.serie.state,
   };
 
@@ -490,6 +508,7 @@ function AddSerie() {
         me.serie.number = "";
         me.serie.num = "";
         me.serie.document_Type = 0;
+        me.serie.default = 0;
         me.serie.state = 1;
         me.ListSerie(me.id_voucher);
         Swal.fire("Comprobante", "Se ha creado la nueva serie", "success");

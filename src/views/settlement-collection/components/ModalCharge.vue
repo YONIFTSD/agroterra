@@ -245,7 +245,7 @@ function AddPayment(index) {
    broadcast_date :this.charges[index].broadcast_date,
    document :this.charges[index].document,
    coin :this.charges[index].coin,
-   exchange_rate : parseFloat(this.charges[index].exchange_rate).toFixed(2),
+   exchange_rate : parseFloat(this.charges[index].exchange_rate).toFixed(4),
    amount : parseFloat(this.charges[index].amount).toFixed(2),
    amount_final : parseFloat(this.charges[index].amount_final).toFixed(2),
  };

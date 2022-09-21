@@ -7,7 +7,7 @@
             <strong> Modulo Cuentas por Cobrar - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form">
+            <b-form id="Form" autocomplete="off">
               <b-row>
 
                 <b-col md="6">
@@ -70,6 +70,40 @@
                   </b-form-group>
                 </b-col>
 
+                <div class="col-md-12" v-if="detail.length > 0" >
+                  <div class="table-responsive mt-3">
+                    <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                      <thead class="">
+                        <tr>
+                          <th width="3%" class="text-center">#</th>
+                          <th width="8%" class="text-center">Codigo</th>
+                          <th width="40%" class="text-center">Nombre</th>
+                          <th width="10%" class="text-center">UM</th>
+                          <th width="5%" class="text-center">C. Barras</th>
+                          <th width="10%" class="text-center">Cantidad</th>
+                          <th width="10%" class="text-center">P. Unit</th>
+                          <th width="7%" class="text-center">P. Total</th>
+                    
+                        </tr>
+                      </thead>
+                      <tbody v-for="(item, it) in detail" :key="it">
+                        <tr>
+                            <td class="align-middle text-center">{{ it + 1 }}</td>
+                            <td class="align-middle text-left">{{ item.code }}</td>
+                            <td class="align-middle text-left">{{ item.name }}</td>
+                            <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure)  }}</td>
+                            <td class="align-middle text-center">{{ item.barcode }}</td>
+                            <td class="align-middle text-right">{{ item.quantity }}</td>
+                            <td class="align-middle text-right">{{ item.unit_price }}</td>
+                            <td class="align-middle text-right">{{ item.total_price }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <b-col md="12"> <br> </b-col>
+
                 <b-col md="5"></b-col>
                 <b-col md="2">
                   <b-link class="btn form-control btn-primary" :to="{ path: '/cuentas-por-cobrar/listar' }" append >REGRESAR</b-link>
@@ -90,6 +124,8 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
 import LoadingComponent from './../pages/Loading'
+import CodeToName from "@/assets/js/CodeToName";
+
 export default {
   name: "CategoriaView",
   props: ["id_account_receivable"],
@@ -119,7 +155,9 @@ export default {
           balance:'',
           state:1,
       },
-    
+
+      detail:[],
+
       type_invoice:[
         {value: "01", text : "Factura"},
         {value: "03", text : "Boleta de Venta"},
@@ -134,6 +172,7 @@ export default {
         {value: "52", text : "Despacho Simplificado - Importación Simplificada"},
         {value: "91", text : "Comprobante de No Domiciliado"},
         {value: "NE", text : "Nota de Entrada"},
+        {value: "GC", text : "Guia de Crédito"},
         {value: "00", text : "Otros"},
       ],
       providers: [],
@@ -150,7 +189,7 @@ export default {
   },
   methods: {
     ViewAccountReceivable,
-
+    NameUnitMeasure,
   },
 
   computed: {
@@ -163,6 +202,9 @@ export default {
   },
 };
 
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 //ver usuario
 function ViewAccountReceivable() {
@@ -194,6 +236,7 @@ function ViewAccountReceivable() {
           me.account_receivable.fee = response.data.result.fee;
           me.account_receivable.balance = response.data.result.balance;
           me.account_receivable.state = response.data.result.state;
+          me.detail = response.data.detail;
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }

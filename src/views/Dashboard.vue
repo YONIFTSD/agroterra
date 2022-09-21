@@ -50,10 +50,10 @@
           </b-col>
           <b-col md="2">
             <b-link class="text-decoration-none"  @click="modalProductsDeliveredShow">
-            <b-card no-body :class="'text-center ' + (number_home.products_delivered > 0 ? 'bg-warning':'bg-primary')+ ' height-card'">
+            <b-card no-body :class="'text-center ' + (number_home.products_delivered > 0 ? 'bg-danger':'bg-primary')+ ' height-card'">
               <b-row class="no-gutters h-100">
                 <b-col md="8" class="text-light align-self-center text-center">
-                  <span>Productos por <br> Entregar</span>
+                  <span>Productos en<br> Negativos</span>
                 </b-col>
                 <b-col md="4" class="text-light align-self-center text-center">
                   <span class="align-middle h3">{{number_home.products_delivered}}</span>
@@ -82,9 +82,16 @@
         </b-row>
       </b-col>
           <b-col md="10" class="bg-white" >
-              <div class="small">
-                <ChartSales  />
-              </div>
+            <div class="w-100">
+              <div class="w-100 text-center text-dark">Reporte de Venta Semana - Soles</div>
+              <ChartSalesPEN/>
+            </div>
+            <hr>
+            <!-- <div class="w-100 mt-2">
+              <div class="w-100 text-center text-dark">Reporte de Venta Semana - Dólares</div>
+              <ChartSalesUSD />
+            </div> -->
+            
           </b-col>
           <b-col md="2">
               <b-row>
@@ -144,6 +151,12 @@
  
     </b-modal>
 
+
+    <!-- <b-modal size="lg">
+          <line-chart :options="options" :chart-data="datacollection_usd"></line-chart>
+    </b-modal> -->
+
+
     <ModalCPESunat />
     <ModalObserverVouchers />
     <ModalProductsDelivered />
@@ -168,8 +181,10 @@ import ModalObserverVouchers from './components/ModalObserverVouchers'
 import ModalProductsDelivered from './components/ModalProductsDelivered'
 import ModalRequirements from './components/ModalRequirements'
 import ModalTransfers from './components/ModalTransfers'
-import ChartSales from './components/ChartSales'
+import ChartSalesPEN from './components/ChartSalesPEN'
+import ChartSalesUSD from './components/ChartSalesUSD'
 
+import LineChart from './components/LineChart.js'
 export default {
   name: 'Dashboard',
 
@@ -179,7 +194,9 @@ export default {
    ModalProductsDelivered,
    ModalRequirements,
    ModalTransfers,
-  ChartSales,
+  ChartSalesPEN,
+  ChartSalesUSD,
+  LineChart,
   },
   data () {
     return {
@@ -194,7 +211,12 @@ export default {
       },
       name :'',
 
-
+      datacollection_pen:{ labels: [], datasets: []},
+      datacollection_usd:{ labels: [], datasets: []},
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      },
       service_expiration : [],
       modal_expiration: false,
     }
@@ -204,6 +226,7 @@ export default {
       this.NumberHome();
     });
     this.NumberHome();
+    // this.fillData()
   },
   methods: {
     modalCPEShow,
@@ -216,6 +239,41 @@ export default {
     modalOrders,
 
     ServiceExpiration,
+    fillData () {
+        this.datacollection_pen = {
+          labels: [this.getRandomInt(), this.getRandomInt()],
+          datasets: [
+            {
+              label: 'Data One',
+              backgroundColor: '#f87979',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }, {
+              label: 'Data One',
+              backgroundColor: '#f87979',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }
+          ]
+        }
+
+        this.datacollection_usd = {
+          labels: [this.getRandomInt(), this.getRandomInt()],
+          datasets: [
+            {
+              label: 'Data One',
+              backgroundColor: '#f87979',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }, {
+              label: 'Data One',
+              backgroundColor: '#f87979',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }
+          ]
+        }
+        
+      },
+      getRandomInt () {
+        return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+      }
   },
   computed: {
     ...mapState(["url_base"]),
@@ -274,8 +332,39 @@ function NumberHome() {
         me.number_home.orders = parseFloat(response.data.orders);
         me.modal_expiration = response.data.expiration;
         me.service_expiration = response.data.service_expiration;
-        
-        EventBus.$emit('DataChartSale',response.data.data_chart);
+
+        let datasets_pen = [];
+        for (let index = 0; index < response.data.data_chart.datasets_chart_pen.length; index++) {
+          const element = response.data.data_chart.datasets_chart_pen[index];
+          datasets_pen.push({
+              label: element.name,
+              backgroundColor: '#f87979',
+              data: element.data_chart,
+            });
+        }
+
+        me.datacollection_pen = {
+          labels: response.data.data_chart.labels,
+          datasets: datasets_pen
+        }
+
+
+        let datasets_usd = [];
+        for (let index = 0; index < response.data.data_chart.datasets_chart_usd.length; index++) {
+          const element = response.data.data_chart.datasets_chart_usd[index];
+          datasets_usd.push({
+              label: element.name,
+              backgroundColor: '#000000',
+              data: element.data_chart,
+            });
+        }
+        me.datacollection_usd = {
+          labels: response.data.data_chart.labels,
+          datasets: datasets_usd
+        }
+
+        EventBus.$emit('DataChartSalePEN', response.data.data_chart);
+        EventBus.$emit('DataChartSaleUSD', response.data.data_chart);
       }
   })
 }

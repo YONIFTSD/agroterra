@@ -3,21 +3,47 @@
       <b-row>
         <b-col class="mt-1 mb-2" md="12">
           <b-input-group>
-            <b-input-group-append>
+            <!-- <b-input-group-append>
               <b-form-select class="form-control"  @change="SearchProducts" v-model="search.id_warehouse" :options="warehouses" ></b-form-select>
-            </b-input-group-append>
+            </b-input-group-append> -->
             <b-input-group-append>
               <b-form-select class="form-control"  @change="SearchProducts" v-model="search.search_category" :options="categories" ></b-form-select>
             </b-input-group-append>
             <b-form-input type="search"  @keyup="SearchProducts" v-model="search.search_product" placeholder="Buscar un producto"  class="form-control" ></b-form-input>
             <b-input-group-append>
-              <b-form-input type="search" v-model="search.search_barcode" placeholder="Codigo de barras"  class="form-control" ></b-form-input>
+              <b-form-input type="search" @change="SearchBarcode" ref="search_barcode"  v-model="search.search_barcode" placeholder="Codigo de barras"  class="form-control" ></b-form-input>
             </b-input-group-append>
         </b-input-group>
         </b-col>
       </b-row>
       <b-row class="block-product" :style="size_pos">
-        <b-col md="4" v-for="(item, it) in products" :key="it">
+        <div class="table-responsive mt-1 height-table">
+              <table class="table table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th class="text-center" width="80%">Descripción</th>
+                    <th class="text-center" width="10%">Stock</th>
+                    <th class="text-center" width="10%">Precio</th>
+                  </tr>
+                </thead>
+                <tbody v-for="(item, it) in products" :key="it">
+                  <tr :class="'p-0 m-0 '+BackgroundColor(item.internal_product,item.commissionable)"  style="cursor: pointer" @click="AddProduct(item.id_product)">
+                    <td class="text-left">
+                      <small class="p-0 m-0">{{item.code}} | {{item.name }} <strong>{{item.presentation.length == 0 ? '':' - '+ item.presentation}}</strong></small> <br>
+                      <small class="text-warning p-0 m-0" style="font-size: 8px; padding-top:-10px">{{item.composition }}</small> 
+
+                    </td>
+                    <td class="text-right text-success">{{ item.stock}}</td>
+                    <td class="text-right">
+                      <small class="text-info"> S/. {{ item.sale_price}} </small> <br>
+                      <small class="text-danger"> S/. {{ item.minimal_price}} </small> 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+        <!-- <b-col md="4" v-for="(item, it) in products" :key="it">
           <b-link class="text-decoration-none" @click="AddProduct(item.id_product)" >
             <b-card  :img-src="url_base + item.photo" img-alt="Card image" class=" text-dark" img-top>
               <b-row>
@@ -33,17 +59,8 @@
               </b-row>
             </b-card>
           </b-link>
-        </b-col>
+        </b-col> -->
 
-      </b-row>
-
-      <b-row class="mt-1 text-dark">
-        <b-col md="8">
-          <b-pagination v-model="currentPage" v-on:input="SearchProducts" :total-rows="rows" :per-page="perPage" align="center"></b-pagination>
-        </b-col>
-        <b-col md="4 text-center">
-          <p>Pagina Actual: {{ currentPage }}</p>
-        </b-col>
       </b-row>
   </div>
 </template>
@@ -62,7 +79,7 @@ input[type=number] {
 
 .text-total{
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 520;
 }
 /* .size-pos{
   min-height: var(--size-pos);
@@ -121,6 +138,8 @@ export default {
     AddProduct,
     ChangeWarehouse,
     ViewEstablishment,
+    SearchBarcode,
+    BackgroundColor,
         ...mapActions('SalePOS',['mLoadAddPOSDetail','mLoadEditWarehouse']),
       
   },
@@ -139,6 +158,17 @@ export default {
     }
   },
 };
+
+function BackgroundColor(internal_product,commissionable) {
+  if (commissionable == 1) {
+    return 'bg-success';
+  }
+  if (internal_product == 1) {
+    return 'bg-warning';
+  }
+  return '';
+}
+
 
 function ViewEstablishment() {
   let me = this;
@@ -233,7 +263,7 @@ function SearchProducts() {
     id_warehouse : this.search.id_warehouse,
     search_category : search_category,
     search_product: search_product,
-    stock:1,
+    stock:0,
     page:this.currentPage
   };
 
@@ -291,6 +321,48 @@ function AddProduct(id_product) {
     })
   
 
+}
+
+function SearchBarcode() {
+  
+    let barcode = this.search.search_barcode;
+    if (barcode.length == 0) {
+      return false;
+    }
+    let me = this;
+    let url = this.url_base + "product/view-cost-barcode/" + barcode +"/"+ this.id_establishment;
+    // this.search.search_barcode = '';
+    axios({
+      method: "GET",
+      url: url,
+      headers: { token: this.token, module: this.module,role: this.role,},
+    })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        let detail = {
+          id_product: response.data.result.id_product,
+          code: response.data.result.code,
+          name: response.data.result.name,
+          presentation: response.data.result.presentation,
+          unit_measure: "",
+          igv: response.data.result.igv,
+          existence_type: response.data.result.existence_type,
+          quantity: parseFloat(1).toFixed(2),
+          unit_price: response.data.result.sale_price,
+          total_price: response.data.result.sale_price,
+        }
+        
+        me.mLoadAddPOSDetail(detail);
+        me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado el producto '+response.data.result.name + ' - '+response.data.result.presentation , type: 'success'});
+        me.search.search_barcode = '';
+        const search_barcode = me.$refs.search_barcode;
+        search_barcode.focus();
+        
+      }else{
+        const search_barcode = me.$refs.search_barcode;
+        search_barcode.focus();
+      }
+    })
 }
 
 </script>

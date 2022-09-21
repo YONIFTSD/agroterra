@@ -8,11 +8,11 @@
           </CCardHeader>
           <CCardBody>
 
-          <b-form id="Form" @submit.prevent="Validate">
-            <b-row>
+          <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
+            <b-row class="row justify-content-md-center">
 
                
-                <b-col sm="12" md="2"></b-col>
+                
                 <b-col sm="12" md="2">
                   <b-form-group label="Desde :">
                     <b-form-input class="text-center" :max="report.to" type="date"  ref="to" v-model="report.from"></b-form-input>
@@ -26,6 +26,20 @@
                     <small v-if="errors.to" class="form-text text-danger" >Selccione una fecha</small>
                   </b-form-group>
                 </b-col>
+
+                <b-col sm="12" md="2">
+                  <b-form-group label="Moneda :">
+                    <b-form-select v-model="report.coin" :options="coin"></b-form-select>
+                    <small v-if="errors.to" class="form-text text-danger" >Selccione una fecha</small>
+                  </b-form-group>
+                </b-col>
+
+                <!-- <b-col sm="12" md="2">
+                  <b-form-group label="Convertir a:">
+                    <b-form-select v-model="report.coin_convert" :options="coin_convert"></b-form-select>
+                    <small v-if="errors.to" class="form-text text-danger" >Selccione una fecha</small>
+                  </b-form-group>
+                </b-col> -->
 
 
                 <b-col sm="12" md="2">
@@ -48,7 +62,7 @@
               <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
-                    <th class="text-center" colspan="19">VENTAS 14.1 ( {{report.from}} -  {{report.to}}) </th>
+                    <th class="text-center" colspan="20">VENTAS 14.1 ( {{report.from}} -  {{report.to}}) </th>
                   </tr>
                   <tr>
                     <th rowspan="2" class="text-center">#</th>
@@ -56,9 +70,11 @@
                     <th rowspan="2" class="text-center">Fecha <br> Vencim.</th>
                     <th colspan="3" class="text-center">Comprobante de Pago</th>
                     <th colspan="3" class="text-center">Información del Cliente</th>
+                    <th rowspan="2" class="text-center">Moneda</th>
                     <th rowspan="2" class="text-center">Ope. <br> Gravada</th>
-                    <th colspan="2" class="text-center">Ope. no Gravada</th>
                     <th rowspan="2" class="text-center">IGV</th>
+                    <th colspan="2" class="text-center">Ope. no Gravada</th>
+                    
                     <th rowspan="2" class="text-center">Total</th>
                     <th rowspan="2" class="text-center">Tipo <br> Cambio</th>
                     <th colspan="4" class="text-center">Referencia del comprobante</th>
@@ -92,10 +108,12 @@
                     <td class="text-center">{{item.client_document_type}}</td>
                     <td class="text-left">{{item.client_document_number}}</td>
                     <td class="text-left">{{item.client_name}}</td>
+                    <td class="text-left">{{item.coin}}</td>
                     <td class="text-right">{{item.taxed_operation}}</td>
+                    <td class="text-right">{{item.igv}}</td>
                     <td class="text-right">{{item.exonerated_operation}}</td>
                     <td class="text-right">{{item.unaffected_operation}}</td>
-                    <td class="text-right">{{item.igv}}</td>
+                    
                     <td class="text-right">{{item.total}}</td>
                     <td class="text-center">{{item.exchange_rate}}</td>
                     <td class="text-center">{{item.modified_emission_date}}</td>
@@ -145,11 +163,22 @@ export default {
       role:1,
       perPage: 15,
       currentPage: 1,
+      coin:[        
+        {value:'PEN',text:'Soles'},
+        {value:'USD',text:'Dólares'}
+      ],
+      coin_convert:[
+        {value:'all',text:'Ninguno'},
+        {value:'PEN',text:'Soles'},
+        {value:'USD',text:'Dólares'}
+      ],
       rows: 0,
       data_table: [],
       report:{
         from:moment(new Date()).local().format("YYYY-MM-DD"),
         to:moment(new Date()).local().format("YYYY-MM-DD"),
+        coin:'PEN',
+        coin_convert:'all',
       },
       
       errors:{
@@ -183,7 +212,7 @@ export default {
 
 function ExportExcel() {  
   let me = this;
-  let url = me.url_base + "excel-report-sales-141/"+me.report.from+"/"+me.report.to;
+  let url = me.url_base + "excel-report-sales-141/"+me.report.from+"/"+me.report.to+"/"+me.report.coin;
   window.open(url,'_blank');
 }
 

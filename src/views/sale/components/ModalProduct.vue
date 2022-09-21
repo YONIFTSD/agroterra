@@ -8,7 +8,8 @@
           </b-form-group>
         </b-col>
         <b-col md="8">
-          <b-form-group label="Buscar producto :">
+          <b-form-group >
+            <b-form-checkbox class="mb-2" switch size="sm" @change="SearchProducts" v-model="type_search" name="check-button" >Buscar por producto/composición:</b-form-checkbox>
             <b-form-input  type="text"  ref="email" autofocus v-model="search_product" @keyup="SearchProducts"></b-form-input>
           </b-form-group>
         </b-col>
@@ -21,7 +22,7 @@
         </b-col>
         <b-col md="12">
           <div class="table-responsive mt-3">
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered table-information-detail">
               <thead>
                 <tr>
                   <th width="3%"  rowspan="2" class="text-center align-middle">#</th>
@@ -38,11 +39,16 @@
                   <th class="text-center" v-for="item in warehouses" :key="item.id_warehouse">{{item.name}}</th>
                 </tr>
               </thead>
-              <tbody v-for="(item, it) in products" :key="item.id_product">
+              <tbody v-for="(item, it) in products" :key="it">
                 <tr :class="BackgroundColor(item.internal_product,item.commissionable)">
                   <td class="text-center">{{ it + 1 }}</td>
                   <td class="text-left">{{ item.code }}</td>
-                  <td class="text-left">{{ item.name + (item.presentation.length == 0 ? "":" - "+item.presentation)   }}</td>
+                  <td class="text-left">
+                    {{ item.name + (item.presentation.length == 0 ? "":" - "+item.presentation)   }} <br>
+                    <small>{{ item.composition }}</small>
+
+
+                  </td>
                   <td class="text-center" v-for="stock in item.stock" :key="stock.id_warehouse+stock.quantity">
                   {{ stock.quantity }}
                   </td>
@@ -99,6 +105,7 @@ export default {
         module:'Sale',
         role:0,
         id_establishment:0,
+        type_search:false,
         search_product:'',
         stock:0,
         categories:[],
@@ -286,6 +293,7 @@ function SearchProducts() {
   let data = {
     id_category: this.id_category,
     id_establishment : this.id_establishment,
+    type_search: this.type_search ? "composition":"product",
     search : search,
     stock: this.stock
   };

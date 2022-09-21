@@ -31,6 +31,9 @@ const actions = {
         let detail = context.state.input_detail;
         detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity) ;
         detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
+
+        detail[index].package = detail[index].package.length == 0 ? 0 : parseFloat(detail[index].package) ;
+        detail[index].package = parseFloat(detail[index].package).toFixed(0);
     },
 
     mLoadDeleteInputDetail(context,index){

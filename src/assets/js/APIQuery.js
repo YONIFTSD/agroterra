@@ -29,6 +29,16 @@ var ExchangeRate = (function() {
     };
 })();
 
+var ExchangeRateByDate = (function(date) {
+    return function ExchangeRateByDate(date) {
+        return fetch('https://apis.reyfact.com/tipo-cambio-by-date/'+date)
+        .then(response => response.json())
+        .then(json => {
+            return json;
+        })
+    };
+})();
 
 
-export default {SearchDni,SearchRuc,ExchangeRate}
+
+export default {SearchDni,SearchRuc,ExchangeRate,ExchangeRateByDate}

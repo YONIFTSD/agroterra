@@ -2,7 +2,7 @@
   <div>
     <b-modal size="lg" hide-footer v-model="modalExchangeRate" class="" title="TIPO DE CAMBIO">
      
-          <b-form id="Form" @submit.prevent="Validate">
+          <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
          
                 <b-col md="2">
@@ -171,17 +171,23 @@ export default {
     
   },
   mounted () {
-    EventBus.$on('ModalExchangeRateShow', () => {
+    EventBus.$on('ModalExchangeRateShow', (data) => {
+ 
+      if (data.date) {
+        this.exchange_rate.date = data.date;
+      }
       this.modalExchangeRate = true;
       this.exchange_rate.id_user = 0;
       this.exchange_rate.coin = 'USD';
-      this.exchange_rate.date = moment(new Date()).local().format("YYYY-MM-DD");
+      // this.exchange_rate.date = moment(new Date()).local().format("YYYY-MM-DD");
       this.exchange_rate.shopping = 0;
       this.exchange_rate.sale = 0;
       this.exchange_rate.state = 1;
+
+      this.GetExchangeRate();
+      this.ListExchangeRate();
     });
-    this.GetExchangeRate();
-    this.ListExchangeRate();
+    
   },
   methods: {
     ListExchangeRate,
@@ -217,7 +223,7 @@ export default {
 
 function GetExchangeRate() {
   let me = this;
-  ApiQuery.ExchangeRate().then((data) => {
+  ApiQuery.ExchangeRateByDate(me.exchange_rate.date).then((data) => {
           if (data.status == 200) {
             me.exchange_rate_sunat.day = data.fecha;
             me.exchange_rate_sunat.shopping = data.compra;

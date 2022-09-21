@@ -7,7 +7,7 @@
             <strong> Modulo de Canje de Venta - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="2">
@@ -121,56 +121,108 @@
                 <!-- Detalle venta -->
 
                 <b-col md="12" class="mt-2"></b-col>
+                
+                <b-col md="3">
+                  <div class="table-responsive">
+                    <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                      <thead>
+                        <tr>
+                          <th width="25%" class="text-center">Fecha</th>
+                          <th width="65%" class="text-center">Refenrencia</th>
+                          <th width="10%" class="text-center">Acc.</th>
+                        </tr>
+                      </thead>
+                      <tbody v-for="(item, it) in linkages" :key="it">
+                        <tr>
+                            <td class="align-middle text-center">{{ item.broadcast_date }}</td>
+                            <td class="align-middle text-center">{{ item.reference }}</td>
+                            <td class="align-middle text-center">
+                              <button type="button" @click="DeleteLinkeage(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </b-col>
 
-                <b-col md="8">
-                  <b-form-group class="m-0" >
-                    <b-form-input readonly v-model="total_sale.number_to_letters" ></b-form-input>
+                <b-col md="3">
+                 
+                  <b-form-group label="Observación:">
+                    <b-form-textarea size="sm" v-model="sale.observation"></b-form-textarea>
                   </b-form-group>
+                  
+                </b-col>
+                <b-col md="3">
                   <b-row>
+                      <div class="table-responsive">
+                        <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                          <tbody >
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_detraction" switch size="sm" name="check-button" >¿Tiene Detracción?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_retention" switch size="sm" name="check-button" >¿Tiene retención de igv?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_discount" switch size="sm" name="check-button" >¿Tiene Descuento Global?</b-form-checkbox>
+                                </td>
+                            </tr> -->
+                          </tbody>
+                        </table>
+                      </div>
+           
+     
                     
-                    <b-col md="6">
-                        <div class="table-responsive mt-3">
-                          <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
-                            <thead>
-                              <tr>
-                                <th width="25%" class="text-center">Fecha</th>
-                                <th width="65%" class="text-center">Refenrencia</th>
-                              </tr>
-                            </thead>
-                            <tbody v-for="(item, it) in linkages" :key="it">
-                              <tr>
-                                  <td class="align-middle text-center">{{ item.broadcast_date }}</td>
-                                  <td class="align-middle text-center">{{ item.reference }}</td>
-                            
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                    </b-col>
-                    <b-col md="6" class="mt-2">
-                      <b-form-group label="Observación:">
-                        <b-form-textarea v-model="sale.observation"></b-form-textarea>
-                      </b-form-group>
-                    </b-col>
                   </b-row>
                 </b-col>
 
-                <b-col md="2"></b-col>
-                <b-col md="2">
+                <b-col md="3">
                   <div class="table-responsive">
                     <table  class="table   table-hover table-lg mt-lg mb-0">
                       <tbody>
-                        <tr>
-                            <td width="40%" class="align-middle text-right text-total">SUBTOTAL:</td>
-                            <td width="60%" class="align-middle text-right text-total">{{ total_sale.subtotal }}</td>
+                        <tr v-if="total_sale.check_detraction == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Detracción :</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <div class="input-group">
+                                <b-form-input size="sm" @change="mLoadTotalSaleDetail" type="number" step="any" class="text-right" v-model="total_sale.percentage_detraction"></b-form-input>
+                                <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.detraction"></b-form-input>
+                              </div>
+                            </td>
+                        </tr>
+                        <tr v-if="total_sale.check_retention == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Retencion (3%):</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.retention"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-right text-total">IGV:</td>
-                            <td class="align-middle text-right text-total">{{ total_sale.igv }}</td>
+                            <td width="50%" class="align-middle text-right text-total">Subtotal:</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.subtotal"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr v-if="total_sale.check_discount == '1'">
+                            <td class="align-middle text-right text-total">Descuento:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input size="sm" type="number" step="any" class="text-right" v-model="total_sale.discount"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-right text-total">TOTAL:</td>
-                            <td class="align-middle text-right text-total">{{ total_sale.total }}</td>
+                            <td class="align-middle text-right text-total">IGV ({{sale.igv_percentage}}%):</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.igv"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">Total:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.total"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="2" class="align-middle text-center"><small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small></td>
@@ -178,8 +230,6 @@
                       </tbody>
                     </table>
                   </div>
-                  
-
                 </b-col>
 
                 <b-col md="3"></b-col>
@@ -291,24 +341,40 @@ export default {
         fees_collected:[],
         observation: "",
         license_plate: "",
+        code_sap: "",
+        order_sap: "",
+        service: "",
         modified_document_type: "",
         modified_serie: "",
         modified_number: "",
         modified_emission_date: "",
+        check_contingency:"0",
+        check_retention:"0",
+        check_discount:"0",
         reason: "",
         support: "",
         sunat_message: "",
         hash_cpe: "",
         hash_cdr: "",
+        code_sap: '',
+        order_sap: '',
+        service: '',
+        check_detraction:"0",
+        check_contingency: "0",
+        check_retention: "0",
+        check_discount: "0",
         taxed_operation: '0.00',
         exonerated_operation: '0.00',
         unaffected_operation: '0.00',
+        retention: '0.00',
         discount: '0.00',
         subtotal: '0.00',
         igv: '0.00',
         total: '0.00',
+        net_total: '0.00',
         state: '1',
         number_to_letters: '',
+        igv_percentage:'',
       },
 
       series: null,
@@ -400,7 +466,8 @@ export default {
     ViewSale,
     CodeInvoice,
     DeleteLinkeage,
-    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages','mLoadAddSaleDetail','mLoadEditCoin','mLoadAddLinkages']),
+    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages','mLoadAddSaleDetail',
+    'mLoadEditCoin','mLoadAddLinkages','mLoadTotalSaleDetail','mLoadIgvPercentage']),
   },
 
   computed: {
@@ -464,8 +531,10 @@ function ViewSale() {
         };
         me.mLoadAddLinkages(order);
 
+        me.sale.igv_percentage = response.data.result.igv_percentage;
+        me.mLoadIgvPercentage(response.data.result.igv_percentage);
+        
         me.client = {id: response.data.result.id_client,full_name: response.data.result.name + ' - ' + response.data.result.document_number};
-
         me.sale.id_sale = response.data.result.id_sale,
         me.sale.id_warehouse = response.data.result.id_warehouse,
         me.sale.type_operation = response.data.result.type_operation,
@@ -721,20 +790,28 @@ function AddSale() {
   let me = this;
   me.isLoading = true;
   let url = me.url_base + "redeemed-sale/add";
-  me.sale.id_user = me.user.id_user;
+   me.sale.id_user = me.user.id_user;
   me.sale.id_establishment = me.id_establishment;
   me.sale.id_client = me.client.id;
+  me.sale.check_contingency = me.total_sale.check_contingency;
+  me.sale.check_detraction = me.total_sale.check_detraction;
+  me.sale.check_retention = me.total_sale.check_retention;
+  me.sale.check_discount = me.total_sale.check_discount;
   me.sale.taxed_operation = me.total_sale.taxed_operation;
   me.sale.unaffected_operation = me.total_sale.unaffected_operation;
   me.sale.exonerated_operation = me.total_sale.exonerated_operation;
+  me.sale.percentage_detraction = me.total_sale.percentage_detraction;
+  me.sale.retention = me.total_sale.retention;
+  me.sale.detraction = me.total_sale.detraction;
   me.sale.discount = me.total_sale.discount;
   me.sale.subtotal = me.total_sale.subtotal;
   me.sale.igv = me.total_sale.igv;
   me.sale.total = me.total_sale.total;
+  me.sale.net_total = me.total_sale.net_total;
   me.sale.number_to_letters = me.total_sale.number_to_letters;
   me.sale.linkages = me.linkages;
   me.sale.sale_detail = me.sale_detail;
-  me.sale.fees_collected = me.fees_collected;
+  me.sale.payment_cash = me.payment_cash;
   let data = me.sale;
   axios({
     method: "POST",

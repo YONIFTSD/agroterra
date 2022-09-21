@@ -41,6 +41,8 @@ var CodeInvoice = (function() {
             case 'NA': code = "NA"; break;
             case 'NP': code = "NP"; break;
             case 'GD': code = "GD"; break;
+            case 'CT': code = "CT"; break;
+            case 'RH': code = "RH"; break;
             default: code = ''; break;
         }
 
@@ -80,6 +82,7 @@ var NameInvoice = (function() {
             case 'NA' : name = "Nota de Almacen"; break; 
             case 'NS' : name = "Nota de Servicio"; break; 
             case 'GD' : name = "Guía de Despacho"; break; 
+            case 'RH' : name = "Recibo por Honorarios"; break; 
             default: name = ''; break;
         }
 
@@ -277,6 +280,8 @@ var NameUnitMeasure = (function() {
             case 'LBR': name = 'LIBRAS'; break;
             case 'LTR': name = 'LITRO'; break;
             case 'MTR': name = 'METRO'; break;
+            case 'MTK': name = 'METRO CUADRADO'; break;
+            case 'MTQ': name = 'METRO CUBICO'; break;
             case 'MGM': name = 'MILIGRAMOS'; break;
             case 'MIL': name = 'MILLARES'; break;
             case 'UM': name = 'MILLON DE UNIDADES'; break;
@@ -293,6 +298,7 @@ var NameUnitMeasure = (function() {
             case 'ZZ': name = 'UNIDAD (SERVICIOS)'; break;
             case 'GRM': name = 'US GALON (3,7843 L)'; break;
             case 'GLL': name = 'GRAMO'; break;
+            case 'TNE': name = 'TONELADAS'; break;     
             default: name = ''; break;
         }
         return (name);

@@ -7,7 +7,7 @@
             <strong> Modulo Registro de Cobros - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
                
                 
@@ -75,13 +75,13 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <!-- <b-col md="2">
                   <b-form-group label="Caja:">
                     <b-form-select type="number" v-model="charge.cash" :options="cashs" ></b-form-select>
                   </b-form-group>
-                </b-col>
+                </b-col> -->
 
-                <b-col md="10">
+                <b-col md="12">
                   <b-form-group label="Observación:">
                     <b-form-input v-model="charge.observation" ></b-form-input>
                   </b-form-group>
@@ -148,7 +148,7 @@ export default {
           coin:'PEN',
           exchange_rate:'1.00',
           bank:'',
-          cash:'0',
+          cash:'1',
           number_op:'',
           observation:'',
           total: (0).toFixed(2),
@@ -239,6 +239,8 @@ export default {
     modalClients,
     AddCharge,
     Validate,
+    DataPrint,
+    Print,
   },
 
   computed: {
@@ -317,6 +319,9 @@ function AddCharge(me) {
           me.charge.balance = (0).toFixed(2);
           me.charge.state = 1;
           me.client = null;
+
+          me.DataPrint(response.data.result.id_charge);
+          
           Swal.fire({ icon: 'success', text: 'Se ha registrado el cobro', timer: 3000,})
       } else if(response.data.status == 400) {
         Swal.fire({ icon: 'success', text: response.data.message, timer: 3000,})
@@ -372,4 +377,51 @@ function Validate() {
 
 
 }
+
+
+
+
+function DataPrint(id_charge) {
+
+  let me = this;
+
+    let url = me.url_base + "charge/data-print/"+id_charge;
+    let data = me.sale;
+    axios({
+      method: "GET",
+      url: url,
+      data: data,
+      headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
+    })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.Print(response.data.result);
+      } 
+
+    })
+
+}
+
+function Print(info) {
+  let url = 'http://localhost/print/consumirapi-charge.php';
+  var data = new FormData(); 
+  data.append("info",JSON.stringify(info)); 
+  axios({
+    method: "POST",
+    url: url,
+    data:data,
+    headers: {
+      "Content-Type": "application/json",
+      "Accept":"*/*",
+    },
+  })
+    .then(function (response) {
+     
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+
 </script>

@@ -7,59 +7,60 @@
             <strong> Modulo de Venta - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
-              <b-row>
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
+              <b-row align-h="center">
        
-                <b-col md="2">
+                <b-col sm="6" md="3" lg="2">
                   <b-form-group>
                     <b-form-select disabled v-model="sale.id_warehouse" :options="warehouses"></b-form-select>
                     <small  v-if="errors.id_warehouse"  class="form-text text-danger">Seleccione un almacen</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="6" md="3" lg="2">
                   <b-form-group label="">
                     <b-form-select disabled v-model="sale.coin" :options="coins"></b-form-select>
                     <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
                   </b-form-group>
                 </b-col>
     
-                <b-col md="6"></b-col>
-                <b-col md="2">
+             
+                <b-col sm="6" md="3" lg="2" offset-lg="6">
                   <b-form-group>
                     <b-button disabled class="form-control btn btn-info" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
-             
+             </b-row>
+             <b-row>
 
-               <b-col md="3">
+               <b-col sm="12" md="4" lg="3">
                   <b-form-group label="Comprobante :">
                     <b-form-select disabled v-model="sale.type_invoice" :options="type_invoice"></b-form-select>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="12" md="4" lg="2">
                   <b-form-group label="Serie :">
                     <b-form-input class="text-center" disabled type="text" ref="serie"  v-model="sale.serie"></b-form-input>
                     <small v-if="errors.id_serie"  class="form-text text-danger" >Seleccione una serie</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="12" md="4" lg="2">
                   <b-form-group label="Numero :">
                     <b-form-input class="text-center" disabled type="text" ref="number"  v-model="sale.number"></b-form-input>
                     <small v-if="errors.number" class="form-text text-danger">Ingrese un numero de 8 digitos</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="12" md="6" lg="2">
                   <b-form-group label="Fecha Emision:">
                     <b-form-input disabled class="text-center" type="date" ref="broadcast_date" v-model="sale.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
+                <b-col m="12" md="6" lg="3">
                   <b-form-group>
                     <label class="control-label">Forma de Pago: <span v-if="disabled_fees_collected" class="badge badge-primary link" @click="ModalFeedCollected">Cuotas</span></label>
                     <b-form-select disabled @change="BntFeesCollected" v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
@@ -68,7 +69,7 @@
 
                
                 
-                <b-col md="6">
+                <b-col sm="12" md="12" lg="6">
                   <b-form-group>
                     <label>Cliente: </label>
                     <v-select disabled placeholder="Seleccione un cliente" class="w-100" :filterable="false" label="full_name" v-model="client" @search="SearchClients" :options="clients"></v-select>
@@ -77,37 +78,29 @@
                 </b-col>
 
                 
-                <b-col  v-if="type_business == 1 || type_business == 2" md="6">
+                <b-col  v-if="type_business == 1 || type_business == 2 || type_business == 4" sm="12" md="12" lg="6">
                   <b-form-group label="Dirección :">
                     <b-form-input disabled type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col  v-if="type_business == 3" md="4">
+                <b-col  v-if="type_business == 3" sm="12" md="6" lg="4">
                   <b-form-group label="Dirección :">
                     <b-form-input disabled type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col  v-if="type_business == 3" md="2">
+                <b-col  v-if="type_business == 3" sm="12" md="6" lg="2">
                   <b-form-group label="Placa:">
                     <b-form-input disabled type="text" v-model="sale.license_plate"></b-form-input>
                   </b-form-group>
                 </b-col>
 
-
-                 
-
-                 
-
-
-                
-
                  <div class="col-md-12">
                       <div class="table-responsive mt-3">
-                          <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                          <table  class="table table-information-detail table-bordered table-hover table-lg mt-lg mb-0">
                             <thead class="">
                               <tr>
                                 <th width="3%" class="text-center">#</th>
@@ -140,58 +133,94 @@
 
                 <b-col md="12" class="mt-2"></b-col>
 
-                <b-col md="6">
-                  <b-form-group class="m-0" >
-                    <b-form-input readonly v-model="sale.number_to_letters" ></b-form-input>
+                <b-col md="3">
+                  <b-form-group label="Observación:">
+                    <b-form-textarea v-model="sale.observation"></b-form-textarea>
                   </b-form-group>
-                  <b-row>
-                    
-                    <b-col md="7">
-                        <div class="table-responsive mt-3">
-                          <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
-                            <thead>
-                              <tr>
-                                <th width="25%" class="text-center">Fecha</th>
-                                <th width="75%" class="text-center">Refenrencia</th>
-                              </tr>
-                            </thead>
-                            <tbody v-for="(item, it) in sale.linkages" :key="it">
-                              <tr>
-                                  <td class="align-middle text-center">{{ item.broadcast_date }}</td>
-                                  <td class="align-middle text-center">{{ item.reference }}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                    </b-col>
-                    <b-col md="5" class="mt-2">
-                      <b-form-group label="Observación:">
-                        <b-form-textarea v-model="sale.observation"></b-form-textarea>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                  
-                
+                  <div class="table-responsive mt-3">
+                    <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                      <thead>
+                        <tr>
+                          <th width="25%" class="text-center">Fecha</th>
+                          <th width="75%" class="text-center">Refenrencia</th>
+                        </tr>
+                      </thead>
+                      <tbody v-for="(item, it) in sale.linkages" :key="it">
+                        <tr>
+                            <td class="align-middle text-center">{{ item.broadcast_date }}</td>
+                            <td class="align-middle text-center">{{ item.reference }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>  
                 </b-col>
-
                 <b-col md="2">
-
+                  <b-row>
+                      <div class="table-responsive">
+                        <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                          <tbody >
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox disabled value="1" unchecked-value="0" v-model="sale.check_detraction" switch size="sm" name="check-button" >¿Tiene Detracción?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox disabled value="1" unchecked-value="0" v-model="sale.check_retention" switch size="sm" name="check-button" >¿Tiene retención de igv?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total.check_discount" switch size="sm" name="check-button" >¿Tiene Descuento Global?</b-form-checkbox>
+                                </td>
+                            </tr> -->
+                          </tbody>
+                        </table>
+                      </div>
+                  </b-row>
+                </b-col>
+                <b-col md="3">
                   <div class="table-responsive">
                     <table  class="table   table-hover table-lg mt-lg mb-0">
                       <tbody>
-                        <tr>
-                            <td width="40%" class="align-middle text-right text-total">SUBTOTAL:</td>
-                            <td width="60%" class="align-middle text-right text-total">{{ sale.subtotal }}</td>
+                        <tr v-if="sale.check_detraction == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Detracción :</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <div class="input-group">
+                                <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.percentage_detraction"></b-form-input>
+                                <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.detraction"></b-form-input>
+                              </div>
+                            </td>
+                        </tr>
+                        <tr v-if="sale.check_retention == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Retencion (3%):</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.retention"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-right text-total">IGV:</td>
-                            <td class="align-middle text-right text-total">{{ sale.igv }}</td>
+                            <td width="50%" class="align-middle text-right text-total">Subtotal:</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.subtotal"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr v-if="sale.check_discount == '1'">
+                            <td class="align-middle text-right text-total">Descuento:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.discount"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-right text-total">TOTAL:</td>
-                            <td class="align-middle text-right text-total">{{ sale.total }}</td>
+                            <td class="align-middle text-right text-total">IGV ({{sale.igv_percentage}}%):</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.igv"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
+                            <td class="align-middle text-right text-total">Total:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.total"></b-form-input>
+                            </td>
                         </tr>
                       </tbody>
                     </table>
@@ -224,14 +253,56 @@
 
                 </b-col>
 
-                <b-col md="3"></b-col>
-        
-                <b-col md="3">
-                  <b-button  type="button" @click="DataPrint(sale.id_sale)" class="form-control" variant="warning" >IMPRIMIR</b-button>
+                <b-col md="12"><br></b-col>
+
+                <b-col v-if="type_business == 4" md="12">
+                  <b-row>
+                      <b-col md="2">
+                        <b-form-group label="Código SAP:">
+                          <b-form-input disabled type="text" v-model="sale.code_sap"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label="Pedido SAP:">
+                          <b-form-input disabled type="text" v-model="sale.order_sap"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label="Servicio:">
+                          <b-form-input disabled type="text" v-model="sale.service"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2"></b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="DataPrint(sale.id_sale)" class="form-control" variant="warning" >IMPRIMIR</b-button>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-link class="btn form-control btn-primary" :to="{ path: '/venta/listar' }" append >REGRESAR</b-link>
+                        </b-form-group>
+                      </b-col>
+                  </b-row>
                 </b-col>
-                <b-col md="3">
-                  <b-link class="btn form-control btn-primary" :to="{ path: '/venta/listar' }" append >REGRESAR</b-link>
+                <b-col v-if="type_business != 4" md="12">
+                  <b-row>
+                      <b-col md="4"></b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="DataPrint(sale.id_sale)" class="form-control" variant="warning" >IMPRIMIR</b-button>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-link class="btn form-control btn-primary" :to="{ path: '/venta/listar' }" append >REGRESAR</b-link>
+                        </b-form-group>
+                      </b-col>
+                  </b-row>
                 </b-col>
+
+
+                
               </b-row>
             </b-form>
           </CCardBody>
@@ -333,42 +404,58 @@ export default {
         id_sale: "",
         id_client: "",
         id_serie: "",
-        id_warehouse: '',
-        linkages:[],
+        id_warehouse: "",
         type_operation: "01",
+        linkages: [],
         type_invoice: "03",
         serie: "",
         number: "",
         broadcast_date: moment(new Date()).local().format("YYYY-MM-DD"),
         broadcast_time: "",
         expiration_date: moment(new Date()).local().format("YYYY-MM-DD"),
+        web_pay: 0,
         coin: "PEN",
-        address: "",
-        way_to_pay: "01-008",
+        address: '',
+        way_to_pay: "01-000",
         payment_type: "01",
         payment_method: "008",
         payment_deadline: "0",
+        fees_collected:[],
         observation: "",
-        license_plate:"",
+        license_plate: "",
         modified_document_type: "",
         modified_serie: "",
         modified_number: "",
         modified_emission_date: "",
+        check_contingency:"0",
+        check_detraction:"0",
+        check_retention:"0",
+        check_discount:"0",
         reason: "",
         support: "",
         sunat_message: "",
         hash_cpe: "",
         hash_cdr: "",
+        code_sap: '',
+        order_sap: '',
+        service: '',
+        check_contingency: "0",
+        check_retention: "0",
+        check_discount: "0",
         taxed_operation: '0.00',
         exonerated_operation: '0.00',
         unaffected_operation: '0.00',
+        percentage_detraction: '0.00',
+        detraction: '0.00',
+        retention: '0.00',
         discount: '0.00',
         subtotal: '0.00',
         igv: '0.00',
         total: '0.00',
+        net_total: '0.00',
         state: '1',
         number_to_letters: '',
-         fees_collected:[],
+        igv_percentage:'',
       },
       sale_detail:[],
       fees_collected:[],
@@ -380,6 +467,7 @@ export default {
         {value: "01", text : "Factura"},
         {value: "03", text : "Boleta de Venta"},
         {value: "NV", text : "Nota de Venta"},
+        {value: "GC", text : "Guia de Crédito"},
       ],
       coins:[
         {value: "PEN", text : "Soles"},
@@ -387,13 +475,16 @@ export default {
       ],
       way_to_pay:[
         {value:"01-000", text :'Contado'},
+        {value:"01-999", text :'Contado - Anticipo'},
         {value:'03-7',text:'Credito - 7 Dias'},
         {value:'03-15',text:'Credito - 15 Dias'},
         {value:'03-30',text:'Credito - 30 Dias'},
         {value:'03-45',text:'Credito - 45 Dias'},
         {value:'03-60',text:'Credito - 60 Dias'},
         {value:'03-75',text:'Credito - 75 Dias'},
-        {value:'03-90',text:'Credito - 75 Dias'},
+        {value:'03-90',text:'Credito - 90 Dias'},
+        {value:'03-105',text:'Credito - 105 Dias'},
+        {value:'03-120',text:'Credito - 120 Dias'},
       ],
 
        payment_method: [
@@ -406,6 +497,8 @@ export default {
           {value :"008", text :'EFECTIVO'},
           {value :"101", text :'TRANSFERENCIAS - COMERCIO EXTERIOR'},
           {value :"102", text :'CHEQUES BANCARIOS  - COMERCIO EXTERIOR'},
+          {value :"333", text :'RETENCIÓN'},
+          {value :"444", text :'DETRACCIÓN'},
           {value :"000", text :'PAGO POR WEB'},
       ],
 
@@ -584,6 +677,9 @@ function ViewSale() {
         me.sale.payment_deadline = response.data.result.payment_deadline;
         me.sale.observation = response.data.result.observation;
         me.sale.license_plate = response.data.result.license_plate;
+        me.sale.code_sap = response.data.result.code_sap;
+        me.sale.order_sap = response.data.result.order_sap;
+        me.sale.service = response.data.result.service;
         me.sale.modified_document_type = response.data.result.modified_document_type;
         me.sale.modified_serie = response.data.result.modified_serie;
         me.sale.modified_number = response.data.result.modified_number;
@@ -593,15 +689,26 @@ function ViewSale() {
         me.sale.sunat_message = response.data.result.sunat_message;
         me.sale.hash_cpe = response.data.result.hash_cpe;
         me.sale.hash_cdr = response.data.result.hash_cdr;
+        me.sale.check_contingency = response.data.result.check_contingency;
+        me.sale.check_detraction = response.data.result.check_detraction;
+        me.sale.check_retention = response.data.result.check_retention;
+        me.sale.check_discount = response.data.result.check_discount;
         me.sale.taxed_operation = response.data.result.taxed_operation;
         me.sale.exonerated_operation = response.data.result.exonerated_operation;
         me.sale.unaffected_operation = response.data.result.unaffected_operation;
+        me.sale.percentage_detraction = response.data.result.percentage_detraction;
+        me.sale.detraction = response.data.result.detraction;
+        me.sale.retention = response.data.result.retention;
         me.sale.discount = response.data.result.discount;
         me.sale.subtotal = response.data.result.subtotal;
         me.sale.igv = response.data.result.igv;
         me.sale.total = response.data.result.total;
+        me.sale.net_total = response.data.result.net_total;
+
         me.sale.state = response.data.result.state;
         me.sale.number_to_letters = response.data.result.number_to_letters;
+
+        me.sale.igv_percentage = response.data.result.igv_percentage;
        
         me.sale_detail = response.data.detail_result;
         me.payment_cash = response.data.charges;

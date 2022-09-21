@@ -7,7 +7,7 @@
             <strong> Modulo Costeo - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="6">
@@ -76,7 +76,7 @@
                     <b-form-input rows="1"  v-model="shopping.observation" max-rows="3"></b-form-input>
                   </b-form-group>
                 </b-col>
-
+    
                 <!-- Detalle Entrada -->
                 <mShoppingDetail/>
                 <small v-if="errors.shopping_detail" class="col-md-12 form-text text-center text-danger">Agregue productos</small>
@@ -324,6 +324,9 @@ export default {
         {value:"03-60",text:'Crédito - 60 dias'},
         {value:"03-75",text:'Crédito - 75 dias'},
         {value:"03-90",text:'Crédito - 90 dias'},
+        {value:"03-105",text:'Crédito - 105 dias'},
+        {value:"03-120",text:'Crédito - 120 dias'},
+
       ],
 
       affection_for_detraction: [
@@ -436,7 +439,10 @@ function ChangeInvoiceExpenses() {
 
 
 function modalExachangeRate() {
-  EventBus.$emit('ModalExchangeRateShow');
+  let data = {
+    date : this.shopping.broadcast_date
+  }
+  EventBus.$emit('ModalExchangeRateShow',data);
 }
 
 function Proration() {
@@ -525,7 +531,8 @@ function ViewShopping() {
             if (expenses_final > 0) {
               let detail_cost = {
                 reason : 'Compra',
-                id_purchase_expenses : 0,
+                module: 'Shopping',
+                id_module : 0,
                 type_invoice : response.data.result.shopping.invoice_type,
                 serie : response.data.result.shopping.serie,
                 number : response.data.result.shopping.number,
@@ -534,6 +541,8 @@ function ViewShopping() {
                 total : expenses_final.toFixed(2),
               }
               me.mLoadAddCostingExpenses(detail_cost);
+
+       
             }
 
             let linkages_cost = response.data.result.shopping.linkages_cost;

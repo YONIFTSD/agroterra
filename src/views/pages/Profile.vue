@@ -7,7 +7,7 @@
             <strong> Perfil de Usuario</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="3"></b-col>

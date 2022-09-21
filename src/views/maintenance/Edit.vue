@@ -7,7 +7,7 @@
             <strong> Modulo Mantenimiento - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="EditMantenimiento">
+            <b-form id="Form" autocomplete="off" @submit.prevent="EditMantenimiento">
               <b-row>
 
                 <b-col md="3">

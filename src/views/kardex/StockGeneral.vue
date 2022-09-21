@@ -11,26 +11,33 @@
 
                 <b-col md="2">
                   <b-form-group label="Establecimiento :">
-                    <b-form-select @change="ListStockGeneral" v-model="id_establishment" :options="establishments"></b-form-select>
+                    <b-form-select @change="ListEstablishmentAndWarehouses" v-model="id_establishment" :options="establishments"></b-form-select>
                   </b-form-group>
                 </b-col>
 
-                 <b-col sm="12" md="5">
-                  <b-form-group label="Proveedor">
-                    <v-select @input="ListStockGeneral" placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider" @search="SearchProvider" :options="providers"></v-select>
+                 <b-col sm="12" md="2">
+                  <b-form-group label="Almacen">
+                    <b-form-select  v-model="id_warehouse" :options="warehouses"></b-form-select>
                   </b-form-group>
                 </b-col>
+
                 <b-col sm="12" md="2">
                     <b-form-group label="Categoria" >
                       <b-form-select @change="ListStockGeneral" v-model="id_category" :options="categories"></b-form-select>
                     </b-form-group>
                 </b-col>
 
+                <b-col sm="12" md="2">
+                    <b-form-group label="Hasta" >
+                      <b-form-input class="text-center" type="date" v-model="to"></b-form-input>
+                    </b-form-group>
+                </b-col>
+
                 
-                <b-col sm="6" md="2">
+                <b-col sm="6" md="3">
                   <b-form-group label=".">
                     <b-input-group>
-                    <b-form-input v-model="search" class="form-control"></b-form-input>
+                    <b-form-input @keyup="ListStockGeneral" v-model="search" class="form-control"></b-form-input>
                     <b-input-group-append>
                       <b-button variant="primary" @click="ListStockGeneral"><b-icon icon="search"></b-icon></b-button>
                     </b-input-group-append>
@@ -49,26 +56,24 @@
               <table class="table table-hover table-bordered">
                 <thead>
                   <tr>
-                    <th rowspan="2" width="5%" class="text-center">#</th>
-                    <th rowspan="2" width="8%" class="text-center">Codigo</th>
-                    <th rowspan="2" width="40%" class="text-center">Nombre</th>
-                    <th rowspan="2" width="10%" class="text-center">Categoria</th>
-                    <th :colspan="item.quantity" width="10%" class="text-center" v-for="(item, it) in mestablishments" :key="it">{{ item.name }}</th>
-                  </tr>
-                  <tr>
-                    <th class="text-center" v-for="(item, it) in mwarehouses" :key="it">{{ item.name }}</th>
+                    <th width="5%" class="text-center">#</th>
+                    <th width="8%" class="text-center">Codigo</th>
+                    <th width="40%" class="text-center">Nombre</th>
+                    <th width="10%" class="text-center">Categoria</th>
+                    <th width="10%" class="text-center">Marca</th>
+                    <th width="10%" class="text-center">U. M.</th>
+                    <th width="5%" class="text-center">Stock</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in data_table" :key="it">
                   <tr>
                     <td class="text-center">{{ it + 1 }}</td>
                     <td class="text-center"> {{ item.code }}</td>
-                    <td class="text-left"> {{ item.name + " - "+item.presentation }}</td>
+                    <td class="text-left"> {{ item.name }}</td>
                     <td class="text-left"> {{ item.category_name }}</td>
-                    <td class="text-right" v-for="(stock, it1) in item.stock" :key="it1">
-                       {{stock.quantity}}
-                    </td>
-                
+                    <td class="text-left"> {{ item.brand_name }}</td>
+                    <td class="text-left"> {{ item.unit_measure }}</td>
+                    <td class="text-right"> {{ item.stock }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -114,15 +119,13 @@ export default {
       rows: 0,
       data_table: [],
       establishments:[],
-      mestablishments:[],
-      mwarehouses:[],
+      warehouses:[],
       id_establishment:'all',
+      id_warehouse:'all',
       search: "",
-      providers: [],
-      provider:null,
       categories:[],
       id_category:'all',
-
+      to:moment(new Date()).local().format("YYYY-MM-DD"),
       errors:{
         to:false,
         from:false,
@@ -131,6 +134,7 @@ export default {
   },
   mounted() {
     this.ListEstablishment();
+    this.ListEstablishmentAndWarehouses();
     this.ListCategories();
     this.ListStockGeneral();
   },
@@ -246,10 +250,8 @@ function ListStockGeneral() {
 
 
   let search = this.search == "" ? "all" : this.search;
-  let id_provider = this.provider == null ? 'all':this.provider.id;
   let me = this;
-  let url = this.url_base + "kardex/stock-general/"+this.id_establishment+"/"+id_provider+"/"+ this.id_category +"/"+ search + "?page=" + this.currentPage;
-
+  let url = this.url_base + "kardex/stock-general-v2/"+this.id_establishment+"/"+this.id_warehouse+"/"+this.to+"/"+ this.id_category +"/"+ search + "?page=" + this.currentPage;
 
   axios({
     method: "GET",
@@ -259,9 +261,8 @@ function ListStockGeneral() {
     .then(function (response) {
       if (response.data.status == 200) {
         me.rows = response.data.result.table.total;
-        me.data_table = response.data.result.stock;
-        me.mestablishments = response.data.result.establishments;
-        me.mwarehouses = response.data.result.warehouses;
+        me.data_table = response.data.result.result;
+    
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
@@ -274,11 +275,9 @@ function ListStockGeneral() {
 
 function ExportExcel() {
 
-
   let search = this.search == "" ? "all" : this.search;
-  let id_provider = this.provider == null ? 'all':this.provider.id;
   let me = this;
-  let url = this.url_base + "excel-kardex-stock-general/"+this.id_establishment+"/"+id_provider+"/"+this.id_category +"/"+ search;
+  let url = this.url_base + "excel-kardex-stock-general-v2/"+this.id_establishment+"/"+this.id_warehouse+"/"+this.to+"/"+this.id_category +"/"+ search;
 
   window.open(url,'_blank');
 }
@@ -287,15 +286,27 @@ function ExportExcel() {
 // Editar usuario
 function ListEstablishmentAndWarehouses() {
   let me = this;
-  let url = this.url_base + "establishment/list-establishment-warehouses/"+this.id_establishment;
+  if (this.id_establishment == 'all') {
+      me.id_warehouse = 'all';
+      me.warehouses = [{value:'all', text:'Todos'}];
+      return false;
+  }
+
+  let url = this.url_base + "active-warehouses/"+this.id_establishment;
   axios({
     method: "GET",
     url: url,
     headers: { token: this.token, module: this.module,role: 1,},
   })
     .then(function (response) {
+      me.id_warehouse = 'all';
+      me.warehouses = [{value:'all', text:'Todos'}];
       if (response.data.status == 200) {
-       
+        for (let index = 0; index < response.data.result.length; index++) {
+          const element = response.data.result[index];
+          me.warehouses.push({ value: element.id_warehouse, text:element.name })
+        }
+        
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }

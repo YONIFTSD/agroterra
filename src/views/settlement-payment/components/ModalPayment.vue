@@ -159,7 +159,7 @@ export default {
 
 function UpdateAmount(index) {
  
-  this.payments[index].exchange_rate = this.payments[index].exchange_rate.length == 0 ? 1 :this.payments[index].exchange_rate;
+  this.payments[index].exchange_rate = this.payments[index].exchange_rate.length == 0 ? '1.0000' :this.payments[index].exchange_rate;
   this.payments[index].amount_final = this.payments[index].amount_final.length == 0 ? 1 :this.payments[index].amount_final;
  
   if (this.msettlement_payment.coin == 'PEN') {
@@ -177,7 +177,7 @@ function UpdateAmount(index) {
     }
   }
 
-  this.payments[index].exchange_rate = parseFloat(this.payments[index].exchange_rate).toFixed(2);
+  this.payments[index].exchange_rate = parseFloat(this.payments[index].exchange_rate).toFixed(4);
   this.payments[index].amount = parseFloat(this.payments[index].amount).toFixed(2);
   this.payments[index].amount_final = parseFloat(this.payments[index].amount_final).toFixed(2);
 
@@ -245,7 +245,7 @@ function AddPayment(index) {
    broadcast_date :this.payments[index].broadcast_date,
    document :this.payments[index].document,
    coin :this.payments[index].coin,
-   exchange_rate : parseFloat(this.payments[index].exchange_rate).toFixed(2),
+   exchange_rate : parseFloat(this.payments[index].exchange_rate).toFixed(4),
    amount : parseFloat(this.payments[index].amount).toFixed(2),
    amount_final : parseFloat(this.payments[index].amount_final).toFixed(2),
  };

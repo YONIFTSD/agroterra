@@ -28,19 +28,19 @@ const actions = {
         let validate = true;
         let detail = context.state.costing_detail;
         let unit_value = context.state.proration_type;
-        for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_product == product.id_product) {
-                detail[index].quantity = parseFloat(detail[index].quantity) + parseFloat(product.quantity);
-                detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
-                validate = false;
-                context.dispatch('mLoadTotalsCostingDetail');
-                break;
-            }
-        }
-        if (validate) {
+        // for (let index = 0; index < detail.length; index++) {
+        //     if (detail[index].id_product == product.id_product) {
+        //         detail[index].quantity = parseFloat(detail[index].quantity) + parseFloat(product.quantity);
+        //         detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
+        //         validate = false;
+        //         context.dispatch('mLoadTotalsCostingDetail');
+        //         break;
+        //     }
+        // }
+        // if (validate) {
             context.commit('mAddCostingDetail',product);
             context.dispatch('mLoadTotalsCostingDetail');
-        }
+        // }
         
     },
 
@@ -56,20 +56,19 @@ const actions = {
         let detail = context.state.costing_detail;
         let unit_value = context.state.munit_value;
         
-        for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_product == id_product) {
+        // for (let index = 0; index < detail.length; index++) {
+            // if (detail[index].id_product == id_product) {
                 detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity);
                 detail[index].quantity = parseFloat(detail[index].quantity).toFixed(2);
                 context.dispatch('mLoadTotalsCostingDetail');
-                break;
-            }
-        }
+        //         break;
+        //     }
+        // }
     },
 
     mLoadResetCostingDetail(context){
         context.commit('mResertCostingDetail');
         context.commit('mProrationTypeValueCosting','');
-        
         context.dispatch('mLoadTotalsCostingDetail');
     },
 
@@ -134,13 +133,13 @@ const actions = {
             if (proration_type == 2) {
                 let gross_weight = 0;
                 for (let index = 0; index < detail.length; index++) {
-                    gross_weight += parseFloat(detail[index].gross_weight);
+                    gross_weight += parseFloat(detail[index].gross_weight * detail[index].quantity);
                 }
                 let distribution_factor = parseFloat(base_expense) / parseFloat(gross_weight);
                 console.log(distribution_factor);
                 for (let index = 0; index < detail.length; index++) {
-                  detail[index].total_freight_value = parseFloat(detail[index].gross_weight) * parseFloat(distribution_factor);
-                  detail[index].unit_freight_value = distribution_factor;
+                  detail[index].total_freight_value = parseFloat(detail[index].gross_weight * detail[index].quantity) * parseFloat(distribution_factor);
+                  detail[index].unit_freight_value = parseFloat(detail[index].gross_weight) * parseFloat(distribution_factor);
                   detail[index].total_cost = parseFloat(detail[index].net_total_value) + parseFloat(detail[index].total_freight_value);
                   detail[index].unit_cost = parseFloat(detail[index].total_cost) / parseFloat(detail[index].quantity);
                   
@@ -164,8 +163,6 @@ const actions = {
                   detail[index].total_cost = parseFloat(detail[index].total_cost).toFixed(5);
                   detail[index].total_cost_igv = parseFloat(detail[index].total_cost_igv).toFixed(5);
                   detail[index].total_cost_final = parseFloat(detail[index].total_cost_final).toFixed(5);
-                  
-
                 }
                 console.log(detail)
                 context.commit('mCostingDetail',detail);
@@ -318,6 +315,9 @@ const actions = {
         let total = 0;
         for (let index = 0; index < detail.length; index++) {
             if (detail[index].module == "PurchaseExpense") {
+                total += parseFloat(detail[index].total);
+            }
+            if (detail[index].module == "Shopping") {
                 total += parseFloat(detail[index].total);
             }
             if (detail[index].module == "CreditDebitNote") {

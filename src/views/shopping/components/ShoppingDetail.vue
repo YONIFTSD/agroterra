@@ -21,29 +21,29 @@
                     <th class="text-center">Importe</th>
                   </tr>
                 </thead>
-                <tbody v-for="(item, it) in shopping_detail" :key="item.id_product">
+                <tbody v-for="(item, it) in shopping_detail" :key="it">
                   <tr>
                       <td class="align-middle text-center">{{ it + 1 }}</td>
                       <td class="align-middle text-left">{{ item.code }}</td>
                       <td class="text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation) }}</td>
                       <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
                       <td class="align-middle text-center">
-                        <input type="number" step="any" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.quantity">
+                        <input type="number" step="any" @change="EditDetail(it)" class="form-control text-right" v-model="item.quantity">
                       </td>
                       <td class="align-middle text-center">
-                        <input type="number" step="any" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.unit_value">
+                        <input type="number" step="any" @change="EditDetail(it)" class="form-control text-right" v-model="item.unit_value">
                       </td>
                       <td class="align-middle text-center">
-                        <input type="number" step="any" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.percentage_discount">
+                        <input type="number" step="any" @change="EditDetail(it)" class="form-control text-right" v-model="item.percentage_discount">
                       </td>
                       <td class="align-middle text-right">{{ item.unit_discount }}</td>
                       <td class="align-middle text-right">{{ item.net_unit_value }}</td>
                       <td class="align-middle text-right">{{ item.net_total_value }}</td>
                       <td class="align-middle text-center">
-                        <input type="number" @change="EditDetail(item.id_product)" class="form-control text-right" v-model="item.package">
+                        <input type="number" @change="EditDetail(it)" class="form-control text-right" v-model="item.package">
                       </td>
                       <td class="align-middle text-center">
-                        <button type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>  
+                        <button type="button" @click="DeleteDetail(it)" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>  
                       </td>
 
                   </tr>

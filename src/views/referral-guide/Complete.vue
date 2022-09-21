@@ -7,7 +7,7 @@
             <strong> Modulo de Guia Remisión - Completar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
 
               <b-tabs content-class="mt-3">
                 <b-tab title="Datos de Guia de Remisión" active>

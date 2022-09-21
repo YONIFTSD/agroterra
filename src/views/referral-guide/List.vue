@@ -249,7 +249,7 @@ function PDFReferralGuide(id_referral_guide) {
 //listar usuario
 function ListReferralGuide() {
 
-    let id_provider = this.provider == null ? 'all' : this.provider.id;
+  let id_provider = this.provider == null ? 'all' : this.provider.id;
   this.errors.from = false;
   this.errors.to = false;
 
@@ -258,7 +258,7 @@ function ListReferralGuide() {
   let search = this.search == "" ? "all" : this.search;
 
   let me = this;
-  let url = this.url_base + "referral-guide/list/"+id_provider+"/" + this.from + "/" + this.to + "/" + this.id_establishment + "/" + search + "?page=" + this.currentPage;
+  let url = this.url_base + "referralguide/list/all/" + this.from + "/" + this.to + "/" + this.id_establishment + "/" + search + "?page=" + this.currentPage;
 
   axios({
     method: "GET",

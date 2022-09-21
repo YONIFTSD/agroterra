@@ -7,7 +7,7 @@
             <strong> Modulo Cuentas por Cobrar - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
                
                 
@@ -73,7 +73,39 @@
                   </b-form-group>
                 </b-col>
 
-           
+                <div class="col-md-12" v-if="detail.length > 0">
+                  <div class="table-responsive mt-3">
+                    <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                      <thead class="">
+                        <tr>
+                          <th width="3%" class="text-center">#</th>
+                          <th width="8%" class="text-center">Codigo</th>
+                          <th width="40%" class="text-center">Nombre</th>
+                          <th width="10%" class="text-center">UM</th>
+                          <th width="5%" class="text-center">C. Barras</th>
+                          <th width="10%" class="text-center">Cantidad</th>
+                          <th width="10%" class="text-center">P. Unit</th>
+                          <th width="7%" class="text-center">P. Total</th>
+                    
+                        </tr>
+                      </thead>
+                      <tbody v-for="(item, it) in detail" :key="it">
+                        <tr>
+                            <td class="align-middle text-center">{{ it + 1 }}</td>
+                            <td class="align-middle text-left">{{ item.code }}</td>
+                            <td class="align-middle text-left">{{ item.name }}</td>
+                            <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure)  }}</td>
+                            <td class="align-middle text-center">{{ item.barcode }}</td>
+                            <td class="align-middle text-right">{{ item.quantity }}</td>
+                            <td class="align-middle text-right">{{ item.unit_price }}</td>
+                            <td class="align-middle text-right">{{ item.total_price }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <b-col md="12"> <br> </b-col>
 
 
         
@@ -113,6 +145,7 @@ import EventBus from "@/assets/js/EventBus";
 // components
 import ModalClients from './../components/ModalClient'
 import LoadingComponent from './../pages/Loading'
+import CodeToName from "@/assets/js/CodeToName";
 
 export default {
   name: "UsuarioAdd",
@@ -149,6 +182,7 @@ export default {
 
       clients: [],
       client:null,
+      detail:[],
 
       type_invoice:[
         {value: "01", text : "Factura"},
@@ -164,6 +198,7 @@ export default {
         {value: "52", text : "Despacho Simplificado - Importación Simplificada"},
         {value: "91", text : "Comprobante de No Domiciliado"},
         {value: "NE", text : "Nota de Entrada"},
+        {value: "GC", text : "Guia de Crédito"},
         {value: "00", text : "Otros"},
       ],
 
@@ -199,6 +234,7 @@ export default {
 
     EditAccountReceivable,
     Validate,
+    NameUnitMeasure,
   },
 
   computed: {
@@ -221,6 +257,9 @@ export default {
   },
 };
 
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 
 function ViewAccountReceivable() {
 
@@ -254,6 +293,8 @@ function ViewAccountReceivable() {
           me.account_receivable.fee = response.data.result.fee;
           me.account_receivable.balance = response.data.result.balance;
           me.account_receivable.state = response.data.result.state;
+
+          me.detail = response.data.detail;
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }

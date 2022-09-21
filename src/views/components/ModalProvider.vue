@@ -3,7 +3,7 @@
     <b-modal size="md" hide-footer v-model="modalProviders" class="" title="NUEVO PROVEEDOR">
       <b-row>
         <b-col md="12">
-          <b-form id="Form" @submit.prevent="AddProvider">
+          <b-form id="Form" autocomplete="off" @submit.prevent="AddProvider">
               <b-row>
                 <b-col md="6">
                   <b-form-group label="Tipo de Documento :">
@@ -98,6 +98,7 @@ export default {
           phone: "",
           email: "",
           state: 1,
+          sellers:[],
         },
 
         mubigee:null,
@@ -227,6 +228,7 @@ function AddProvider() {
     phone: this.provider.phone,
     email: this.provider.email,
     state: this.provider.state,
+    sellers: [],
   };
 
   axios({
@@ -251,6 +253,9 @@ function AddProvider() {
         me.provider.email = "";
         me.provider.state = 1;
         me.modalProviders = false;
+
+        EventBus.$emit('GetDataProvider',response.data.result);
+
         Swal.fire("Sistema", "Se ha registrado el nuevo proveedor", "success");
       } else if (response.data.status == 400) {
         Swal.fire("Sistema", "El proveedor ingresado ya se encuentra registrado", "warning");

@@ -157,6 +157,9 @@ function AddTransfer(id_output) {
     .then(function (response) {
       if (response.data.status == 200) {
          let val_add = true;
+         if (me.linkages.length > 0) {
+           return false;
+         }
         for (let index = 0; index < me.linkages.length; index++) {
           const element =  me.linkages[index];
           if (element.module == "Salida" && element.id_module == response.data.result.output.id_output) {
@@ -192,6 +195,9 @@ function AddTransfer(id_output) {
               igv: element.igv,
               existence_type: element.existence_type,
               quantity: element.quantity,
+              package: 0,
+              expiration_date: '',
+
             }
             
             me.mLoadAddInputDetail(detail);

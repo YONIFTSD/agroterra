@@ -7,7 +7,7 @@
             <strong> Modulo Costeo - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="6">
@@ -355,6 +355,8 @@ export default {
         {value:"03-60",text:'Crédito - 60 dias'},
         {value:"03-75",text:'Crédito - 75 dias'},
         {value:"03-90",text:'Crédito - 90 dias'},
+        {value:"03-105",text:'Crédito - 105 dias'},
+        {value:"03-120",text:'Crédito - 120 dias'},
       ],
 
       affection_for_detraction: [

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal size="xl" class="modal-size" hide-footer v-model="modal_products_delivered" title="VENTAS POR ENTREGAR">
+    <b-modal size="xl" class="modal-size" hide-footer v-model="modal_products_delivered" title="PRODUCTOS EN NEGATIVO">
       <b-row>
       
 
@@ -22,35 +22,19 @@
                 <thead>
                   <tr>
                     <th width="5%" class="text-center">#</th>
-                    <th width="9%" class="text-center">Fecha</th>
-                    <th width="15%" class="text-center">Comprobante</th>
-                    <th width="35%" class="text-center">Cliente</th>
-                    <th width="5%" class="text-center">Moneda</th>
-                    <th width="8%" class="text-center">Total</th>
-                    <th width="8%" class="text-center">Estado</th>
-                    <th width="8%" class="text-center">Acciones</th>
+                    <th width="10%" class="text-center">Código</th>
+                    <th width="55%" class="text-center">Nombre</th>
+                    <th width="20%" class="text-center">Almacen</th>
+                    <th width="10%" class="text-center">Stock</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in sales" :key="it">
                   <tr >
                     <td class="text-center">{{ it + 1 }}</td>
-                    <td class="text-center"> {{ item.broadcast_date  }}</td>
-                    <td class="text-center"> {{ CodeInvoice(item.type_invoice) + ' '+item.serie + '-'+item.number }}</td>
-                    <td class="text-left"> {{ item.client_name + ' - '+item.client_document_number  }}</td>
-                    <td class="text-right"> {{ item.coin  }}</td>
-                    <td class="text-right"> {{ item.total  }}</td>
-                    <td class="text-center">
-                          <b-badge v-if="item.state == 0" variant="danger">XML</b-badge>
-                          <b-badge v-if="item.state == 1" variant="warning">Girado</b-badge>
-                          <b-badge v-if="item.state == 2" variant="success">Canjeado</b-badge>
-                          <b-badge v-if="item.state == 3" variant="info">Emitido</b-badge>
-                          <b-badge v-if="item.state == 4" variant="success">Aceptado</b-badge>
-                          <b-badge v-if="item.state == 5" variant="danger">Rechazado</b-badge>
-                          <b-badge v-if="item.state == 6" variant="danger">Anulado</b-badge>
-                    </td>
-                    <td class="text-center">
-                      <b-button type="button" @click="ConfirmSaleDelivered(item.id_sale)" variant="primary" size="sm"><i class="fas fa-exchange-alt"></i></b-button>
-                    </td>
+                    <td class="text-center"> {{ item.code  }}</td>
+                    <td class="text-left"> {{ item.name + (item.presentation.length == 0 ? '': ' - '+item.presentation)  }}</td>
+                    <td class="text-left"> {{ item.warehouse_name  }}</td>
+                    <td class="text-right"> {{ item.quantity  }}</td>
                   </tr>
                 </tbody>
               </table>

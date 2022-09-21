@@ -67,9 +67,9 @@
                           >Ver</b-dropdown-item
                         >
                         <b-dropdown-item
-                          v-if="Permission('CashDelete') && item.state != 0"
+                          v-if="Permission('CashDelete')"
                           @click="ConfirmDeleteCash(item.id_cash)"
-                          >Anular</b-dropdown-item
+                          >Eliminar</b-dropdown-item
                         >
                       </b-dropdown>
                     </td>
@@ -204,7 +204,7 @@ function ViewCash(id_cash) {
 // Confirmar eliminar
 function ConfirmDeleteCash(id_cash) {
   Swal.fire({
-    title: "Esta seguro de anular la caja?",
+    title: "Esta seguro de eliminar la caja?",
     text: "No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,
@@ -221,7 +221,7 @@ function ConfirmDeleteCash(id_cash) {
 // eliminar usuario
 function DeleteCash(id_cash) {
   let me = this;
-  let url = this.url_base + "cash/cancel/" + id_cash;
+  let url = this.url_base + "cash/delete/" + id_cash;
   axios({
     method: "delete",
     url: url,
@@ -236,7 +236,7 @@ function DeleteCash(id_cash) {
         //eliminado del objeto
         for (var i = 0; i < me.data_table.length; i++) {
           if (me.data_table[i].id_cash == id_cash) {
-            me.data_table[i].state = 0;
+            me.data_table.splice(i, 1);
             break;
           }
         }

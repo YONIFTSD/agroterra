@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal size="lg" hide-footer v-model="modalCars" class="w-100" title="Vehiculos">
-      <b-form id="Form" @submit.prevent="Validate">
+      <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
         <b-row>
           <b-col md="3">
             <b-form-group label="Marca">

@@ -7,7 +7,7 @@
             <strong> Modulo Compras - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="6">
@@ -407,7 +407,11 @@ function modalProviders() {
 }
 
 function modalExachangeRate() {
-  EventBus.$emit('ModalExchangeRateShow');
+  let data = {
+    date : this.shopping.broadcast_date
+  }
+  EventBus.$emit('ModalExchangeRateShow',data);
+
 }
 
 

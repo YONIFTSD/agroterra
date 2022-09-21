@@ -81,7 +81,9 @@ function ViewBusiness() {
 }
 </script>
 <style>
-
+.table-information-detail{
+    min-width: 700px !important;
+}
 table tr td{
   padding: 3px !important;
   vertical-align: middle !important;

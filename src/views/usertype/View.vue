@@ -7,7 +7,7 @@
             <strong> Modulo de Tipo Usuario - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form">
+            <b-form id="Form" autocomplete="off">
               <b-row>
                 
                 <b-col md="3">

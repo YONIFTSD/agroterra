@@ -43,9 +43,10 @@
                 <thead>
                   <tr>
                     <th width="3%" class="text-center">#</th>
-                    <th width="10%" class="text-center">Fecha</th>
-                    <th width="15%" class="text-center">Comprobante</th>
-                    <th width="60%" class="text-center">Razón Social</th>
+                    <th width="8%" class="text-center">Fecha</th>
+                    <th width="12%" class="text-center">Comprobante</th>
+                    <th width="45%" class="text-center">Razón Social</th>
+                    <th width="20%" class="text-center">Establecimiento</th>
                     <th width="10%" class="text-center">Acciones</th>
                   </tr>
                 </thead>
@@ -55,10 +56,15 @@
                     <td class="text-center"> {{ item.broadcast_date }}</td>
                     <td class="text-center"> {{ CodeInvoice(item.type_invoice)+ ' '+item.serie+'-'+item.number }}</td>
                     <td class="text-left"> {{ item.provider_name + ' - '+item.provider_document_number }}</td>
+                    <td class="text-left"> {{ item.establishment_name + ' | '+item.warehouse_name }}</td>
                     <td class="text-center">
+                      <b-button type="button" @click="ViewInput(item.id_input)" variant="info">
+                        <i class="fas fa-eye"></i>
+                      </b-button>
                       <b-button type="button" @click="AddLinkages(item.id_input)" variant="primary">
                         <i class="fas fa-plus-square"></i>
                       </b-button>
+                      
                     </td>
                   </tr>
                 </tbody>
@@ -140,6 +146,7 @@ export default {
       CodeInvoice,
       ListInput,
       AddLinkages,
+      ViewInput,
       
       ...mapActions('Shopping',['mLoadAddLinkages']),
       ...mapActions('Shopping',['mLoadAddShoppingDetail']),
@@ -147,6 +154,7 @@ export default {
       
   },
   computed: {
+      ...mapState('Shopping',['linkages']),
     ...mapState(["url_base"]),
     token: function () {
       let user = window.localStorage.getItem("user");
@@ -160,6 +168,17 @@ export default {
     }
   },
 };
+
+
+function ViewInput(id_input) {
+
+  let route = this.$router.resolve({
+    name: "InputView",
+    params: { id_input: je.encrypt(id_input) },
+  });
+
+  window.open(route.href,'_blank');
+}
 
 function SearchProvider(search, loading) {
   
@@ -193,7 +212,7 @@ function ListInput() {
   let search = this.search == "" ? "all" : this.search;
 
   let me = this;
-  let url = this.url_base + "input/list-pending/" + id_provider + "/" + this.from + "/" + this.to + "/"+this.id_establishment + "/" + search + "?page=" + this.currentPage;
+  let url = this.url_base + "input/list-pending-shopping/" + id_provider + "/" + this.from + "/" + this.to + "/"+this.id_establishment + "/" + search + "?page=" + this.currentPage;
 
 
   axios({
@@ -227,54 +246,65 @@ function AddLinkages(id_input) {
     .then(function (response) {
       
       if (response.data.status == 200) {
-        
-        let linkage = {
-          reason: 'Entrada',
-          id_linkage : response.data.result.input.id_input,
-          type_invoice : response.data.result.input.type_invoice,
-          serie : response.data.result.input.serie,
-          number : response.data.result.input.number,
-        }
-        
-        me.mLoadAddLinkages(linkage);
-
-        let input = {
-          provider: {id: response.data.result.input.id_provider, name: response.data.result.input.provider_name + " - "+ response.data.result.input.provider_document_number},
-          id_warehouse: response.data.result.input.id_warehouse
-        }
-        EventBus.$emit('CompletePurchase',input);
-        
-
-        let input_detail = response.data.result.input_detail;
-        for (let index = 0; index < input_detail.length; index++) {
-          const element = input_detail[index];
-          let detail = {
-            id_product : element.id_product,
-            code : element.code,
-            name : element.name,
-            presentation : element.presentation,
-            unit_measure : element.unit_measure,
-            igv : element.igv,
-            quantity : parseFloat(element.quantity).toFixed(2),
-            percentage_discount: (0).toFixed(2),
-            package: (1).toFixed(0),
-
-            unit_value: (0).toFixed(2),
-            unit_discount: (0).toFixed(2),
-            net_unit_value: (0).toFixed(2),
-            unit_igv: (0).toFixed(2),
-            unit_price: (0).toFixed(2),
-
-            total_value: (0).toFixed(2),
-            total_discount: (0).toFixed(2),
-            net_total_value: (0).toFixed(2),
-            total_igv: (0).toFixed(2),
-            total_price: (0).toFixed(2),
+        let linkages = me.linkages;
+        let validation = false;
+        for (let index = 0; index < linkages.length; index++) {
+          const element = linkages[index];
+          if (element.id_linkage == response.data.result.input.id_input && element.reason == 'Entrada') {
+            validation = true;
           }
-          me.mLoadAddShoppingDetail(detail);
+        }
+        if (!validation) {
+          let linkage = {
+            reason: 'Entrada',
+            id_linkage : response.data.result.input.id_input,
+            type_invoice : response.data.result.input.type_invoice,
+            serie : response.data.result.input.serie,
+            number : response.data.result.input.number,
+          }
+          
+          me.mLoadAddLinkages(linkage);
 
+          let input = {
+            provider: {id: response.data.result.input.id_provider, name: response.data.result.input.provider_name + " - "+ response.data.result.input.provider_document_number},
+            id_warehouse: response.data.result.input.id_warehouse
+          }
+          EventBus.$emit('CompletePurchase',input);
+          
+          let input_detail = response.data.result.input_detail;
+          for (let index = 0; index < input_detail.length; index++) {
+            const element = input_detail[index];
+            let detail = {
+              id_input_detail : element.id_input_detail,
+              id_product : element.id_product,
+              code : element.code,
+              name : element.name,
+              presentation : element.presentation,
+              unit_measure : element.unit_measure,
+              igv : element.igv,
+              quantity : parseFloat(element.balance).toFixed(2),
+              percentage_discount: (0).toFixed(2),
+              package: parseFloat(element.package).toFixed(0),
+
+              unit_value: (0).toFixed(2),
+              unit_discount: (0).toFixed(2),
+              net_unit_value: (0).toFixed(2),
+              unit_igv: (0).toFixed(2),
+              unit_price: (0).toFixed(2),
+
+              total_value: (0).toFixed(2),
+              total_discount: (0).toFixed(2),
+              net_total_value: (0).toFixed(2),
+              total_igv: (0).toFixed(2),
+              total_price: (0).toFixed(2),
+            }
+            me.mLoadAddShoppingDetail(detail);
+
+          }
         }
         
+        me.$notify({ group: 'alert', title: 'Sistema', text:'Se ha agregado la entrada', type: 'success'});
+
       } else {
         
       }

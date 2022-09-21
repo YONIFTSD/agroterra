@@ -7,64 +7,65 @@
             <strong> Modulo de Venta - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
-              <b-row>
-       
-                <b-col md="2">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
+              <b-row align-h="center">
+                <b-col sm="6" md="3" lg="2">
                   <b-form-group>
                     <b-form-select v-model="sale.id_warehouse" :options="warehouses"></b-form-select>
                     <small  v-if="errors.id_warehouse"  class="form-text text-danger">Seleccione un almacen</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="6" md="3" lg="2">
                   <b-form-group>
                     <b-form-select @change="ChangeCoin" v-model="sale.coin" :options="coins"></b-form-select>
                     <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
                   </b-form-group>
                 </b-col>
-                <b-col md="2">
+                <b-col sm="6" md="3" lg="2">
                   <b-form-group>
                     <b-button variant="warning" class="form-control"  @click="modalCurrecyConverterShow">Conversor de Divisas</b-button>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="4"></b-col>
-                <b-col md="2">
+         
+                <b-col sm="6" md="3" lg="2" offset-lg="4">
                   <b-form-group>
                     <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
              
+            </b-row>
+            <b-row>
 
-               <b-col md="3">
+               <b-col sm="12" md="4" lg="3">
                   <b-form-group label="Comprobante :">
                     <b-form-select disabled v-model="sale.type_invoice" :options="type_invoice"></b-form-select>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="6" md="4" lg="2">
                   <b-form-group label="Serie :">
                     <b-form-input class="text-center" disabled type="text" ref="serie"  v-model="sale.serie"></b-form-input>
                     <small v-if="errors.id_serie"  class="form-text text-danger" >Seleccione una serie</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="6" md="4" lg="2">
                   <b-form-group label="Numero :">
                     <b-form-input class="text-center" disabled type="text" ref="number"  v-model="sale.number"></b-form-input>
                     <small v-if="errors.number" class="form-text text-danger">Ingrese un numero de 8 digitos</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="6" md="6" lg="2">
                   <b-form-group label="Fecha Emision:">
                     <b-form-input disabled class="text-center" type="date" ref="broadcast_date" v-model="sale.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="3">
+                <b-col sm="6" md="6" lg="3">
                   <b-form-group>
                     <label class="control-label">Forma de Pago: <span v-if="disabled_fees_collected" class="badge badge-primary link" @click="ModalFeedCollected">Cuotas</span></label>
                     <b-form-select @change="BntFeesCollected" v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
@@ -73,7 +74,7 @@
 
                
                 
-                <b-col md="6">
+                <b-col sm="12" md="12" lg="6">
                   <b-form-group>
                     <label>Cliente: <span @click="modalClients" class="text-info link">Nuevo</span></label>
                     <v-select @input="AddressClient" placeholder="Seleccione un cliente" class="w-100" :filterable="false" label="full_name" v-model="client" @search="SearchClients" :options="clients"></v-select>
@@ -81,21 +82,21 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col  v-if="type_business == 1 || type_business == 2" md="6">
+                <b-col  v-if="type_business == 1 || type_business == 2 || type_business == 4" sm="12" md="12" lg="6">
                   <b-form-group label="Dirección :">
                     <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col  v-if="type_business == 3" md="4">
+                <b-col  v-if="type_business == 3" sm="12" md="6" lg="4">
                   <b-form-group label="Dirección :">
                     <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col  v-if="type_business == 3" md="2">
+                <b-col  v-if="type_business == 3" sm="12" md="6" lg="2">
                   <b-form-group label="Placa:">
                     <b-form-input type="text" v-model="sale.license_plate"></b-form-input>
                   </b-form-group>
@@ -119,57 +120,101 @@
                 <!-- Detalle venta -->
 
                 <b-col md="12" class="mt-2"></b-col>
-
-                <b-col md="6">
-                  <b-form-group class="m-0" >
-                    <b-form-input readonly v-model="total_sale.number_to_letters" ></b-form-input>
+                <b-col md="3">
+                  <b-form-group label="Observación:">
+                    <b-form-textarea v-model="sale.observation"></b-form-textarea>
                   </b-form-group>
-                  <b-row>
-                    
-                    <b-col md="7">
-                        <div class="table-responsive mt-3">
-                          <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
-                            <thead>
-                              <tr>
-                                <th width="25%" class="text-center">Fecha</th>
-                                <th width="75%" class="text-center">Refenrencia</th>
-                              </tr>
-                            </thead>
-                            <tbody v-for="(item, it) in sale.linkages" :key="it">
-                              <tr>
-                                  <td class="align-middle text-center">{{ item.broadcast_date }}</td>
-                                  <td class="align-middle text-center">{{ item.reference }}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                    </b-col>
-                    <b-col md="5" class="mt-2">
-                      <b-form-group label="Observación:">
-                        <b-form-textarea v-model="sale.observation"></b-form-textarea>
-                      </b-form-group>
-                    </b-col>
-                  </b-row>
-                  
-                
+
+                  <div class="table-responsive mt-3">
+                    <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                      <thead>
+                        <tr>
+                          <th width="25%" class="text-center">Fecha</th>
+                          <th width="75%" class="text-center">Refenrencia</th>
+                        </tr>
+                      </thead>
+                      <tbody v-for="(item, it) in sale.linkages" :key="it">
+                        <tr>
+                            <td class="align-middle text-center">{{ item.broadcast_date }}</td>
+                            <td class="align-middle text-center">{{ item.reference }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
                 </b-col>
 
                 <b-col md="2">
+                  <b-row>
+                      <div class="table-responsive">
+                        <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                          <tbody >
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_detraction" switch size="sm" name="check-button" >¿Tiene Detracción?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_retention" switch size="sm" name="check-button" >¿Tiene retención de igv?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_discount" switch size="sm" name="check-button" >¿Tiene Descuento Global?</b-form-checkbox>
+                                </td>
+                            </tr> -->
+                          </tbody>
+                        </table>
+                      </div>
+           
+     
+                    
+                  </b-row>
+                </b-col>
 
+                <b-col md="3">
                   <div class="table-responsive">
                     <table  class="table   table-hover table-lg mt-lg mb-0">
                       <tbody>
-                        <tr>
-                            <td width="40%" class="align-middle text-right text-total">SUBTOTAL:</td>
-                            <td width="60%" class="align-middle text-right text-total">{{ total_sale.subtotal }}</td>
+                        <tr v-if="total_sale.check_detraction == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Detracción :</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <div class="input-group">
+                                <b-form-input size="sm" @change="mLoadTotalSaleDetail" type="number" step="any" class="text-right" v-model="total_sale.percentage_detraction"></b-form-input>
+                                <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.detraction"></b-form-input>
+                              </div>
+                            </td>
+                        </tr>
+                        <tr v-if="total_sale.check_retention == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Retencion (3%):</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.retention"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-right text-total">IGV:</td>
-                            <td class="align-middle text-right text-total">{{ total_sale.igv }}</td>
+                            <td width="50%" class="align-middle text-right text-total">Subtotal:</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.subtotal"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr v-if="total_sale.check_discount == '1'">
+                            <td class="align-middle text-right text-total">Descuento:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input size="sm" type="number" step="any" class="text-right" v-model="total_sale.discount"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-right text-total">TOTAL:</td>
-                            <td class="align-middle text-right text-total">{{ total_sale.total }}</td>
+                            <td class="align-middle text-right text-total">IGV ({{sale.igv_percentage}}%):</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.igv"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">Total:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.total"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="2" class="align-middle text-center"><small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small></td>
@@ -212,17 +257,56 @@
                 </b-col>
 
               
+                <b-col md="12"><br></b-col>
+                <b-col v-if="type_business == 4" md="12">
+                  <b-row>
+                      <b-col md="2">
+                        <b-form-group label="Código SAP:">
+                          <b-form-input type="text" v-model="sale.code_sap"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label="Pedido SAP:">
+                          <b-form-input type="text" v-model="sale.order_sap"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label="Servicio:">
+                          <b-form-input type="text" v-model="sale.service"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2"></b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="DataPrint(sale.id_sale)" class="form-control" variant="warning" >IMPRIMIR</b-button>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="Validate" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
+                        </b-form-group>
+                      </b-col>
+                  </b-row>
+                </b-col>
+                <b-col v-if="type_business != 4" md="12">
+                  <b-row>
+                      <b-col md="4"></b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="DataPrint(sale.id_sale)" class="form-control" variant="warning" >IMPRIMIR</b-button>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="Validate" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
+                        </b-form-group>
+                      </b-col>
+                  </b-row>
+                </b-col>
 
-                <b-col md="4"></b-col>
-                <b-col md="2">
-                  <b-button  type="button" @click="DataPrint(sale.id_sale)" class="form-control" variant="warning" >IMPRIMIR</b-button>
-                </b-col>
-                <!-- <b-col md="2">
-                  <b-button type="button" :disabled="sale.state == 6" @click="showModalSaleLow" class="form-control" variant="danger" >DAR DE BAJA</b-button>
-                </b-col> -->
-                <b-col md="2">
-                  <b-button  type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
-                </b-col>
+
+
+               
               </b-row>
             </b-form>
           </CCardBody>
@@ -326,7 +410,7 @@ export default {
     return {
       isLoading:false,
       module: 'Sale',
-      role: 2,
+      role: 3,
       sale: {
         id_sale: "",
         id_client: "",
@@ -343,6 +427,12 @@ export default {
         web_pay: 0,
         coin: "PEN",
         address: "",
+        code_sap: '',
+        order_sap: '',
+        service: '',
+        check_contingency: "0",
+        check_retention: "0",
+        check_discount: "0",
         way_to_pay: "01-000",
         payment_type: "01",
         payment_method: "008",
@@ -368,6 +458,7 @@ export default {
         state: '1',
         number_to_letters: '',
         fees_collected:[],
+        igv_percentage:'',
       },
       sale_low: {
         id_sale_low : '',
@@ -394,6 +485,7 @@ export default {
         {value: "07", text : "Nota de Crédito"},
         {value: "08", text : "Nota de Dédito"},
         {value: "NV", text : "Nota de Venta"},
+        {value: "GC", text : "Guia de Crédito"},
       ],
       coins:[
         {value: "PEN", text : "Soles"},
@@ -401,13 +493,16 @@ export default {
       ],
       way_to_pay:[
         {value:"01-000", text :'Contado'},
+        {value:"01-999", text :'Contado - Anticipo'},
         {value:'03-7',text:'Credito - 7 Dias'},
         {value:'03-15',text:'Credito - 15 Dias'},
         {value:'03-30',text:'Credito - 30 Dias'},
         {value:'03-45',text:'Credito - 45 Dias'},
         {value:'03-60',text:'Credito - 60 Dias'},
         {value:'03-75',text:'Credito - 75 Dias'},
-        {value:'03-90',text:'Credito - 75 Dias'},
+        {value:'03-90',text:'Credito - 90 Dias'},
+        {value:'03-105',text:'Credito - 105 Dias'},
+        {value:'03-120',text:'Credito - 120 Dias'},
       ],
 
        payment_method: [
@@ -420,6 +515,8 @@ export default {
           {value :"008", text :'EFECTIVO'},
           {value :"101", text :'TRANSFERENCIAS - COMERCIO EXTERIOR'},
           {value :"102", text :'CHEQUES BANCARIOS  - COMERCIO EXTERIOR'},
+          {value :"333", text :'RETENCIÓN'},
+          {value :"444", text :'DETRACCIÓN'},
           {value :"000", text :'PAGO POR WEB'},
       ],
   
@@ -449,22 +546,27 @@ export default {
     this.ViewSale();
  
      EventBus.$on('TotalPaymentCash', () => {
-      let total = this.total_sale.total;
-      let payment_method = this.sale.way_to_pay.split("-");
-      if (payment_method[0] == "01") {
-        if (this.payment_cash.length == 0) {
-          this.payment_cash.push(
-            {id_charge:'', payment_method:'008', document:'', total: parseFloat(total).toFixed(2)}
-          )
-        }else{
-          let total_payment = parseFloat(total) / parseFloat(this.payment_cash.length);
-          for (let index = 0; index < this.payment_cash.length; index++) {
-            this.payment_cash[index].total = parseFloat(total_payment).toFixed(2);
-          }
-        
-        }
-      }else{
+
+      if (this.sale.way_to_pay == "01-999") {
         this.payment_cash = [];
+      }else{
+        let total = this.total_sale.total;
+        let payment_method = this.sale.way_to_pay.split("-");
+        if (payment_method[0] == "01") {
+          if (this.payment_cash.length == 0) {
+            this.payment_cash.push(
+              {id_charge:'', payment_method:'008', document:'', total: parseFloat(total).toFixed(2)}
+            )
+          }else{
+            let total_payment = parseFloat(total) / parseFloat(this.payment_cash.length);
+            for (let index = 0; index < this.payment_cash.length; index++) {
+              this.payment_cash[index].total = parseFloat(total_payment).toFixed(2);
+            }
+          
+          }
+        }else{
+          this.payment_cash = [];
+        }
       }
       
     });
@@ -504,7 +606,8 @@ export default {
 
     modalCurrecyConverterShow,
     ChangeCoin,
-    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadAddSaleDetail','mLoadEditCoin']),
+    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadAddSaleDetail','mLoadEditCoin','mLoadTotalSaleDetail',
+    'mLoadEditCheck','mLoadIgvPercentage']),
   },
 
   computed: {
@@ -705,7 +808,9 @@ function ViewSale() {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-      
+        me.sale.igv_percentage = response.data.result.igv_percentage;
+        me.mLoadIgvPercentage(response.data.result.igv_percentage);
+
         me.client = {id: response.data.result.id_client,full_name: response.data.result.name + ' - ' + response.data.result.document_number};
         me.mLoadEditCoin(response.data.result.coin);
         me.sale.id_sale = response.data.result.id_sale,
@@ -733,6 +838,11 @@ function ViewSale() {
         me.sale.payment_deadline = response.data.result.payment_deadline;
         me.sale.observation = response.data.result.observation;
         me.sale.license_plate = response.data.result.license_plate;
+        me.sale.state = response.data.result.state;
+        me.sale.code_sap = response.data.result.code_sap;
+        me.sale.order_sap = response.data.result.order_sap;
+        me.sale.service = response.data.result.service;
+        
         me.sale.modified_document_type = response.data.result.modified_document_type;
         me.sale.modified_serie = response.data.result.modified_serie;
         me.sale.modified_number = response.data.result.modified_number;
@@ -752,8 +862,21 @@ function ViewSale() {
         me.sale.state = response.data.result.state;
         me.sale.number_to_letters = response.data.result.number_to_letters;
         me.sale.fees_collected = response.data.result.fees_collected;
+
+        
+
         me.payment_cash = response.data.charges;
-       
+        let data = {
+          check_contingency: response.data.result.check_contingency,
+          check_detraction: response.data.result.check_detraction,
+          check_retention: response.data.result.check_retention,
+          check_discount: response.data.result.check_discount,
+          percentage_detraction: response.data.result.percentage_detraction,
+        }
+        me.mLoadEditCheck(data);
+        
+
+        
         let detail_result = response.data.detail_result;
         for (let index = 0; index < detail_result.length; index++) {
           const element = detail_result[index];
@@ -789,13 +912,21 @@ function EditSale(_this) {
   let url = me.url_base + "sale/edit";
   me.sale.id_user = me.user.id_user;
   me.sale.id_client = me.client.id;
+  me.sale.check_contingency = me.total_sale.check_contingency;
+  me.sale.check_detraction = me.total_sale.check_detraction;
+  me.sale.check_retention = me.total_sale.check_retention;
+  me.sale.check_discount = me.total_sale.check_discount;
   me.sale.taxed_operation = me.total_sale.taxed_operation;
   me.sale.unaffected_operation = me.total_sale.unaffected_operation;
   me.sale.exonerated_operation = me.total_sale.exonerated_operation;
+    me.sale.percentage_detraction = me.total_sale.percentage_detraction;
+  me.sale.detraction = me.total_sale.detraction;
+  me.sale.retention = me.total_sale.retention;
   me.sale.discount = me.total_sale.discount;
   me.sale.subtotal = me.total_sale.subtotal;
   me.sale.igv = me.total_sale.igv;
   me.sale.total = me.total_sale.total;
+  me.sale.net_total = me.total_sale.net_total;
   me.sale.number_to_letters = me.total_sale.number_to_letters;
   me.sale.sale_detail = me.sale_detail;
   me.sale.payment_cash = me.payment_cash;
@@ -849,56 +980,59 @@ function Validate() {
   
   
   let total = 0;
-  let payment_method = this.sale.way_to_pay.split("-");
-  if (payment_method[0] == "01") {
-    this.sale.fees_collected = [];
-    for (let index = 0; index < this.payment_cash.length; index++) {
-      const element = this.payment_cash[index];
-      if (element.payment_method == "") {
-        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos cuenten con un metodo de pago', timer: 2000,}); return false;
-      }
-  
-      if (element.total.length == 0) {
-        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
-      }
-      if (parseFloat(element.total) <= 0) {
-        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
-      }
-      total += parseFloat(element.total);
-    }
-    let balance_payment_cash = parseFloat(this.total_sale.total) - parseFloat(total);
-    if (balance_payment_cash < -0.15 || balance_payment_cash > 0.15) {
-      this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos coincidan con el total del comprobante', timer: 4000,}); 
-      return false;
-    }
-  }else{
-    this.payment_cash = [];
-    if (this.sale.fees_collected.length > 0) {
-      for (let index = 0; index < this.sale.fees_collected.length; index++) {
-        const element = this.sale.fees_collected[index];
-        if (element.date == "") {
-          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas cuenten con un fecha', timer: 2000,}); return false;
+
+
+
+
+  if (this.sale.way_to_pay != "01-999") {
+      let payment_method = this.sale.way_to_pay.split("-");
+      if (payment_method[0] == "01") {
+        this.sale.fees_collected = [];
+        for (let index = 0; index < this.payment_cash.length; index++) {
+          const element = this.payment_cash[index];
+          if (element.payment_method == "") {
+            this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos cuenten con un metodo de pago', timer: 2000,}); return false;
+          }
+      
+          if (element.total.length == 0) {
+            this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
+          }
+          if (parseFloat(element.total) <= 0) {
+            this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
+          }
+          total += parseFloat(element.total);
         }
-        if (element.total.length == 0) {
-          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas sean mayores a 0', timer: 2000,}); return false;
+        let balance_payment_cash = parseFloat(this.total_sale.total) - parseFloat(total);
+        if (balance_payment_cash < -0.15 || balance_payment_cash > 0.15) {
+          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos coincidan con el total del comprobante', timer: 4000,}); 
+          return false;
         }
-        if (parseFloat(element.total) <= 0) {
-          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas  sean mayores a 0', timer: 2000,}); return false;
+      }else{
+        this.payment_cash = [];
+        if (this.sale.fees_collected.length > 0) {
+          for (let index = 0; index < this.sale.fees_collected.length; index++) {
+            const element = this.sale.fees_collected[index];
+            if (element.date == "") {
+              this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas cuenten con un fecha', timer: 2000,}); return false;
+            }
+            if (element.total.length == 0) {
+              this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas sean mayores a 0', timer: 2000,}); return false;
+            }
+            if (parseFloat(element.total) <= 0) {
+              this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas  sean mayores a 0', timer: 2000,}); return false;
+            }
+            total += parseFloat(element.total);
+          }
+          let balance_fee_collection = parseFloat(this.total_sale.net_total) - parseFloat(total);
+          console.log(balance_fee_collection)
+          if (balance_fee_collection < -0.15 || balance_fee_collection > 0.15) {
+            this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas coincidan con el total del comprobante', timer: 4000,}); 
+            return false;
+          }
         }
-        total += parseFloat(element.total);
+        
       }
-      let balance_fee_collection = parseFloat(this.total_sale.total) - parseFloat(total);
-      console.log(balance_fee_collection)
-      if (balance_fee_collection < -0.15 || balance_fee_collection > 0.15) {
-        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas coincidan con el total del comprobante', timer: 4000,}); 
-        return false;
-      }
-    }
-    
   }
-  
-
-
 
 
   let me = this;

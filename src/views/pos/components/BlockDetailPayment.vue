@@ -42,7 +42,7 @@
                       <td width="60%" class="align-middle text-right text-total pr-1">{{ total_pos.subtotal }}</td>
                   </tr>
                   <tr>
-                      <td class="align-middle text-right text-total">IGV: {{ sale.coin == "PEN" ? "S/":"$"}}</td>
+                      <td class="align-middle text-right text-total">IGV ({{igv_percentage}}%): {{ sale.coin == "PEN" ? "S/":"$"}}</td>
                       <td class="align-middle text-right text-total pr-1">{{ total_pos.igv }}</td>
                   </tr>
                   <tr>
@@ -107,6 +107,7 @@ export default {
       size_pos: '--size-pos: 370px',
       role: 2,
       coin:'PEN',
+      igv_percentage:'',
       coins:[
         {value: "PEN", text : "Soles"},
         {value: "USD", text : "Dolares"},
@@ -122,8 +123,13 @@ export default {
     };
   },
   mounted () {
+    EventBus.$on('GetDataClient', (data) => {
+      this.client = {id:data.id_client,full_name:data.name+" - "+data.document_number};
+      this.ChangeClient();
+    });
     this.client = this.mclient;
     this.ViewEstablishment();
+    this.GetInformationSale();
   },
   methods: {
     SearchClients,
@@ -132,8 +138,10 @@ export default {
     DeleteDetail,
     ChangeClient,
     ViewEstablishment,
+    AddressClient,
+    GetInformationSale,
   
-    ...mapActions('SalePOS',['mLoadEditPOSDetail','mLoadDeletePOSDetail','mLoadEditClient']),
+    ...mapActions('SalePOS',['mLoadEditPOSDetail','mLoadDeletePOSDetail','mLoadEditClient','mLoadEditClientAddress']),
       
   },
   computed: {
@@ -151,6 +159,24 @@ export default {
     }
   },
 };
+
+function GetInformationSale() {
+  
+  let me = this;
+  let url = this.url_base + "get-information-sale";
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: this.role, },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.igv_percentage = response.data.result.igv_percentage;;
+      } 
+    })
+}
+
+
 function ViewEstablishment() {
   let me = this;
   let url = me.url_base + "establishment/view/" + this.id_establishment;
@@ -184,7 +210,29 @@ function SearchClients(search, loading) {
 }
 function ChangeClient() {
   this.mLoadEditClient(this.client);
+  this.AddressClient();
 }
+function AddressClient() {
+
+  let me = this;
+  if (this.client == null) {
+    me.mLoadEditClientAddress('');
+    return false;
+  }
+  
+  let url = this.url_base + "client/view/"+this.client.id;
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: this.role, },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.mLoadEditClientAddress(response.data.result.address);
+      } 
+    })
+}
+
 function modalClients() {
   EventBus.$emit('ModalClientsShow');
 }

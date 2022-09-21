@@ -597,6 +597,12 @@ function configRoutes() {
           beforeEnter: userGuard,
         },
         {
+          path: "canjear/:id_quotation",
+          name: "SaleTrade",
+          component: () => import("@/views/sale/Trade"),
+          props: true,
+        },
+        {
           path: "editar/:id_sale",
           name: "SaleEdit",
           component: () => import("@/views/sale/Edit"),
@@ -631,6 +637,41 @@ function configRoutes() {
           component: () => import("@/views/pos/Add"),
           beforeEnter: userGuard,
         }
+      ],
+    },
+
+    {
+      path: "/cotizacion",
+      redirect: "/cotizacion/listar",
+      name: "Quotation",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "QuotationList",
+          component: () => import("@/views/quotation/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "QuotationAdd",
+          component: () => import("@/views/quotation/Add"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "editar/:id_quotation",
+          name: "QuotationEdit",
+          component: () => import("@/views/quotation/Edit"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ver/:id_quotation",
+          name: "QuotationView",
+          component: () => import("@/views/quotation/View"),
+          props: true,
+          beforeEnter: userGuard,
+        },
       ],
     },
 
@@ -1192,6 +1233,12 @@ function configRoutes() {
           beforeEnter: userGuard,
         },
         {
+          path: "stock",
+          name: "StockList",
+          component: () => import("@/views/kardex/Stock"),
+          beforeEnter: userGuard,
+        },
+        {
           path: "stock-general",
           name: "StockGeneralList",
           component: () => import("@/views/kardex/StockGeneral"),
@@ -1388,6 +1435,28 @@ function configRoutes() {
     },
 
 
+    {
+      path: "/servicio-factoring",
+      redirect: "/servicio-factoring/listar",
+      name: "Factoring",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "FactoringList",
+          component: () => import("@/views/factoring/List"),
+          beforeEnter: userGuard,
+        },
+        {
+          path: "nuevo",
+          name: "FactoringAdd",
+          component: () => import("@/views/factoring/Add"),
+          beforeEnter: userGuard,
+        },
+      ],
+    },
+
+
 
 
 
@@ -1459,10 +1528,88 @@ function configRoutes() {
           props: true,
           beforeEnter: userGuard,
         },
+        {
+          path: "seguimiento-de-ventas",
+          name: "ReportSalesTrackingList",
+          component: () => import("@/views/report/SalesTracking"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "seguimiento-de-compras",
+          name: "ReportShoppingTrackingList",
+          component: () => import("@/views/report/ShoppingTracking"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ventas-segun-precio",
+          name: "ReportSalesPriceList",
+          component: () => import("@/views/report/SalesPrice"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "cuentas-por-cobrar",
+          name: "ReportReceivableList",
+          component: () => import("@/views/report/Receivable"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "cuentas-por-pagar",
+          name: "ReportPayList",
+          component: () => import("@/views/report/Pay"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "programaciones",
+          name: "ReportProgramList",
+          component: () => import("@/views/report/Program"),
+          props: true,
+          beforeEnter: userGuard,
+        },
+        {
+          path: "ventas-eliminadas",
+          name: "ReportSaleDeleteList",
+          component: () => import("@/views/report/SaleDelete"),
+          props: true,
+          beforeEnter: userGuard,
+        },
       ],
     },
 
-
+    {
+      path: "/orden-de-compra",
+      redirect: "/orden-de-compra/listar",
+      name: "PurchaseOrder",
+      component: TheContainer,
+      children: [
+        {
+          path: "listar",
+          name: "PurchaseOrderList",
+          component: () => import("@/views/purchase-order/List"),
+        },
+        {
+          path: "nuevo",
+          name: "PurchaseOrderAdd",
+          component: () => import("@/views/purchase-order/Add"),
+        },
+        {
+          path: "editar/:id_purchase_order",
+          name: "PurchaseOrderEdit",
+          component: () => import("@/views/purchase-order/Edit"),
+          props: true,
+        },
+        {
+          path: "ver/:id_purchase_order",
+          name: "PurchaseOrderView",
+          component: () => import("@/views/purchase-order/View"),
+          props: true,
+        },
+      ],
+    },
 
 
     {

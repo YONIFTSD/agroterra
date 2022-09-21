@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal size="xl" hide-footer v-model="modalDrives" class="w-100" title="Conductores">
-      <b-form id="Form" @submit.prevent="Validate">
+      <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
         <b-row>
          <b-col md="3">
             <b-form-group label="Tipo de Documento :">

@@ -36,7 +36,9 @@
                           <b-badge v-if="item.state == 6" variant="danger">Anulado</b-badge>
                     </td>
                     <td class="text-center">
+                      <b-button v-if="item.state == 0" type="button" @click="GenerateXML(item.id_sale)" variant="primary" size="sm"><i class="fas fa-file-import"></i></b-button>
                       <b-button type="button" @click="SendXMLSale(item.id_sale)" variant="primary" size="sm"><i class="fas fa-file-import"></i></b-button>
+                      
                     </td>
                   </tr>
                 </tbody>
@@ -145,6 +147,51 @@
               </b-col>
             </b-row>
         </b-tab>
+        <b-tab title="Guia de Remisión">
+          <div class="table-responsive mt-3">
+              <table class="table table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th width="5%" class="text-center">#</th>
+                    <th width="9%" class="text-center">Fecha</th>
+                    <th width="15%" class="text-center">Comprobante</th>
+                    <th width="40%" class="text-center">Cliente</th>
+                    <th width="8%" class="text-center">Estado</th>
+                    <th width="8%" class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody v-for="(item, it) in referral_guide" :key="it">
+                  <tr v-b-popover.hover.top="item.sunat_message" :title="'CPE SUNAT ' + CodeInvoice(item.type_invoice) + ' '+item.serie + '-'+item.number">
+                    <td class="text-center">{{ it + 1 }}</td>
+                    <td class="text-center"> {{ item.broadcast_date  }}</td>
+                    <td class="text-center"> {{ CodeInvoice(item.type_invoice) + ' '+item.serie + '-'+item.number }}</td>
+                    <td class="text-left"> {{ item.name + ' - '+item.document_number  }}</td>
+                    <td class="text-center">
+                          <b-badge v-if="item.state == 0" variant="danger">XML</b-badge>
+                          <b-badge v-if="item.state == 1" variant="warning">Girado</b-badge>
+                          <b-badge v-if="item.state == 2" variant="success">Canjeado</b-badge>
+                          <b-badge v-if="item.state == 3" variant="info">Emitido</b-badge>
+                          <b-badge v-if="item.state == 4" variant="success">Aceptado</b-badge>
+                          <b-badge v-if="item.state == 5" variant="danger">Rechazado</b-badge>
+                          <b-badge v-if="item.state == 6" variant="danger">Anulado</b-badge>
+                    </td>
+                    <td class="text-center">
+                      <b-button type="button" @click="SendXMLReferralGuide(item.id_referral_guide)" variant="primary" size="sm"><i class="fas fa-file-import"></i></b-button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <b-row class="mt-1">
+              <b-col md="8">
+                <b-pagination v-model="currentPage_referral_guide" v-on:input="ListObservedReferralGuide"  :total-rows="rows_referral_guide"  :per-page="perPage_referral_guide"  align="center"></b-pagination>
+              </b-col>
+              <b-col md="4 text-center">
+                <p>Pagina Actual: {{ currentPage_referral_guide }}</p>
+              </b-col>
+            </b-row>
+        </b-tab>
       </b-tabs>
 
     </b-modal>
@@ -199,6 +246,12 @@ export default {
       rows_sale_low: 0,
       sales_low: [],
 
+
+      perPage_referral_guide: 10,
+      currentPage_referral_guide: 1,
+      rows_referral_guide: 0,
+      referral_guide: [],
+
       
 
       cpe:{
@@ -219,17 +272,20 @@ export default {
       this.ListObservedSale();
       this.ListObservedRedeemedSale();
       this.ListObservedSaleLow();
-
+      this.ListObservedReferralGuide();
     });
   },
   methods: {
     ListObservedSale,
     ListObservedRedeemedSale,
     ListObservedSaleLow,
+    ListObservedReferralGuide,
      CodeInvoice,
      SendXMLSale,
      SendXMLRedeemedSale,
-     SendXMLSaleLow
+     SendXMLSaleLow,
+     SendXMLReferralGuide,
+     GenerateXML,
      
   },
   computed: {
@@ -260,7 +316,7 @@ function ListObservedSale() {
       })
 }
 function ListObservedRedeemedSale() {
-      let url = this.url_base + "home/list-observed-redeemed-sale?page=" + this.currentPage_sale;;
+      let url = this.url_base + "home/list-observed-redeemed-sale?page=" + this.currentPage_redeemed_sale;;
       let me = this;
       axios({
           method: "GET",
@@ -287,6 +343,21 @@ function ListObservedSaleLow() {
       })
       this.isLoading = false;
 }
+
+function ListObservedReferralGuide() {
+      let url = this.url_base + "home/list-observed-referral-guide?page=" + this.currentPage_referral_guide;;
+      let me = this;
+      axios({
+          method: "GET",
+          url: url,
+      }).then(function (response) {
+            if (response.data.status == 200) {
+            me.rows_referral_guide = response.data.result.total;
+            me.referral_guide = response.data.result.data;
+          } 
+      })
+}
+
 
 function SendXMLSale(id_sale) {
   this.isLoading = true;
@@ -323,6 +394,29 @@ function SendXMLSale(id_sale) {
     })
 }
 
+function GenerateXML(id_sale) {
+  this.isLoading = true;
+  let me = this;
+  let url = this.url_base + "home/regenerate-xml/" + id_sale;
+  axios({
+    method: "get",
+    url: url,
+    headers: { token: this.token, module: this.module,role: 1 },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        for (var i = 0; i < me.sales.length; i++) {
+          if (me.sales[i].id_sale == id_sale) {
+            me.sales[i].state = response.data.result.state;
+            break;
+          }
+        }
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      }
+      me.isLoading = false;
+    })
+}
 
 function SendXMLRedeemedSale(id_redeemed_sale) {
   this.isLoading = true;
@@ -385,6 +479,42 @@ function SendXMLSaleLow(id_sale_low) {
           Swal.fire({ icon: 'success', text: 'El comprobante, ha sido aceptado', timer: 3000,})
         }else if(response.data.result.state == 4){
           Swal.fire({ icon: 'error', text: response.data.result.sunat_message, timer: 3000,})
+        }
+        
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      }
+      me.isLoading = false;
+    })
+}
+
+
+function SendXMLReferralGuide(id_referral_guide) {
+  this.isLoading = true;
+  let me = this;
+  let url = this.url_base + "home/send-xml-referral-guide/" + id_referral_guide;
+  axios({
+    method: "get",
+    url: url,
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        for (var i = 0; i < me.referral_guide.length; i++) {
+          if (me.referral_guide[i].id_referral_guide == id_referral_guide) {
+            me.referral_guide[i].state = response.data.result.state;
+            break;
+          }
+        }
+        if (response.data.result.state == 4) {
+          for (var i = 0; i < me.referral_guide.length; i++) {
+            if (me.referral_guide[i].id_referral_guide == id_referral_guide) {
+              me.referral_guide.splice(i, 1);
+              break;
+            }
+          }
+          Swal.fire({ icon: 'success', text: 'El comprobante, ha sido aceptado', timer: 3000,})
+        }else if(response.data.result.state == 5){
+          Swal.fire({ icon: 'error', text:'El comprobante, fue rechazado', timer: 3000,})
         }
         
       } else {

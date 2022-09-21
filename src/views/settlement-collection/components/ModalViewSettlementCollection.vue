@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal size="lg" hide-footer v-model="modal_settlement_collection" class="w-100" title="DETALLE LIQUIDACION DE COBRO">
-      <b-form id="Form">
+      <b-form id="Form" autocomplete="off">
               <b-row>
 
                 <b-col md="10">

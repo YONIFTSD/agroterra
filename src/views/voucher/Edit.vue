@@ -7,7 +7,7 @@
             <strong> Modulo de Comprobante - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="EditVoucher">
+            <b-form id="Form" autocomplete="off" @submit.prevent="EditVoucher">
               <b-row>
                 
        

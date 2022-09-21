@@ -7,7 +7,7 @@
             <strong> Modulo Compras - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="6">
@@ -87,7 +87,8 @@
 
                 <b-col md="3">
                   <b-form-group label="Almacen :">
-                    <b-form-select ref="id_warehouse" :disabled="linkages.length > 0" v-model="shopping.id_warehouse" :options="warehouse"></b-form-select>
+                    <b-form-select ref="id_warehouse" v-if="linkages.length > 0" :disabled="linkages.length > 0" v-model="shopping.id_warehouse" :options="warehouse_all"></b-form-select>
+                    <b-form-select ref="id_warehouse" v-if="linkages.length == 0" :disabled="linkages.length > 0" v-model="shopping.id_warehouse" :options="warehouse"></b-form-select>
                     <small v-if="errors.id_warehouse" class="form-text text-danger">Seleccione un almacen</small>
                   </b-form-group>
                 </b-col>
@@ -122,7 +123,7 @@
 
                 <b-col md="8">
                   <b-row>
-                     <b-col md="8">
+                     <b-col md="5">
                        <div class="table-responsive mt-3">
                         <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                           <thead >
@@ -138,7 +139,7 @@
                               <td class="text-center">{{ CodeInvoice(item.type_invoice) + " " + item.serie + " " + item.number  }}</td>
                     
                               <td class="text-center">
-                                <button type="button" @click="mLoadDeleteLinkages(it)" class="btn btn-danger">
+                                <button type="button" @click="mLoadDeleteLinkages(it),SelectWarehouse()" class="btn btn-danger">
                                   <i class="fas fa-trash-alt"></i>
                                 </button>
                               </td>
@@ -281,6 +282,7 @@ export default {
       provider:null,
 
       warehouse:[],
+      warehouse_all:[],
 
       operations_type:[
         {value :"02", text :"Compra Nacional"},
@@ -309,6 +311,7 @@ export default {
         {value: "52", text : "Despacho Simplificado - Importación Simplificada"},
         {value: "91", text : "Comprobante de No Domiciliado"},
         {value: "NE", text : "Nota de Entrada"},
+        {value: "NV", text : "Nota de Venta"},
         {value: "00", text : "Otros"},
       ],
 
@@ -332,6 +335,8 @@ export default {
         {value:"03-60",text:'Crédito - 60 dias'},
         {value:"03-75",text:'Crédito - 75 dias'},
         {value:"03-90",text:'Crédito - 90 dias'},
+        {value:"03-105",text:'Crédito - 105 dias'},
+        {value:"03-120",text:'Crédito - 120 dias'},
       ],
 
       affection_for_detraction: [
@@ -363,6 +368,9 @@ export default {
     };
   },
   mounted() {
+    EventBus.$on('GetDataProvider', (data) => {
+      this.provider = {id:data.id_provider,name:data.name+" - "+data.document_number};
+    });
     EventBus.$on('RefreshGetExchangeRateByDate', () => {
       this.GetExchangeRateByDate();
     });
@@ -391,7 +399,7 @@ export default {
     CodeInvoice,
     ChangeUnitValue,
     ChangeExpensesValue, 
-    
+    SelectWarehouse,
     
 
     GetExchangeRateByDate,
@@ -419,6 +427,12 @@ export default {
     }
   },
 };
+
+function SelectWarehouse() {
+  if (this.linkages.length == 0) {
+    this.shopping.id_warehouse = '';
+  }
+}
 
 function ChangeUnitValue() {
   this.mLoadUnitValue(this.shopping.unit_value);
@@ -458,7 +472,10 @@ function modalProviders() {
 }
 
 function modalExachangeRate() {
-  EventBus.$emit('ModalExchangeRateShow');
+  let data = {
+    date : this.shopping.broadcast_date
+  }
+  EventBus.$emit('ModalExchangeRateShow',data);
 }
 
 function modalInputShow() {
@@ -477,7 +494,7 @@ function UpperCase() {
 }
 
 function ListWarehouse() {
-   
+  
   let me = this;
   let url = this.url_base + "active-warehouses/"+this.id_establishment;
   axios({
@@ -491,6 +508,27 @@ function ListWarehouse() {
         for (let index = 0; index < response.data.result.length; index++) {
           const element = response.data.result[index];
           me.warehouse.push({value: element.id_warehouse, text: element.name});
+        }
+        
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      }
+    })
+
+
+
+  url = this.url_base + "active-warehouses-all";
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: this.role,},
+  })
+    .then(function (response) {
+      me.warehouse_all.push({value: '', text: '-- Seleccione un almacen --'});
+      if (response.data.status == 200) {
+        for (let index = 0; index < response.data.result.length; index++) {
+          const element = response.data.result[index];
+          me.warehouse_all.push({value: element.id_warehouse, text: element.name});
         }
         
       } else {
@@ -545,7 +583,7 @@ function AddShopping(mthis) {
             me.shopping.payment_type = '01';
             me.shopping.payment_method = '008';
             me.shopping.payment_deadline = '';
-            me.shopping.affection_for_detraction = '';
+            me.shopping.affection_for_detraction = '0';
             me.shopping.unit_value = '0';
             me.shopping.observation = '';
             me.shopping.expenses =  (0).toFixed(2);

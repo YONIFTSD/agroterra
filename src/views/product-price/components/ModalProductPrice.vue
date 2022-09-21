@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal size="xl" hide-footer v-model="modalProducts" class="w-100" title="Determinación de Precios">
-      <b-form id="Form" @submit.prevent="Validate">
+      <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
       <b-row>
         <b-col md="3">
           <b-form-group label="Código :">
@@ -24,7 +24,7 @@
 
       <b-row>
         <b-col md="3">
-          <b-form-group label="Costo :">
+          <b-form-group label="Costo Inc. IGV :">
             <b-form-input @change="CalculatePriceCost" type="number" step="any" class="text-right" v-model="product_price.purchase_price"></b-form-input>
             <small v-if="errors.purchase_price"  class="form-text text-danger" >Ingrese una costo</small>
           </b-form-group>
@@ -230,6 +230,8 @@ function ViewProductPrice() {
       
       if (response.data.status == 200) {
         me.product_price = response.data.result;
+
+        // me.CalculatePriceCost();
       } else {
         
       }
@@ -268,14 +270,14 @@ function SelectPrice(index) {
   }else{
     this.product_price.exchange_rate = exchange_rate_usd;
   }
-  this.product_price.expenses = parseFloat(this.product_price.expenses);
+  this.product_price.expenses = parseFloat(this.history_prices[index].expenses);
 
   this.product_price.price_final = (this.product_price.purchase_price * this.product_price.exchange_rate) + this.product_price.expenses;
 
-  this.product_price.purchase_price = this.product_price.purchase_price.toFixed(2);
-  this.product_price.exchange_rate = this.product_price.exchange_rate.toFixed(2);
-  this.product_price.expenses = this.product_price.expenses.toFixed(2);
-  this.product_price.price_final = this.product_price.price_final.toFixed(2);
+  this.product_price.purchase_price = parseFloat(this.product_price.purchase_price).toFixed(2);
+  this.product_price.exchange_rate = parseFloat(this.product_price.exchange_rate).toFixed(2);
+  this.product_price.expenses = parseFloat(this.product_price.expenses).toFixed(2);
+  this.product_price.price_final = parseFloat(this.product_price.price_final).toFixed(2);
   this.DeterminatePriceFinal(1);
 }
 
@@ -286,11 +288,21 @@ function CalculatePriceCost() {
   this.product_price.expenses = this.product_price.expenses.length == 0 ? 0 : parseFloat(this.product_price.expenses);
   this.product_price.price_final = (this.product_price.purchase_price * this.product_price.exchange_rate) + this.product_price.expenses;
 
-  this.product_price.purchase_price = this.product_price.purchase_price.toFixed(2);
-  this.product_price.exchange_rate = this.product_price.exchange_rate.toFixed(2);
-  this.product_price.expenses = this.product_price.expenses.toFixed(2);
-  this.product_price.price_final = this.product_price.price_final.toFixed(2);
-  this.DeterminatePriceFinal(1);
+  this.product_price.purchase_price = parseFloat(this.product_price.purchase_price).toFixed(2);
+  this.product_price.exchange_rate = parseFloat(this.product_price.exchange_rate).toFixed(2);
+  this.product_price.expenses = parseFloat(this.product_price.expenses).toFixed(2);
+  this.product_price.price_final = parseFloat(this.product_price.price_final).toFixed(2);
+
+
+  if (parseFloat(this.product_price.fixed_costs) == 0) {
+    this.product_price.real_cost = parseFloat(this.product_price.price_final);
+  }else{
+    this.product_price.real_cost = parseFloat(this.product_price.price_final) / (1 - (parseFloat(this.product_price.fixed_costs) / 100));
+  }
+
+  this.product_price.real_cost = parseFloat(this.product_price.real_cost).toFixed(2);
+  this.product_price.fixed_costs = parseFloat(this.product_price.fixed_costs).toFixed(2);
+  // this.DeterminatePriceFinal(1);
 }
 
 function DeterminatePriceFinal(type) {
@@ -305,21 +317,21 @@ function DeterminatePriceFinal(type) {
 
   if (type == 1) {
       if (parseFloat(this.product_price.fixed_costs) == 0) {
-        this.product_price.real_cost = 0;
+        this.product_price.real_cost = price_final;
       }else{
         this.product_price.real_cost = price_final / (1 - (parseFloat(this.product_price.fixed_costs) / 100));
       }
 
       if (parseFloat(this.product_price.minimal_utility) == 0) {
-        this.product_price.minimal_price = 0;
+        this.product_price.minimal_price = this.product_price.real_cost;
       }else{
-        this.product_price.minimal_price = price_final / (1 - (parseFloat(this.product_price.minimal_utility) / 100));
+        this.product_price.minimal_price = parseFloat(this.product_price.real_cost) / (1 - (parseFloat(this.product_price.minimal_utility) / 100));
       }
 
       if (parseFloat(this.product_price.maximum_utility) == 0) {
-        this.product_price.sale_price = 0;
+        this.product_price.sale_price = this.product_price.real_cost;
       }else{
-        this.product_price.sale_price = price_final / (1 - (parseFloat(this.product_price.maximum_utility) / 100));
+        this.product_price.sale_price = parseFloat(this.product_price.real_cost) / (1 - (parseFloat(this.product_price.maximum_utility) / 100));
       }
       
       
@@ -334,13 +346,13 @@ function DeterminatePriceFinal(type) {
       if (parseFloat(this.product_price.minimal_price) == 0) {
         this.product_price.minimal_utility = 0;
       }else{
-        this.product_price.minimal_utility = (1 - (price_final / parseFloat(this.product_price.minimal_price)) )  * 100;
+        this.product_price.minimal_utility = (1 - (parseFloat(this.product_price.real_cost) / parseFloat(this.product_price.minimal_price)) )  * 100;
       }
 
       if (parseFloat(this.product_price.sale_price) == 0) {
         this.product_price.maximum_utility = 0;
       }else{
-        this.product_price.maximum_utility = (1 - (price_final / parseFloat(this.product_price.sale_price)) )  * 100;
+        this.product_price.maximum_utility = (1 - (parseFloat(this.product_price.real_cost) / parseFloat(this.product_price.sale_price)) )  * 100;
       }
       
      

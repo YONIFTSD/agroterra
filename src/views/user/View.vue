@@ -7,7 +7,7 @@
             <strong> Modulo de Usuario - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="EditUser">
+            <b-form id="Form" autocomplete="off" @submit.prevent="EditUser">
               <b-row>
                 <b-col md="3"></b-col>
                 <b-col md="6">

@@ -9,7 +9,9 @@
                     <th width="45%" class="text-center">Nombre</th>
                     <th width="12%" class="text-center">UM</th>
                     <th width="10%" class="text-center">Cantidad</th>
-                    <th width="8%" class="text-center">Acciones</th>
+                    <!-- <th width="12%" class="text-center">F. Venc.</th> -->
+                    <th width="12%" class="text-center">Bultos</th>
+                    <th width="5%" class="text-center">Acc.</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in input_detail" :key="item.id_product">
@@ -21,8 +23,14 @@
                       <td class="align-middle text-center">
                         <input :disabled="type_operation == '21'" type="number" step="any" @change="EditDetail(it)" class="form-control text-right" v-model="item.quantity">
                       </td>
+                      <!-- <td class="align-middle text-center">
+                        <input type="date" class="form-control text-center" v-model="item.expiration_date">
+                      </td> -->
                       <td class="align-middle text-center">
-                        <button :disabled="type_operation == '21'" type="button" @click="DeleteDetail(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
+                        <input type="number" step="any" @change="EditDetail(it)" class="form-control text-right" v-model="item.package">
+                      </td>
+                      <td class="align-middle text-center">
+                        <button :disabled="type_operation == '21'" size="sm" type="button" @click="DeleteDetail(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
                       </td>
 
                   </tr>

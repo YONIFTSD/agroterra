@@ -8,7 +8,7 @@
           </CCardHeader>
           <CCardBody>
             <b-row>
-              <b-col sm="12" md="7"></b-col>
+              <b-col sm="12" md="5"></b-col>
 
               
                <b-col sm="12" md="1">
@@ -18,9 +18,9 @@
               <b-col sm="12" md="1">
                   <b-button type="button" title="Exportar Excel" @click="ExportExcel" class="form-control" variant="success"><i class="fas fa-file-excel"></i></b-button>
               </b-col>
-              <b-col sm="6" md="2">
+              <b-col sm="6" md="4">
                 <b-input-group>
-                  <b-form-input  v-model="search" class="form-control"></b-form-input>
+                  <b-form-input @keyup="ListProduct"  v-model="search" class="form-control"></b-form-input>
                   <b-input-group-append>
                     <b-button variant="primary" @click="ListProduct"><b-icon icon="search"></b-icon></b-button>
                   </b-input-group-append>
@@ -36,22 +36,26 @@
                   <tr>
                     <th width="5%" class="text-center">#</th>
                     <th width="6%" class="text-center">Código</th>
-                    <th width="43%" class="text-center">Nombre</th>
+                    <th width="50%" class="text-center">Nombre</th>
                     <th width="10%" class="text-center">Categoria</th>
                     <th width="10%" class="text-center">Marca</th>
-                    <th width="23%" class="text-center">Proveedor</th>
+                    <th width="10%" class="text-center">IGV</th>
                     <th width="6%" class="text-center">Estado</th>
                     <th width="8%" class="text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in data_table" :key="item.id_product">
-                  <tr>
+                  <tr :class="BackgroundColor(item.internal_product,item.commissionable)">
                     <td class="text-center">{{ it + 1 }}</td>
                     <td class="text-center"> {{ item.code }}</td>
                     <td class="text-left"> {{ item.name + (item.presentation.length == 0 ? "": " - "+item.presentation) }}</td>
                     <td class="text-left"> {{ item.category_name }}</td>
                     <td class="text-left"> {{ item.brand_name }}</td>
-                    <td class="text-left"> {{ item.provider_name }}</td>
+                    <td class="text-left">
+                      <span v-if="item.igv == 10">Gravado</span>
+                      <span v-if="item.igv == 20">Exonerado</span>
+                      <span v-if="item.igv == 30">Inafecto</span>
+                    </td>
                     <td class="text-center">
                       <b-badge v-if="item.state == 1" variant="success">Activo</b-badge>
                       <b-badge v-if="item.state == 0" variant="danger">Anulado</b-badge>
@@ -74,23 +78,27 @@
                     <th width="5%" class="text-center">#</th>
                     
                     <th width="6%" class="text-center">Código</th>
-                    <th width="40%" class="text-center">Nombre</th>
+                    <th width="50%" class="text-center">Nombre</th>
                     <th width="10%" class="text-center">Categoria</th>
                     <th width="10%" class="text-center">Marca</th>
-                    <th width="23%" class="text-center">Proveedor</th>
+                    <th width="10%" class="text-center">IGV</th>
                     <th width="6%" class="text-center">Foto</th>
                     <th width="6%" class="text-center">Estado</th>
                     <th width="8%" class="text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in data_table" :key="item.id_product">
-                  <tr>
+                  <tr :class="BackgroundColor(item.internal_product,item.commissionable)">
                     <td class="text-center">{{ it + 1 }}</td>
                     <td class="text-center"> {{ item.code }}</td>
                     <td class="text-left"> {{ item.name + (item.presentation.length == 0 ? "": " - "+item.presentation) }}</td>
                     <td class="text-left"> {{ item.category_name }}</td>
                     <td class="text-left"> {{ item.brand_name }}</td>
-                    <td class="text-left"> {{ item.provider_name }}</td>
+                    <td class="text-left">
+                      <span v-if="item.igv == 10">Gravado</span>
+                      <span v-if="item.igv == 20">Exonerado</span>
+                      <span v-if="item.igv == 30">Inafecto</span>
+                    </td>
                     <td class="text-center">
                       <b-card-img :src="url_base + item.photo"></b-card-img>
                     </td>
@@ -160,6 +168,7 @@ export default {
     DeleteProduct,
     Permission,
     ExportExcel,
+    BackgroundColor,
   },
 
   computed: {
@@ -176,6 +185,16 @@ export default {
     },
   },
 };
+
+function BackgroundColor(internal_product,commissionable) {
+  if (commissionable == 1) {
+    return 'bg-success';
+  }
+  if (internal_product == 1) {
+    return 'bg-warning';
+  }
+  return '';
+}
 
 //listar usuario
 function ListProduct() {

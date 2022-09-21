@@ -8,7 +8,7 @@
           </CCardHeader>
           <CCardBody>
 
-              <b-form id="Form" @submit.prevent="Editcash">
+              <b-form id="Form" autocomplete="off" @submit.prevent="Editcash">
                       <b-row>
                           <b-col md="3">
                               <b-form-group label="Codigo:">
@@ -102,6 +102,11 @@
                                             <td class="text-let pl-3" >Ventas al Credito</td>
                                             <td class="text-right" >{{cash.total_credit_sales_pen}}</td>
                                             <td class="text-right" >{{cash.total_credit_sales_usd}}</td>
+                                          </tr>
+                                          <tr class="bg-info">
+                                            <td class="text-let pl-3" >Ventas al Anticipo</td>
+                                            <td class="text-right" >{{cash.total_cash_sales_advance_pen}}</td>
+                                            <td class="text-right" >{{cash.total_cash_sales_advance_usd}}</td>
                                           </tr>
                                           <tr class="bg-success">
                                             <td class="text-let" >Total de Ventas del Periodo</td>
@@ -221,6 +226,7 @@ export default {
           others_pen:(0).toFixed(2),
           web_payment_pen:(0).toFixed(2),
           total_cash_sales_pen:(0).toFixed(2),
+          total_cash_sales_advance_pen:(0).toFixed(2),
           total_credit_sales_pen:(0).toFixed(2),
           total_sales_period_pen:(0).toFixed(2),
           total_credit_collection_income_pen:(0).toFixed(2),
@@ -237,6 +243,7 @@ export default {
           others_usd:(0).toFixed(2),
           web_payment_usd:(0).toFixed(2),
           total_cash_sales_usd:(0).toFixed(2),
+          total_cash_sales_advance_usd:(0).toFixed(2),
           total_credit_sales_usd:(0).toFixed(2),
           total_sales_period_usd:(0).toFixed(2),
           total_credit_collection_income_usd:(0).toFixed(2),
@@ -327,6 +334,7 @@ function ViewCash() {
           me.cash.debit_pen = response.data.result.debit_pen;
           me.cash.total_cash_sales_pen = response.data.result.total_cash_sales_pen;
           me.cash.total_credit_sales_pen = response.data.result.total_credit_sales_pen;
+          me.cash.total_cash_sales_advance_pen = response.data.result.total_cash_sales_advance_pen;
           me.cash.total_sales_period_pen = response.data.result.total_sales_period_pen;
           me.cash.total_credit_collection_income_pen = response.data.result.total_credit_collection_income_pen;
           me.cash.total_extraordinary_income_pen = response.data.result.total_extraordinary_income_pen;
@@ -339,6 +347,7 @@ function ViewCash() {
           me.cash.turn_usd = response.data.result.turn_usd;
           me.cash.debit_usd = response.data.result.debit_usd;
           me.cash.total_cash_sales_usd = response.data.result.total_cash_sales_usd;
+          me.cash.total_cash_sales_advance_usd = response.data.result.total_cash_sales_advance_usd;
           me.cash.total_credit_sales_usd = response.data.result.total_credit_sales_usd;
           me.cash.total_sales_period_usd = response.data.result.total_sales_period_usd;
           me.cash.total_credit_collection_income_usd = response.data.result.total_credit_collection_income_usd;

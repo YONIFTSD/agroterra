@@ -22,7 +22,7 @@
               <b-col sm="6" md="2">
                 <label for="">.</label>
                 <b-input-group >
-                  <b-form-input  v-model="search" class="form-control"></b-form-input>
+                  <b-form-input @keyup="ListProduct"  v-model="search" class="form-control"></b-form-input>
                   <b-input-group-append>
                     <b-button variant="primary" @click="ListProduct"><b-icon icon="search"></b-icon></b-button>
                   </b-input-group-append>
@@ -70,7 +70,7 @@
                   </tr>
                 </thead>
                 <tbody v-for="(item, it) in data_table" :key="item.id_product">
-                  <tr>
+                  <tr :class="BackgroundColor(item.internal_product,item.commissionable)"> 
                     <td class="text-center">{{ it + 1 }}</td>
                     <td class="text-center"> {{ item.code }}</td>
                     <td class="text-left"> {{ item.name + " - "+item.presentation }}</td>
@@ -171,6 +171,7 @@ export default {
     Permission,
     ExportExcel,
     ExportExcelGeneral,
+    BackgroundColor,
 
   },
 
@@ -188,6 +189,17 @@ export default {
     }
   },
 };
+
+function BackgroundColor(internal_product,commissionable) {
+  if (commissionable == 1) {
+    return 'bg-success';
+  }
+  if (internal_product == 1) {
+    return 'bg-warning';
+  }
+  return '';
+}
+
 function SearchProvider(search, loading) {
   
     let me = this;

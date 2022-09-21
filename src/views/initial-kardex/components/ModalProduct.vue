@@ -16,24 +16,23 @@
                   <th width="5%"  rowspan="2" class="text-center align-middle">#</th>
                   <th width="8%"  rowspan="2" class="text-center align-middle">Código</th>
                   <th width="55%"  rowspan="2" class="text-center align-middle">Nombre</th>
-                  <th width="10%"  :colspan="warehouses.length" class="text-center align-middle">{{establishment.name }}</th>
+                  <th width="12%"  rowspan="2" class="text-center align-middle">UM</th>
                   <th width="10%"  rowspan="2" class="text-center align-middle">Cantidad</th>
-                  <th width="10%"  rowspan="2" class="text-center align-middle">Acciones</th>
-                </tr>
-                <tr>
-                  <th class="text-center" v-for="item in warehouses" :key="item.id_warehouse">{{item.name}}</th>
+                  <th width="10%"  rowspan="2" class="text-center align-middle">P. Unit</th>
+                  <th width="5%"  rowspan="2" class="text-center align-middle">Acc.</th>
                 </tr>
               </thead>
-              <tbody v-for="(item, it) in products" :key="item.id_product">
+              <tbody v-for="(item, it) in products" :key="it">
                 <tr>
                   <td class="text-center">{{ it + 1 }}</td>
                   <td class="text-left">{{ item.code }}</td>
-                  <td class="text-left">{{ item.name +  " - " + item.presentation }}</td>
-                  <td class="text-center" v-for="stock in item.stock" :key="stock.id_warehouse+stock.quantity">
-                  {{ stock.quantity }}
-                  </td>
+                  <td class="text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation )}}</td>
+                  <td class="text-left">{{ NameUnitMeasure(item.unit_measure) }}</td>
                   <td class="text-center">
                     <input type="number" value="1" :ref="'mODCantidad'+item.id_product" class="form-control">
+                  </td>
+                  <td class="text-center">
+                    <input type="number" step="any" value="0.00" :ref="'mOPUnit'+item.id_product" class="form-control">
                   </td>
                   <td class="text-center">
                       <button type="button" @click="AddProduct(item.id_product)" class="btn btn-info">
@@ -60,7 +59,7 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState,mapActions } from "vuex";
 import EventBus from "@/assets/js/EventBus";
-// import Notifications from 'vue-notification/dist/ssr.js';
+import CodeToName from "@/assets/js/CodeToName";
 
 
 export default {
@@ -68,12 +67,10 @@ export default {
   data() {
     return {
         modalProducts:false,
-        module:'Output',
+        module:'InitialKardex',
         role:0,
         search_product:'',
         products: [],
-        establishment:{},
-        id_establishment:'',
         warehouses:[]
     };
   },
@@ -81,12 +78,11 @@ export default {
     
   },
   mounted () {
-    EventBus.$on('ModalProductsShow', (role,id_establishment) => {
+    EventBus.$on('ModalProductsShow', (role,id_initial_kardex) => {
       this.modalProducts = true;
       this.role = role;
-      this.id_establishment = id_establishment;
-      this.ViewEstablishment();
-      this.ListWarehouse();
+      this.id_initial_kardex = id_initial_kardex;
+  
     });
     
   },
@@ -95,6 +91,7 @@ export default {
       AddProduct,
       ViewEstablishment,
       ListWarehouse,
+      NameUnitMeasure,
 
         ...mapActions('Requirement',['mLoadAddRequirementDetail']),
       
@@ -106,9 +103,17 @@ export default {
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user.api_token;
     },
+    id_establishment: function () {
+      let establishment = window.localStorage.getItem("id_establishment");
+      establishment = JSON.parse(je.decrypt(establishment));
+      return establishment;
+    }
   },
 };
 
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
 function ViewEstablishment() {
   
   let me = this;
@@ -155,44 +160,62 @@ function ListWarehouse() {
 function AddProduct(id_product) {
   
     let quantity = this.$refs['mODCantidad'+id_product][0]['value'];
+    let unit_price = this.$refs['mOPUnit'+id_product][0]['value'];
+    
     let me = this;
-    let url = this.url_base + "product/view/" + id_product;
-
+    let url = this.url_base + "initial-kardex/add-detail";
+    let data = {
+      id_product: id_product,
+      id_initial_kardex: this.id_initial_kardex,
+      quantity: quantity,
+      unit_price: unit_price,
+    }
     axios({
-      method: "GET",
+      method: "POST",
       url: url,
+      data: data,
       headers: {token: this.token, module: this.module,role: this.role, },
     })
     .then(function (response) {
       if (response.data.status == 200) {
-          
-        let detail = {
-          id_product: response.data.result.id_product,
-          code: response.data.result.code,
-          name: response.data.result.name,
-          presentation: response.data.result.presentation,
-          unit_measure: response.data.result.unit_measure,
-          igv: response.data.result.igv,
-          existence_type: response.data.result.existence_type,
-          quantity: quantity,
-        }
-        
-        me.mLoadAddRequirementDetail(detail);
-        
-        
+        EventBus.$emit('RefreshInitialDetail');
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
     })
     .catch((error) => {
-      console.log(error);
-      // Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+
     });
 
    
 }
 //Buscar productos
 function SearchProducts() {
-  
+
+  let me = this;
+  let search = this.search_product == "" ? "all" : this.search_product;
+   let url = this.url_base + "search-products";
+  let data = {
+    search : search
+  };
+  axios({
+    method: "POST",
+    url: url,
+    data:data,
+    headers: {
+      token: this.token,
+    },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.products = response.data.result;
+      } else {
+        me.products = [];
+      }
+    })
+    .catch((error) => {
+      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      
+    });
 }
 </script>

@@ -7,7 +7,7 @@
             <strong> Modulo Gastos de Compra - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="6">
@@ -202,6 +202,7 @@ export default {
         {value: "52", text : "Despacho Simplificado - Importación Simplificada"},
         {value: "91", text : "Comprobante de No Domiciliado"},
         {value: "NE", text : "Nota de Entrada"},
+        {value: "RH", text : "Recibo por Honorarios"},
         {value: "00", text : "Otros"},
       ],
 
@@ -313,7 +314,10 @@ function ShowModalProvider() {
 }
 
 function modalExachangeRate() {
-  EventBus.$emit('ModalExchangeRateShow');
+  let data = {
+    date : this.purchase_expenses.broadcast_date
+  }
+  EventBus.$emit('ModalExchangeRateShow',data);
 }
 //ver usuario
 function ViewPurchaseExpenses() {
@@ -458,8 +462,8 @@ function ChangeAmount(type) {
     this.purchase_expenses.taxed = parseFloat(0);
     this.purchase_expenses.not_taxed = parseFloat(this.purchase_expenses.not_taxed);
     this.purchase_expenses.subtotal = parseFloat(this.purchase_expenses.not_taxed);;
-    this.purchase_expenses.igv = parseFloat(this.purchase_expenses.not_taxed) * 0.18;
-    this.purchase_expenses.total = parseFloat(this.purchase_expenses.not_taxed) + parseFloat(this.purchase_expenses.igv);
+    this.purchase_expenses.igv = parseFloat(0);
+    this.purchase_expenses.total = parseFloat(this.purchase_expenses.not_taxed);
   }
 
   this.purchase_expenses.taxed = this.purchase_expenses.taxed.toFixed(2);

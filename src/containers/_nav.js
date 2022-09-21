@@ -10,7 +10,7 @@ var modules = [{
   icon: 'cilHome',
 }];
 
-if(user_permissions.indexOf('SaleList') > -1 || user_permissions.indexOf('OrderList') > -1  || user_permissions.indexOf('RedeemedSaleList') > -1 || user_permissions.indexOf('POSList') > -1 ){
+if(user_permissions.indexOf('SaleList') > -1 || user_permissions.indexOf('OrderList') > -1  || user_permissions.indexOf('RedeemedSaleList') > -1 || user_permissions.indexOf('POSList') > -1 || user_permissions.indexOf('QuotationList') > -1 ){
   let me = this;
   let item = [];
   if (user_permissions.indexOf('SaleList') > -1) {
@@ -21,6 +21,9 @@ if(user_permissions.indexOf('SaleList') > -1 || user_permissions.indexOf('OrderL
   }
   if (user_permissions.indexOf('OrderList') > -1) {
     item.push({ name: 'Pedidos', to: '/pedidos/listar' });
+  }
+  if (user_permissions.indexOf('QuotationList') > -1) {
+    item.push({ name: 'Cotización', to: '/cotizacion/listar' });
   }
   if (user_permissions.indexOf('RedeemedSaleList') > -1) {
     item.push({ name: 'Canje de Ventas', to: '/canje-venta/listar' });
@@ -41,7 +44,7 @@ if(user_permissions.indexOf('CashList') > -1 || user_permissions.indexOf('Expens
     item.push({ name: 'Cajas', to: '/caja/listar' });
   }
   if (user_permissions.indexOf('CashAdd') > -1) {
-    item.push({ name: 'Arqueo Caja', to: '/caja/nuevo' });
+    item.push({ name: 'Estado Caja', to: '/caja/nuevo' });
   }
   if (user_permissions.indexOf('IncomeList') > -1) {
     item.push({ name: 'Ingresos', to: '/ingresos/listar'});
@@ -53,7 +56,7 @@ if(user_permissions.indexOf('CashList') > -1 || user_permissions.indexOf('Expens
 
   let TypeUser = {
     _name: 'CSidebarNavDropdown',
-    name: 'Arqueo de Caja',
+    name: 'Tesoreria',
     icon: 'cib-cashapp',
     items: item
   }
@@ -61,7 +64,10 @@ if(user_permissions.indexOf('CashList') > -1 || user_permissions.indexOf('Expens
 }
 
 
-if(user_permissions.indexOf('AccountReceivableList') > -1 || user_permissions.indexOf('AccountPayList') > -1 || user_permissions.indexOf('ExchangeDocumentList') > -1 || user_permissions.indexOf('PaymentList') > -1 || user_permissions.indexOf('ChargeList') > -1 || user_permissions.indexOf('SettlementCollectionList') > -1 || user_permissions.indexOf('SettlementPaymentList') > -1 ){
+if(user_permissions.indexOf('AccountReceivableList') > -1 || user_permissions.indexOf('AccountPayList') > -1 
+|| user_permissions.indexOf('ExchangeDocumentList') > -1 || user_permissions.indexOf('PaymentList') > -1 
+|| user_permissions.indexOf('ChargeList') > -1 || user_permissions.indexOf('SettlementCollectionList') > -1 
+|| user_permissions.indexOf('SettlementPaymentList') > -1 ){
   let me = this;
   let item = [];
   if (user_permissions.indexOf('AccountReceivableList') > -1) {
@@ -106,7 +112,7 @@ if(user_permissions.indexOf('ClientList') > -1 || user_permissions.indexOf('Prov
     item.push({ name: 'Clientes', to: '/cliente/listar' });
     
   }
-  if (user_permissions.indexOf('CategoryList') > -1) {
+  if (user_permissions.indexOf('ProviderList') > -1) {
     item.push({ name: 'Proveedores', to: '/proveedor/listar'});
   }
 
@@ -180,7 +186,7 @@ if(user_permissions.indexOf('ShoppingList') > -1 || user_permissions.indexOf('Co
 
 
 
-if(user_permissions.indexOf('RequirementList') > - 1 || user_permissions.indexOf('ReferralGuideList') > - 1 ){
+if(user_permissions.indexOf('RequirementList') > - 1 || user_permissions.indexOf('ReferralGuideList') > - 1  || user_permissions.indexOf('PurchaseOrderList') > - 1 ){
   let me = this;
   let item = [];
 
@@ -190,6 +196,10 @@ if(user_permissions.indexOf('RequirementList') > - 1 || user_permissions.indexOf
 
   if (user_permissions.indexOf('RequirementList') > -1) {
     item.push({ name: 'Requerimientos', to: '/requerimiento/listar' });
+  }
+
+  if (user_permissions.indexOf('PurchaseOrderList') > -1) {
+    item.push({ name: 'Orden de Compra', to: '/orden-de-compra/listar' });
   }
 
   let TypeUser = {
@@ -234,6 +244,9 @@ if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('Cont
   if (user_permissions.indexOf('KardexExistenceList') > -1) {
     item.push({ name: 'Kardex de Existencias', to: '/kardex/existencias'});
   }
+  if (user_permissions.indexOf('StockList') > -1) {
+    item.push({ name: 'Stock', to: '/kardex/stock'});
+  }
   if (user_permissions.indexOf('StockGeneralList') > -1) {
     item.push({ name: 'Stock General', to: '/kardex/stock-general'});
   }
@@ -261,7 +274,10 @@ if(user_permissions.indexOf('InputList') > -1  || user_permissions.indexOf('Cont
 if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('ReportSaleDetailList') > -1 || 
   user_permissions.indexOf('ReportShoppingList') > -1 || user_permissions.indexOf('ReportShoppingDetailList') > -1
   || user_permissions.indexOf('ReportIncomeSettlementList') > -1 || user_permissions.indexOf('ReportDayliIncomeSettlementList') > -1
-  || user_permissions.indexOf('ReportUtilityList') > -1
+  || user_permissions.indexOf('ReportUtilityList') > -1 || user_permissions.indexOf('ReportSalesTrackingList') > -1
+  || user_permissions.indexOf('ReportShoppingTrackingList') > -1 || user_permissions.indexOf('ReportSalesPriceList') > -1
+  || user_permissions.indexOf('ReportReceivableList') > -1 || user_permissions.indexOf('ReportPayList') > -1
+  || user_permissions.indexOf('ReportProgramList') > -1 || user_permissions.indexOf('ReportSaleDeleteList') > -1
   ){
   let me = this;
   let item = [];
@@ -284,6 +300,7 @@ if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('
   if (user_permissions.indexOf('ReportUtilityList') > -1) {
     item.push({ name: 'Utilidad', to: '/reporte/utilidad'});
   }
+
   if (user_permissions.indexOf('ReportCommissionableProductsList') > -1) {
     item.push({ name: 'Prod. Comisionables', to: '/reporte/productos-comisionables'});
   }
@@ -294,6 +311,34 @@ if(user_permissions.indexOf('ReportSaleList') > -1 || user_permissions.indexOf('
 
   if (user_permissions.indexOf('ReportDayliIncomeSettlementList') > -1) {
     item.push({ name: 'Liq. de Ingresos Diaria', to: '/reporte/liquidacion-de-ingresos-diaria'});
+  }
+
+  if (user_permissions.indexOf('ReportSalesTrackingList') > -1) {
+    item.push({ name: 'Seg. de Ventas', to: '/reporte/seguimiento-de-ventas'});
+  }
+
+  if (user_permissions.indexOf('ReportShoppingTrackingList') > -1) {
+    item.push({ name: 'Seg. de Compras', to: '/reporte/seguimiento-de-compras'});
+  }
+
+  if (user_permissions.indexOf('ReportSalesPriceList') > -1) {
+    item.push({ name: 'Ventas Segun el Precio', to: '/reporte/ventas-segun-precio'});
+  }
+
+  if (user_permissions.indexOf('ReportReceivableList') > -1) {
+    item.push({ name: 'Cuentas por Cobrar', to: '/reporte/cuentas-por-cobrar'});
+  }
+
+  if (user_permissions.indexOf('ReportPayList') > -1) {
+    item.push({ name: 'Cuentas por Pagar', to: '/reporte/cuentas-por-pagar'});
+  }
+
+  if (user_permissions.indexOf('ReportProgramList') > -1) {
+    item.push({ name: 'Programaciones', to: '/reporte/programaciones'});
+  }
+
+  if (user_permissions.indexOf('ReportSaleDeleteList') > -1) {
+    item.push({ name: 'Ventas Eliminadas', to: '/reporte/ventas-eliminadas'});
   }
 
 
@@ -324,6 +369,10 @@ if(user_permissions.indexOf('UserList') > -1 || user_permissions.indexOf('UserTy
 
   if (user_permissions.indexOf('EstablishmentList') > -1) {
     item.push({ name: 'Establecimiento',to: '/establecimiento/listar'});
+  }
+
+  if (user_permissions.indexOf('FactoringList') > -1) {
+    item.push({name: 'Ser. Factoring',to: '/servicio-factoring/listar'});
   }
 
   if (user_permissions.indexOf('BusinessList') > -1) {

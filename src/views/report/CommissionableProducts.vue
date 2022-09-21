@@ -8,19 +8,23 @@
           </CCardHeader>
           <CCardBody>
 
-          <b-form id="Form" @submit.prevent="Validate">
-            <b-row>
+          <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
+            <b-row class="row justify-content-md-center">
                 <b-col sm="12" md="2">
                   <b-form-group label="Establecimiento">
                     <b-form-select v-model="report.id_establishment" :options="establishments"></b-form-select>
                   </b-form-group>
                 </b-col>
 
-                <b-col sm="12" md="2">
-                  <b-form-group label="Usuario">
-                    <b-form-select v-model="report.id_user" :options="users"></b-form-select>
+
+                <b-col sm="12" md="6">
+                  <b-form-group>
+                    <label>Proveedor: </label>
+                    <v-select placeholder="Todos" class="w-100" :filterable="false" label="name" v-model="provider" @search="SearchProviders" :options="providers"></v-select>
                   </b-form-group>
                 </b-col>
+
+               
 
                 <b-col sm="12" md="2">
                   <b-form-group label="Desde :">
@@ -36,6 +40,12 @@
                   </b-form-group>
                 </b-col>
 
+
+                <b-col sm="12" md="2">
+                  <b-form-group label="Usuario">
+                    <b-form-select v-model="report.id_user" :options="users"></b-form-select>
+                  </b-form-group>
+                </b-col>
                 
 
                
@@ -138,11 +148,14 @@ export default {
       report:{
         id_establishment: 'all',
         id_user:'all',
+        id_provider:'all',
         from:moment(new Date()).local().format("YYYY-MM-DD"),
         to:moment(new Date()).local().format("YYYY-MM-DD"),
       },
       establishments:[],
       users:[],
+      providers: [],
+      provider:null,
       
       errors:{
         id_establishment:false,
@@ -162,6 +175,7 @@ export default {
     Report,
     CodeInvoice,
     ExportExcel,
+    SearchProviders,
   },
 
   computed: {
@@ -182,9 +196,28 @@ function CodeInvoice(code) {
   return CodeToName.CodeInvoice(code);
 }
 
+function SearchProviders(search, loading) {
+  
+    let me = this;
+    let url = this.url_base + "search-providers/" + search;
+    if (search !== "") {
+      loading(true);
+      axios({
+        method: "GET",
+        url: url,
+      }).then(function (response) {
+            me.providers = response.data.result;
+            loading(false);
+      })
+    }
+    
+}
+
 function ExportExcel() {  
+   
    let me = this;
-  let url = me.url_base + "excel-report-commissionable-products/"+me.report.id_establishment+"/"+me.report.id_user+"/"+me.report.from+"/"+me.report.to;
+   let id_provider = me.provider == null ? 'all':me.provider.id;
+  let url = me.url_base + "excel-report-commissionable-products/"+me.report.id_establishment +"/"+id_provider +"/"+me.report.id_user+"/"+me.report.from+"/"+me.report.to;
   window.open(url,'_blank');
 }
 
@@ -252,6 +285,7 @@ function Validate() {
 function Report(me) {
   let data = me.report;
   let url = this.url_base + "report/commissionable-products";
+  me.report.id_provider = me.provider == null ? 'all':me.provider.id;
   me.isLoading = true;
   axios({
     method: "POST",

@@ -116,13 +116,12 @@ export default {
     EventBus.$on('ChangeTypeProcess', (type_process) => {
       this.type_process = type_process;
     });
+    this.GetInformationSale();
     this.mLoadResetPOSDetail();
   },
   methods: {
-    
-
-
-    ...mapActions('SalePOS',['mLoadResetPOSDetail']),
+    GetInformationSale,
+    ...mapActions('SalePOS',['mLoadResetPOSDetail','mLoadIgvPercentage']),
   },
 
   computed: {
@@ -152,7 +151,22 @@ export default {
 };
 
 
-
+function GetInformationSale() {
+  
+  let me = this;
+  let url = this.url_base + "get-information-sale";
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: this.role, },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        // me.igv_percentage = response.data.result.igv_percentage;
+        me.mLoadIgvPercentage(response.data.result.igv_percentage);
+      } 
+    })
+}
 
 
 

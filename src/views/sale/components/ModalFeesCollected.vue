@@ -102,7 +102,7 @@ export default {
 };
 
 function CalculateFeesCollected() {
-  let total = this.total_sale.total;
+  let total = this.total_sale.net_total;
   let payment_method = this.way_to_pay.split("-");
   if (payment_method[0] == "03") {
       let total_fee_collected = parseFloat(total) / parseFloat(this.fees_collected_modal.length);

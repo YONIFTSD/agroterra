@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal size="xl" hide-footer v-model="modalAmortizations" class="w-100" :title="CodeInvoice(account_receivable.type_invoice) +' '+ account_receivable.serie+'-'+ account_receivable.number + ' | Amortizaciones '">
-      <b-form id="Form" @submit.prevent="Validate">
+      <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
         <b-row>
           <b-col md="2">
             <b-form-group label="Fecha :">

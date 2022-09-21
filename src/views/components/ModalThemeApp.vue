@@ -3,7 +3,7 @@
     <b-modal size="md" class="modal-size" hide-footer v-model="modal_theme" title="TEMA DEL SISTEMA">
       <b-row>
         <b-col md="12">
-          <b-form id="Form" @submit.prevent="Validate">
+          <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="12">

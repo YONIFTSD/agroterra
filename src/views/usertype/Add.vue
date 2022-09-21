@@ -7,7 +7,7 @@
             <strong> Modulo de Tipo Usuario - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="AddUserType">
+            <b-form id="Form" autocomplete="off" @submit.prevent="AddUserType">
               <b-row>
                 <b-col md="3">
                   <b-form-group label="Nombres :" >

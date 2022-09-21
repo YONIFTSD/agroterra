@@ -7,7 +7,7 @@
             <strong> Modulo Registro de Cobros - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
                
                 
@@ -76,13 +76,13 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <!-- <b-col md="2">
                   <b-form-group label="Caja:">
                     <b-form-select disabled v-model="charge.cash" :options="cashs" ></b-form-select>
                   </b-form-group>
-                </b-col>
+                </b-col> -->
 
-                <b-col md="8">
+                <b-col md="10">
                   <b-form-group label="Observación:">
                     <b-form-input disabled v-model="charge.observation" ></b-form-input>
                   </b-form-group>
@@ -94,7 +94,10 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col md="5"></b-col>
+                <b-col md="4"></b-col>
+                <b-col md="2">
+                  <b-button  type="button" @click="DataPrint(charge.id_charge)" class="form-control" variant="warning" >IMPRIMIR</b-button>
+                </b-col>
                 <b-col md="2">
                   <b-link variant="primary" class="form-control btn btn-primary" :to="{ path: '/registro-de-cobros/listar' }" append >REGRESAR</b-link>
                 </b-col>
@@ -242,6 +245,9 @@ export default {
     modalClients,
     EditCharge,
     Validate,
+
+    DataPrint,
+    Print,
   },
 
   computed: {
@@ -390,5 +396,47 @@ function Validate() {
   })
 
 
+}
+
+function DataPrint(id_charge) {
+
+  let me = this;
+
+    let url = me.url_base + "charge/data-print/"+id_charge;
+    let data = me.sale;
+    axios({
+      method: "GET",
+      url: url,
+      data: data,
+      headers: { "Content-Type": "application/json", token: me.token, module: me.module, role: me.role, },
+    })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.Print(response.data.result);
+      } 
+
+    })
+
+}
+
+function Print(info) {
+  let url = 'http://localhost/print/consumirapi-charge.php';
+  var data = new FormData(); 
+  data.append("info",JSON.stringify(info)); 
+  axios({
+    method: "POST",
+    url: url,
+    data:data,
+    headers: {
+      "Content-Type": "application/json",
+      "Accept":"*/*",
+    },
+  })
+    .then(function (response) {
+     
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 </script>

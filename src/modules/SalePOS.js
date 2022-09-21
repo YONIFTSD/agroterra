@@ -2,6 +2,7 @@ import converter from "@/assets/js/NumberToLetters";
 var moment = require("moment");
 const state = {
     mclient: {id:1,full_name:'CLIENTES VARIOS - 00000000'},
+    igv_percentage: 1.18,
     sale: {
         id_sale: "",
         id_client: "",
@@ -19,9 +20,12 @@ const state = {
         coin: "PEN",
         address: '',
         license_plate: '',
+        code_sap: '',
+        order_sap: '',
+        service: '',
         way_to_pay: "01-000",
         payment_type: "01",
-        payment_method: "008",
+        payment_method: "000",
         payment_deadline: "0",
         fees_collected:[],
         observation: "",
@@ -34,9 +38,15 @@ const state = {
         sunat_message: "",
         hash_cpe: "",
         hash_cdr: "",
+        check_contingency:"0",
+        check_detraction:"0",
+        check_retention:"0",
+        check_discount:"0",
         taxed_operation: '0.00',
         exonerated_operation: '0.00',
         unaffected_operation: '0.00',
+        percentage_detraction: '0.00',
+        detraction: '0.00',
         discount: '0.00',
         subtotal: '0.00',
         igv: '0.00',
@@ -50,10 +60,14 @@ const state = {
         taxed_operation: (0).toFixed(2),
         exonerated_operation: (0).toFixed(2),
         unaffected_operation: (0).toFixed(2),
+        percentage_detraction: (0).toFixed(2),
+        detraction: (0).toFixed(2),
+        retention: (0).toFixed(2),
         discount: (0).toFixed(2),
         subtotal: (0).toFixed(2),
         igv: (0).toFixed(2),
         total: (0).toFixed(2),
+        net_total: (0).toFixed(2),
         number_to_letters: "",
     }
 }
@@ -64,8 +78,17 @@ const getters = {}
 //to handle actions
 const actions = {
 
+    mLoadIgvPercentage(context,igv_percentage) {
+        let val_igv_percentage = parseFloat("1."+igv_percentage);
+        context.commit('mEditIgvPercentaje',val_igv_percentage);
+    },
+
     mLoadEditClient(context,client) {
         context.commit('mUpdateClient',client);
+    },
+
+    mLoadEditClientAddress(context,address) {
+        context.commit('mUpdateAddress',address);
     },
 
     mLoadEditWarehouse(context,id_warehouse) {
@@ -123,12 +146,17 @@ const actions = {
             taxed_operation:0,
             exonerated_operation:0,
             unaffected_operation:0,
+            percentage_detraction:0,
+            detraction:0,
+            retention:0,
             discount:0,
             subtotal:0,
             igv:0,
             total:0,
+            net_total:0,
             number_to_letters:''
         }
+        let igv_percentage = context.state.igv_percentage;
         let detail = context.state.pos_detail;
         let coin = context.state.sale.coin;
         for (let index = 0; index < detail.length; index++) {
@@ -143,7 +171,7 @@ const actions = {
             }
         }
         total.total = (total.taxed_operation + total.exonerated_operation + total.unaffected_operation);
-        total.igv = total.taxed_operation - (total.taxed_operation / 1.18);
+        total.igv = total.taxed_operation - (total.taxed_operation / igv_percentage);
         total.subtotal = total.total  - total.igv;
         total.taxed_operation = total.taxed_operation - total.igv;
 
@@ -154,6 +182,8 @@ const actions = {
         total.subtotal = total.subtotal.toFixed(2);
         total.igv = total.igv.toFixed(2);
         total.total = total.total.toFixed(2);
+        total.net_total = total.total;
+        
         
         converter.NumberToLettersApi(total.total,coin ).then((data) => {
         if (data.status == 200) {
@@ -173,6 +203,9 @@ const actions = {
 
 //to handle mutations
 const mutations = {
+    mEditIgvPercentaje(state, igv_percentage) {
+        state.igv_percentage = parseFloat(igv_percentage);
+    },
 
     mAddPOSDetail(state, detail) {
         state.pos_detail.push(detail);
@@ -191,6 +224,9 @@ const mutations = {
     },
     mUpdateClient(state,client){
         state.mclient = client;
+    },
+    mUpdateAddress(state,address){
+        state.sale.address = address;
     },
     mUpdateWarehouse(state,id_warehouse){
         state.sale.id_warehouse = id_warehouse;

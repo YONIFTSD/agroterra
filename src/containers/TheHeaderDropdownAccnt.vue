@@ -54,6 +54,8 @@ function Logout() {
     });
   window.localStorage.clear()
   this.$router.push({ name: "Login"})
+
+  setTimeout(window.location.reload(), 2000);
 }
 function ViewProfile() {
   this.$router.push({ name: "UserProfile"})

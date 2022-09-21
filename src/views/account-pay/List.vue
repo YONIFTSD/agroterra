@@ -18,6 +18,9 @@
                     </b-form-group>
                   </b-col>
                   <b-col sm="6" md="2">
+                    <b-form-group label=".">
+                      <b-button class="form-control" @click="ShowModalEECC" type="button" variant="primary">VER EECC</b-button>
+                    </b-form-group>
                   </b-col>
                   <b-col sm="6" md="3">
                     <b-form-group label=".">
@@ -67,6 +70,7 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
+                            <b-dropdown-item v-if="Permission('AccountPayEdit')" @click="ModalProgramsShow(item.id_account_pay)">Programaciones</b-dropdown-item>
                             <b-dropdown-item v-if="Permission('AccountPayEdit') && item.id_module == 0" @click="EditAccountPay(item.id_account_pay)">Editar</b-dropdown-item>
                             <b-dropdown-item v-if="Permission('AccountPayView')" @click="ViewAccountPay(item.id_account_pay)" >Ver</b-dropdown-item >
                             <b-dropdown-item v-if="Permission('AccountPayDelete') && item.id_module == 0" @click="ConfirmDeleteAccountPay(item.id_account_pay)">Eliminar</b-dropdown-item>
@@ -138,6 +142,7 @@
                         </td>
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
+                            <b-dropdown-item v-if="Permission('AccountPayEdit')" @click="ModalProgramsShow(item.id_account_pay)">Programaciones</b-dropdown-item>
                             <b-dropdown-item v-if="Permission('AccountPayView')" @click="ViewAccountPay(item.id_account_pay)" >Ver</b-dropdown-item >
                           </b-dropdown>
                         </td>
@@ -315,6 +320,7 @@
     <LoadingComponent :is-visible="isLoading"/>
     <ModalBillExchange />
     <ModalEECCClient />
+    <ModalPrograms />
   </div>
 </template>
 
@@ -332,6 +338,7 @@ import CodeToName from "@/assets/js/CodeToName";
 import LoadingComponent from './../pages/Loading'
 import ModalBillExchange from './components/ModalBillExchange'
 import ModalEECCClient from './components/ModalEECCClient'
+import ModalPrograms from './components/ModalPrograms'
 export default {
   name: "UsuarioList",
   components:{
@@ -339,6 +346,7 @@ export default {
     LoadingComponent,
     ModalBillExchange,
     ModalEECCClient,
+    ModalPrograms,
   },
   data() {
     return {
@@ -419,6 +427,8 @@ export default {
     ConfirmDeleteAccountPay,
     DeleteAccountPay,
     Permission,
+
+    ModalProgramsShow,
   },
 
   computed: {
@@ -641,9 +651,16 @@ function ViewAccountPay(id_account_pay) {
 function ShowModalBillExchange(id_bill_exchange) {
   EventBus.$emit('ModalBillExchangeShow',id_bill_exchange);
 }
+
 function ShowModalEECC() {
   EventBus.$emit('ModalEECCShow');  
 }
+
+
+function ModalProgramsShow(id_account_pay) {
+  EventBus.$emit('ModalProgramsShow',id_account_pay);  
+}
+
 
 // Confirmar eliminar
 function ConfirmDeleteAccountPay(id_account_pay) {

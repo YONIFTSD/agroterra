@@ -7,73 +7,76 @@
             <strong> Modulo de Venta - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form">
-            
-              <b-row>
-                <b-col md="2">
+            <b-form id="Form" autocomplete="off">
+              
+              <b-row align-h="center">
+                <b-col sm="6" md="3" lg="2">
                   <b-form-group>
                     <b-form-select v-model="sale.id_warehouse" :options="warehouses"></b-form-select>
                     <small  v-if="errors.id_warehouse"  class="form-text text-danger">Seleccione un almacen</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="6" md="3" lg="2">
                   <b-form-group label="">
                     <b-form-select @change="ChangeCoin" v-model="sale.coin" :options="coins"></b-form-select>
                     <small  v-if="errors.coin"  class="form-text text-danger">Seleccione una moneda</small>
                   </b-form-group>
                 </b-col>
-    
-                <b-col md="2">
-                  <b-form-group>
+
+                <b-col sm="6" md="3" lg="2" v-if="type_business == 2">
+                  <b-form-group >
                     <b-button variant="warning" class="form-control"  @click="modalCurrecyConverterShow">Conversor de Divisas</b-button>
                   </b-form-group>
                 </b-col>
-                <b-col md="2">
+
+                <b-col sm="6" md="3" lg="2" v-if="type_business == 2">
                   <b-form-group>
                     <b-button class="form-control" variant="success" @click="modalOrders">Pedidos</b-button>
                   </b-form-group>
                 </b-col>
-                <b-col md="2">
+
+                <b-col sm="6" md="3" offset-lg="4" lg="2">
                   <b-form-group>
                     <b-form-input @change="SearchBarcode" ref="search_barcode" v-model="search_barcode" placeholder="Código de barras" type="text"></b-form-input>
                   </b-form-group>
                 </b-col>
-                <b-col md="2">
+                <b-col sm="6" md="3" lg="2">
                   <b-form-group>
                     <b-button class="form-control" variant="primary" @click="modalProducts"><i class="fas fa-cart-plus"></i> Productos (F2)</b-button>
                   </b-form-group>
                 </b-col>
-             
+             </b-row>
 
-               <b-col md="3">
+            <b-row>
+               <b-col sm="12" md="4" lg="3">
                   <b-form-group label="Comprobante :">
                     <b-form-select @change="ListSeries" v-model="sale.type_invoice" :options="type_invoice"></b-form-select>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="6" md="4" lg="2">
                   <b-form-group label="Serie :">
                     <b-form-select @change="GetNumberBySerie" v-model="sale.id_serie" :options="series"></b-form-select>
                     <small v-if="errors.id_serie"  class="form-text text-danger" >Seleccione una serie</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="6" md="4" lg="2">
                   <b-form-group label="Numero :">
                     <b-form-input class="text-center" readonly type="text" ref="number"  v-model="sale.number"></b-form-input>
                     <small v-if="errors.number" class="form-text text-danger">Ingrese un numero de 8 digitos</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col md="2">
+                <b-col sm="6" md="6" lg="2">
                   <b-form-group label="Fecha Emision:">
                     <b-form-input :readonly="document_type == 1" class="text-center" type="date" ref="broadcast_date" v-model="sale.broadcast_date"></b-form-input>
                     <small v-if="errors.broadcast_date" class="form-text text-danger">Seleccione una fecha</small>
                   </b-form-group>
                 </b-col>
 
-                 <b-col md="3">
+                 <b-col sm="6" md="6" lg="3">
                   <b-form-group>
                     <label class="control-label">Forma de Pago: <span v-if="disabled_fees_collected" class="badge badge-primary link" @click="ModalFeedCollected">Cuotas</span></label>
                     <b-form-select @change="BntFeesCollected" v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
@@ -81,7 +84,7 @@
                 </b-col>
                
                 
-                <b-col md="6">
+                <b-col sm="12" md="12" lg="6">
                   <b-form-group>
                     <label>Cliente: <span @click="modalClients" class="text-info link">Nuevo</span></label>
                     <v-select @input="AddressClient" placeholder="Seleccione un cliente" class="w-100" :filterable="false" label="full_name" v-model="client" @search="SearchClients" :options="clients"></v-select>
@@ -89,89 +92,127 @@
                   </b-form-group>
                 </b-col>
 
-                <b-col  v-if="type_business == 1 || type_business == 2" md="6">
+                <b-col sm="12" v-if="type_business == 1 || type_business == 2 || type_business == 4" md="12" lg="6">
                   <b-form-group label="Dirección :">
                     <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col  v-if="type_business == 3" md="4">
+                <b-col sm="12" v-if="type_business == 3" md="6" lg="4">
                   <b-form-group label="Dirección :">
                     <b-form-input type="text" ref="address"  v-model="sale.address"></b-form-input>
                     <small v-if="errors.address" class="form-text text-danger">Ingrese una dirección</small>
                   </b-form-group>
                 </b-col>
 
-                <b-col  v-if="type_business == 3" md="2">
+                <b-col sm="12" v-if="type_business == 3" md="6" lg="2">
                   <b-form-group label="Placa:">
                     <b-form-input type="text" v-model="sale.license_plate"></b-form-input>
                   </b-form-group>
                 </b-col>
                 
                 <!-- Detalle venta -->
-                <b-col md="12">
+                <b-col md="12" lg="12">
                     <SaleDetail :type_invoice="sale.type_invoice" :reason="sale.reason"/>
                     <small  v-if="errors.sale_detail"  class="form-text text-danger">Ingrese Productos</small>
                 </b-col>
 
                 <b-col md="12" class="mt-2"> <hr> </b-col>
-  
-                <b-col md="6">
-                  <b-form-group class="m-0" >
-                    <b-form-input readonly v-model="total_sale.number_to_letters" ></b-form-input>
+
+                <b-col sm="12" md="4" lg="3">
+                 
+                  <b-form-group label="Observación:">
+                    <b-form-textarea size="sm" v-model="sale.observation"></b-form-textarea>
                   </b-form-group>
-                  <b-row>
-                    
-                    <b-col md="7">
-                        <div class="table-responsive mt-3">
-                          <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
-                            <thead>
-                              <tr>
-                                <th width="25%" class="text-center">Fecha</th>
-                                <th width="65%" class="text-center">Refenrencia</th>
-                                <th width="10%" class="text-center">Acc.</th>
-                              </tr>
-                            </thead>
-                            <tbody v-for="(item, it) in linkages" :key="it">
-                              <tr>
-                                  <td class="align-middle text-center">{{ item.broadcast_date }}</td>
-                                  <td class="align-middle text-center">{{ item.reference }}</td>
-                                  <td class="align-middle text-center">
-                                    <button type="button" @click="DeleteLinkeage(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
-                                  </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                    </b-col>
-                    <b-col md="5" class="mt-2">
-                      <b-form-group  label="Observación:">
-                        <b-form-textarea v-model="sale.observation"></b-form-textarea>
-                      </b-form-group>
-                      
-                    </b-col>
-                  </b-row>
-                  
-                
+                  <div class="table-responsive">
+                    <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                      <thead>
+                        <tr>
+                          <th width="25%" class="text-center">Fecha</th>
+                          <th width="65%" class="text-center">Refenrencia</th>
+                          <th width="10%" class="text-center">Acc.</th>
+                        </tr>
+                      </thead>
+                      <tbody v-for="(item, it) in linkages" :key="it">
+                        <tr>
+                            <td class="align-middle text-center">{{ item.broadcast_date }}</td>
+                            <td class="align-middle text-center">{{ item.reference }}</td>
+                            <td class="align-middle text-center">
+                              <button type="button" @click="DeleteLinkeage(it)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </b-col>
+                <b-col sm="6" md="4" lg="2">
+                      <div class="table-responsive">
+                        <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                          <tbody >
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_detraction" switch size="sm" name="check-button" >¿Tiene Detracción?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_retention" switch size="sm" name="check-button" >¿Tiene retención de igv?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_discount" switch size="sm" name="check-button" >¿Tiene Descuento Global?</b-form-checkbox>
+                                </td>
+                            </tr> -->
+                            
+                          </tbody>
+                        </table>
+                      </div>
                 </b-col>
 
-                <b-col md="2">
-
+                <b-col sm="6" md="4" lg="3">
                   <div class="table-responsive">
                     <table  class="table   table-hover table-lg mt-lg mb-0">
                       <tbody>
-                        <tr>
-                            <td width="40%" class="align-middle text-right text-total">SUBTOTAL:</td>
-                            <td width="60%" class="align-middle text-right text-total">{{ total_sale.subtotal }}</td>
+                        <tr v-if="total_sale.check_detraction == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Detracción :</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <div class="input-group">
+                                <b-form-input size="sm" @change="mLoadTotalSaleDetail" type="number" step="any" class="text-right" v-model="total_sale.percentage_detraction"></b-form-input>
+                                <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.detraction"></b-form-input>
+                              </div>
+                            </td>
+                        </tr>
+                        <tr v-if="total_sale.check_retention == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Retencion (3%):</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.retention"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-right text-total">IGV:</td>
-                            <td class="align-middle text-right text-total">{{ total_sale.igv }}</td>
+                            <td width="50%" class="align-middle text-right text-total">Subtotal:</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.subtotal"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr v-if="total_sale.check_discount == '1'">
+                            <td class="align-middle text-right text-total">Descuento:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input size="sm" type="number" step="any" class="text-right" v-model="total_sale.discount"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-right text-total">TOTAL:</td>
-                            <td class="align-middle text-right text-total">{{ total_sale.total }}</td>
+                            <td class="align-middle text-right text-total">IGV ({{sale.igv_percentage}}%):</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.igv"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">Total:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="total_sale.total"></b-form-input>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="2" class="align-middle text-center"><small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small></td>
@@ -181,7 +222,7 @@
                   </div>
                 </b-col>
 
-                <b-col md="4">
+                <b-col sm="12" md="6" lg="4">
                   <div class="table-responsive">
                     <table  class="table  table-lg mt-lg mb-0">
                       <thead>
@@ -213,10 +254,48 @@
 
                 </b-col>
 
-                <b-col md="5"></b-col>
-                <b-col md="2">
-                  <b-button  type="button" @click="Validate" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
+                <b-col md="12">
+                  <br>
                 </b-col>
+                
+                <b-col v-if="type_business == 4" md="12">
+                  <b-row>
+                      <b-col sm="4" md="4" lg="2">
+                        <b-form-group label="Código SAP:">
+                          <b-form-input type="text" v-model="sale.code_sap"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col sm="4" md="4" lg="2">
+                        <b-form-group label="Pedido SAP:">
+                          <b-form-input type="text" v-model="sale.order_sap"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col sm="4" md="4" lg="2">
+                        <b-form-group label="Servicio:">
+                          <b-form-input type="text" v-model="sale.service"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="4"></b-col>
+                      <b-col md="12" sm="12" lg="2" >
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="Validate" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
+                        </b-form-group>
+                      </b-col>
+                  </b-row>
+                </b-col>
+                <b-col v-if="type_business != 4" md="12">
+                  <b-row>
+                      <b-col md="5"></b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="Validate" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
+                        </b-form-group>
+                      </b-col>
+                  </b-row>
+                </b-col>
+
+     
+                
 
             
 
@@ -238,7 +317,7 @@
               <p class="my-4 h3">Esta seguro de emitir la venta?</p>
           </b-col>
           <b-col md="6"> <b-form-select autofocus class="text-form-control" :options="quantity_vouchers" v-model="print_voucher"></b-form-select></b-col>
-          <b-col md="6"><b-button  ref="buttonconfirmsale" type="submit" variant="primary" class="form-control">Si, Estoy de Acuerdo !</b-button></b-col>
+          <b-col md="6"><b-button :disabled="btn_sale"  ref="buttonconfirmsale" type="submit" variant="primary" class="form-control">Si, Estoy de Acuerdo !</b-button></b-col>
         </b-row>
       </b-form>
     </b-modal>
@@ -273,8 +352,6 @@ input[type=number] {
   font-weight: 500;
 }
 
-
-</style>
 
 </style>
 <script>
@@ -342,7 +419,12 @@ export default {
         web_pay: 0,
         coin: "PEN",
         address: '',
-    
+        code_sap: '',
+        order_sap: '',
+        service: '',
+        check_contingency: "0",
+        check_retention: "0",
+        check_discount: "0",
         way_to_pay: "01-000",
         payment_type: "01",
         payment_method: "008",
@@ -362,12 +444,15 @@ export default {
         taxed_operation: '0.00',
         exonerated_operation: '0.00',
         unaffected_operation: '0.00',
+        retention: '0.00',
         discount: '0.00',
         subtotal: '0.00',
         igv: '0.00',
         total: '0.00',
+        net_total: '0.00',
         state: '1',
         number_to_letters: '',
+        igv_percentage:'',
       },
      
       series: null,
@@ -378,21 +463,24 @@ export default {
         {value: "01", text : "Factura"},
         {value: "03", text : "Boleta de Venta"},
         {value: "NV", text : "Nota de Venta"},
+        {value: "GC", text : "Guia de Crédito"},
       ],
-      
       coins:[
         {value: "PEN", text : "Soles"},
         {value: "USD", text : "Dolares"},
       ],
       way_to_pay:[
         {value:"01-000", text :'Contado'},
+        {value:"01-999", text :'Contado - Anticipo'},
         {value:'03-7',text:'Credito - 7 Dias'},
         {value:'03-15',text:'Credito - 15 Dias'},
         {value:'03-30',text:'Credito - 30 Dias'},
         {value:'03-45',text:'Credito - 45 Dias'},
         {value:'03-60',text:'Credito - 60 Dias'},
         {value:'03-75',text:'Credito - 75 Dias'},
-        {value:'03-90',text:'Credito - 75 Dias'},
+        {value:'03-90',text:'Credito - 90 Dias'},
+        {value:'03-105',text:'Credito - 105 Dias'},
+        {value:'03-120',text:'Credito - 120 Dias'},
       ],
 
        payment_method: [
@@ -405,6 +493,8 @@ export default {
           {value :"008", text :'EFECTIVO'},
           {value :"101", text :'TRANSFERENCIAS - COMERCIO EXTERIOR'},
           {value :"102", text :'CHEQUES BANCARIOS  - COMERCIO EXTERIOR'},
+          {value :"333", text :'RETENCIÓN'},
+          {value :"444", text :'DETRACCIÓN'},
           {value :"000", text :'PAGO POR WEB'},
       ],
 
@@ -420,13 +510,17 @@ export default {
         total: false,
       },
       validate: false,
+      btn_sale: false,
 
       ///cuotas 
       disabled_fees_collected: false,
     };
   },
   mounted() {
-    
+
+    EventBus.$on('GetDataClient', (data) => {
+      this.client = {id:data.id_client,full_name:data.name+" - "+data.document_number};
+    });
     
     EventBus.$on('InvoiceInformation', (data) => {
       this.client = data.client;
@@ -435,23 +529,29 @@ export default {
     });
 
     EventBus.$on('TotalPaymentCash', () => {
-      let total = this.total_sale.total;
-      let payment_method = this.sale.way_to_pay.split("-");
-      if (payment_method[0] == "01") {
-        if (this.payment_cash.length == 0) {
-          this.payment_cash.push(
-            {id_charge:'', payment_method:'008', document:'', total: parseFloat(total).toFixed(2)}
-          )
-        }else{
-          let total_payment = parseFloat(total) / parseFloat(this.payment_cash.length);
-          for (let index = 0; index < this.payment_cash.length; index++) {
-            this.payment_cash[index].total = parseFloat(total_payment).toFixed(2);
-          }
-        
-        }
-      }else{
+      
+      if (this.sale.way_to_pay == "01-999") {
         this.payment_cash = [];
+      }else{
+        let total = this.total_sale.total;
+        let payment_method = this.sale.way_to_pay.split("-");
+        if (payment_method[0] == "01") {
+          if (this.payment_cash.length == 0) {
+            this.payment_cash.push(
+              {id_charge:'', payment_method:'008', document:'', total: parseFloat(total).toFixed(2)}
+            )
+          }else{
+            let total_payment = parseFloat(total) / parseFloat(this.payment_cash.length);
+            for (let index = 0; index < this.payment_cash.length; index++) {
+              this.payment_cash[index].total = parseFloat(total_payment).toFixed(2);
+            }
+          
+          }
+        }else{
+          this.payment_cash = [];
+        }
       }
+      
       
     });
 
@@ -459,9 +559,10 @@ export default {
       this.sale.fees_collected = data;
     });
 
-
+    this.GetInformationSale();
     this.mLoadResetSaleDetail();
     this.mLoadResetLinkages();
+
     this.ListWarehouses();
     this.ListSeries();
     this.$refs.search_barcode.focus();
@@ -494,13 +595,15 @@ export default {
     DeletePaymentCash,
 
     ChangeCoin,
+    GetInformationSale,
 
     modalCurrecyConverterShow,
-    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages','mLoadAddSaleDetail','mLoadEditCoin']),
+    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadDeleteLinkages',
+    'mLoadAddSaleDetail','mLoadEditCoin','mLoadTotalSaleDetail','mLoadIgvPercentage']),
   },
 
   computed: {
-    ...mapState('Sale',['sale_detail','total_sale','linkages']),
+    ...mapState('Sale',['sale_detail','total_sale','linkages','igv_percentage']),
     ...mapState(["url_base"]),
     token: function () {
       let user = window.localStorage.getItem("user");
@@ -530,6 +633,23 @@ export default {
     }
   },
 };
+
+function GetInformationSale() {
+  
+  let me = this;
+  let url = this.url_base + "get-information-sale";
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: this.role, },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.sale.igv_percentage = response.data.result.igv_percentage;
+        me.mLoadIgvPercentage(response.data.result.igv_percentage);
+      } 
+    })
+}
 
 function ChangeCoin() {
   this.mLoadEditCoin(this.sale.coin);
@@ -573,7 +693,6 @@ function AddressClient() {
     })
 }
 
-
 function SearchClients(search, loading) {
   
    let me = this;
@@ -596,10 +715,9 @@ function SearchBarcode() {
     if (barcode.length == 0) {
       return false;
     }
-    this.search_barcode = "";
     let me = this;
     let url = this.url_base + "product/view-cost-barcode/" + barcode +"/"+ this.id_establishment;
-
+    
     axios({
       method: "GET",
       url: url,
@@ -618,21 +736,18 @@ function SearchBarcode() {
           unit_measure: response.data.result.unit_measure,
           igv: response.data.result.igv,
           existence_type: response.data.result.existence_type,
-          quantity: 1,
+          quantity: (1).toFixed(2),
           unit_price: unit_price.toFixed(2),
           total_price: total_price.toFixed(2),
         }
         me.mLoadAddSaleDetail(detail);
         me.search_barcode = '';
-
         const search_barcode = me.$refs.search_barcode;
         search_barcode.focus();
-
         EventBus.$emit('TotalPaymentCash');
         EventBus.$emit('ChangeFeesCollectedModal');
         
       }else{
-        me.search_barcode = '';
         const search_barcode = me.$refs.search_barcode;
         search_barcode.focus();
       }
@@ -657,7 +772,9 @@ function ListSeries() {
         let data = response.data.result;
         for (let index = 0; index < data.length; index++) {
           me.series.push( { value : data[index].id_serie , text: data[index].serie } );
-          me.sale.id_serie = data[index].id_serie;
+          if (data[index].default == 1) {
+            me.sale.id_serie = data[index].id_serie;
+          }
         }
         if (response.data.result.length == 0)  {
           me.sale.id_serie = '';
@@ -754,19 +871,27 @@ function AddSale() {
   me.sale.id_user = me.user.id_user;
   me.sale.id_establishment = me.id_establishment;
   me.sale.id_client = me.client.id;
+  me.sale.check_contingency = me.total_sale.check_contingency;
+  me.sale.check_detraction = me.total_sale.check_detraction;
+  me.sale.check_retention = me.total_sale.check_retention;
+  me.sale.check_discount = me.total_sale.check_discount;
   me.sale.taxed_operation = me.total_sale.taxed_operation;
   me.sale.unaffected_operation = me.total_sale.unaffected_operation;
   me.sale.exonerated_operation = me.total_sale.exonerated_operation;
+  me.sale.percentage_detraction = me.total_sale.percentage_detraction;
+  me.sale.detraction = me.total_sale.detraction;
+  me.sale.retention = me.total_sale.retention;
   me.sale.discount = me.total_sale.discount;
   me.sale.subtotal = me.total_sale.subtotal;
   me.sale.igv = me.total_sale.igv;
   me.sale.total = me.total_sale.total;
+  me.sale.net_total = me.total_sale.net_total;
   me.sale.number_to_letters = me.total_sale.number_to_letters;
   me.sale.linkages = me.linkages;
   me.sale.sale_detail = me.sale_detail;
   me.sale.payment_cash = me.payment_cash;
 
-  
+  me.btn_sale = true;
   let data = me.sale;
   axios({
     method: "POST",
@@ -791,9 +916,9 @@ function AddSale() {
         me.sale.broadcast_time = "";
         me.sale.expiration_date = moment(new Date()).local().format("YYYY-MM-DD");
         me.sale.coin = "PEN";
-        me.sale.way_to_pay = "01-008";
+        me.sale.way_to_pay = "01-000";
         me.sale.payment_type = "01";
-        me.sale.payment_method = "008";
+        me.sale.payment_method = "000";
         me.sale.payment_deadline = "0";
         me.sale.observation = "";
         me.sale.modified_document_type = "";
@@ -812,6 +937,7 @@ function AddSale() {
         me.sale.subtotal = '0.00';
         me.sale.igv = '0.00';
         me.sale.total = '0.00';
+        me.sale.net_total = '0.00';
         me.sale.state = '1';
         me.sale.number_to_letters = '';
         me.fees_collected = [];
@@ -839,12 +965,15 @@ function AddSale() {
         Swal.fire({ icon: 'error', text: response.data.response, timer: 3000,})
         me.$refs['modal-confirm-sale'].hide()
       }
+      me.btn_sale = false;
       me.isLoading = false;
+      
     })
     .catch((error) => {
       me.isLoading = false;
       Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-      me.$refs['modal-confirm-sale'].hide()
+      me.$refs['modal-confirm-sale'].hide();
+      me.btn_sale = false;
     });
 }
 
@@ -869,59 +998,56 @@ function Validate() {
   if (this.errors.total == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
 
-  
-  let total = 0;
-  let payment_method = this.sale.way_to_pay.split("-");
-  if (payment_method[0] == "01") {
-    this.sale.fees_collected = [];
-    for (let index = 0; index < this.payment_cash.length; index++) {
-      const element = this.payment_cash[index];
-      if (element.payment_method == "") {
-        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos cuenten con un metodo de pago', timer: 2000,}); return false;
-      }
-      if (element.total.length == 0) {
-        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
-      }
-      if (parseFloat(element.total) <= 0) {
-        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
-      }
-      total += parseFloat(element.total);
-    }
-    let balance_payment_cash = parseFloat(this.total_sale.total) - parseFloat(total);
-    if (balance_payment_cash < 0 || balance_payment_cash > 0.15) {
-      this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos coincidan con el total del comprobante', timer: 4000,}); 
-      return false;
-    }
-  }else{
-    this.payment_cash = [];
-    if (this.sale.fees_collected.length > 0) {
-      for (let index = 0; index < this.sale.fees_collected.length; index++) {
-        const element = this.sale.fees_collected[index];
-        if (element.date == "") {
-          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas cuenten con un fecha', timer: 2000,}); return false;
+  if (this.sale.way_to_pay != "01-999") {
+    let total = 0;
+    let payment_method = this.sale.way_to_pay.split("-");
+    if (payment_method[0] == "01") {
+      this.sale.fees_collected = [];
+      for (let index = 0; index < this.payment_cash.length; index++) {
+        const element = this.payment_cash[index];
+        if (element.payment_method == "") {
+          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos cuenten con un metodo de pago', timer: 2000,}); return false;
         }
         if (element.total.length == 0) {
-          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas sean mayores a 0', timer: 2000,}); return false;
+          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
         }
         if (parseFloat(element.total) <= 0) {
-          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas  sean mayores a 0', timer: 2000,}); return false;
+          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de los pagos sean mayores a 0', timer: 2000,}); return false;
         }
         total += parseFloat(element.total);
       }
-      let balance_fee_collection = parseFloat(this.total_sale.total) - parseFloat(total);
-      console.log(balance_fee_collection)
-      if (balance_fee_collection < 0 || balance_fee_collection > 0.15) {
-        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas coincidan con el total del comprobante', timer: 4000,}); 
+      let balance_payment_cash = parseFloat(this.total_sale.total) - parseFloat(total);
+      if (balance_payment_cash < 0 || balance_payment_cash > 0.15) {
+        this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que los pagos coincidan con el total del comprobante', timer: 4000,}); 
         return false;
       }
+    }else{
+      this.payment_cash = [];
+      if (this.sale.fees_collected.length > 0) {
+        for (let index = 0; index < this.sale.fees_collected.length; index++) {
+          const element = this.sale.fees_collected[index];
+          if (element.date == "") {
+            this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas cuenten con un fecha', timer: 2000,}); return false;
+          }
+          if (element.total.length == 0) {
+            this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas sean mayores a 0', timer: 2000,}); return false;
+          }
+          if (parseFloat(element.total) <= 0) {
+            this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que el total de las cuotas  sean mayores a 0', timer: 2000,}); return false;
+          }
+          total += parseFloat(element.total);
+        }
+        let balance_fee_collection = parseFloat(this.total_sale.net_total) - parseFloat(total);
+        if (balance_fee_collection < 0 || balance_fee_collection > 0.15) {
+          this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas coincidan con el total del comprobante', timer: 4000,}); 
+          return false;
+        }
+      }
+      
     }
-    
+  
   }
   
- 
-
-
-
   if (this.type_print == 1) {
     this.quantity_vouchers = [
       {value:0, text:'No imprimir'},
@@ -959,7 +1085,6 @@ function DataPrint(me,id_sale) {
       if (response.data.status == 200) {
         me.Print(response.data.result);
       } 
-
     })
   }
   if (this.type_print == 2) {
@@ -993,14 +1118,19 @@ function Print(info) {
 
 // CUOTAS DE PAGO
 function BntFeesCollected() {
-  let payment_type = this.sale.way_to_pay.split('-');
-  if (payment_type[0] == "03") {
-    this.disabled_fees_collected = true;
+  
+  if (this.sale.way_to_pay == "01-999") {
+    this.payment_cash = [];
   }else{
-    this.disabled_fees_collected = false;
-    this.sale.fees_collected = [];
-    
+    let payment_type = this.sale.way_to_pay.split('-');
+    if (payment_type[0] == "03") {
+      this.disabled_fees_collected = true;
+    }else{
+      this.disabled_fees_collected = false;
+      this.sale.fees_collected = [];
+    }
   }
+  
 
   EventBus.$emit('TotalPaymentCash');
 }

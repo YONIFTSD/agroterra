@@ -7,7 +7,7 @@
             <strong> Modulo Egresos - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form">
+            <b-form id="Form" autocomplete="off">
               <b-row>
 
                 <b-col md="6">
@@ -128,6 +128,8 @@ export default {
         {value: "52", text : "Despacho Simplificado - Importación Simplificada"},
         {value: "91", text : "Comprobante de No Domiciliado"},
         {value: "NE", text : "Nota de Entrada"},
+        {value: "NV", text : "Nota de Venta"},
+        {value: "RH", text : "Recibo por Honorarios"},
         {value: "00", text : "Otros"},
       ],
 

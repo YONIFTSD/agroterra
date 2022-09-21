@@ -30,7 +30,7 @@
             </div>
           </b-tab>
           <b-tab title="Nuevo">
-               <b-form id="Form" @submit.prevent="Validate">
+               <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
                   <b-row>
                 
 
@@ -41,14 +41,21 @@
                       </b-form-group>
                     </b-col>
 
-                    <b-col md="3">
+                    <b-col md="2">
                       <b-form-group label="Dólares :">
                         <b-form-input class="text-right" type="number" step="any" v-model="currency_converter.usd"></b-form-input>
                         <small v-if="errors.usd" class="form-text text-danger">Ingrese un monto</small>
                       </b-form-group>
                     </b-col>
 
-                    <b-col md="3">
+                    <b-col md="2">
+                      <b-form-group label="Euro :">
+                        <b-form-input class="text-right" type="number" step="any" v-model="currency_converter.eur"></b-form-input>
+                        <small v-if="errors.eur" class="form-text text-danger">Ingrese un monto</small>
+                      </b-form-group>
+                    </b-col>
+
+                    <b-col md="2">
                       <b-form-group label="Pesos Chilenos :">
                         <b-form-input class="text-right" type="number" step="any" v-model="currency_converter.clp"></b-form-input>
                         <small v-if="errors.clp" class="form-text text-danger">Ingrese un monto</small>
@@ -94,8 +101,9 @@
                       <tr>
                         <th width="5%" class="text-center">#</th>
                         <th width="25%" class="text-center">Fecha</th>
-                        <th width="20%" class="text-center">USD</th>
-                        <th width="20%" class="text-center">CLP</th>
+                        <th width="15%" class="text-center">USD</th>
+                        <th width="15%" class="text-center">EUR</th>
+                        <th width="15%" class="text-center">CLP</th>
                         <th width="20%" class="text-center">Estado</th>
                         <th width="10%" class="text-center">Acciones</th>
                       </tr>
@@ -105,13 +113,12 @@
                         <td class="text-center">{{ it + 1 }}</td>
                         <td class="text-center"> {{ item.date }}</td>
                         <td class="text-right"> {{ item.usd }}</td>
+                        <td class="text-right"> {{ item.eur }} </td>
                         <td class="text-right"> {{ item.clp }} </td>
                         <td class="text-center">
                             <b-badge v-if="item.state == 1" variant="success">Activo</b-badge>
                             <b-badge v-if="item.state == 0" variant="warning">Inactivo</b-badge>
                         </td>
-                        
-                                
                         <td class="text-center">
                           <b-dropdown bloque size="sm" text="Acciones" right>
                             <b-dropdown-item v-if="Permission('CurrencyConverterView')" @click="ViewCurrencyConverter(item.id_currency_converter)" >Ver</b-dropdown-item >
@@ -182,6 +189,7 @@ export default {
           date: moment(new Date()).local().format("YYYY-MM-DD"),
           usd: parseFloat(0).toFixed(2),
           clp: parseFloat(0).toFixed(2),
+          eur: parseFloat(0).toFixed(2),
           state: 1,
         },
 
@@ -219,6 +227,7 @@ export default {
       this.currency_converter.date = moment(new Date()).local().format("YYYY-MM-DD");
       this.currency_converter.usd = parseFloat(0).toFixed(2),
       this.currency_converter.pen = parseFloat(0).toFixed(2),
+      this.currency_converter.eur = parseFloat(0).toFixed(2),
       this.currency_converter.state = 1;
     });
     
@@ -335,8 +344,9 @@ function SaveCurrencyConverter(me) {
           me.currency_converter.id_user = 0;
           me.currency_converter.coin = 'USD';
           me.currency_converter.date = moment(new Date()).local().format("YYYY-MM-DD");
-          me.currency_converter.usd = 0;
-          me.currency_converter.clp = 0;
+          me.currency_converter.usd = '0.00';
+          me.currency_converter.clp = '0.00';
+          me.currency_converter.eur = '0.00';
           me.currency_converter.state = 1;
           Swal.fire({ icon: 'success', text: 'Se ha registrado la divisa', timer: 3000,})
           me.ListCurrencyConverter();
@@ -345,8 +355,9 @@ function SaveCurrencyConverter(me) {
          me.currency_converter.id_user = 0;
           me.currency_converter.coin = 'USD';
           me.currency_converter.date = moment(new Date()).local().format("YYYY-MM-DD");
-          me.currency_converter.usd = 0;
-          me.currency_converter.clp = 0;
+          me.currency_converter.usd = '0.00';
+          me.currency_converter.clp = '0.00';
+          me.currency_converter.eur = '0.00';
           me.currency_converter.state = 1;
           Swal.fire({ icon: 'success', text: 'se ha modificado la divisa', timer: 3000,})
           me.ListCurrencyConverter();
@@ -370,11 +381,13 @@ function Validate() {
   this.errors.coin = this.currency_converter.coin == 0 ? true : false;
   this.errors.usd = this.currency_converter.usd == 0 ? true : false;
   this.errors.clp = this.currency_converter.clp == 0 ? true : false;
+  this.errors.eur = this.currency_converter.eur == 0 ? true : false;
 
   if (this.errors.date == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.coin == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.usd == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.clp == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.eur == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
   if (this.validate) {
     return false;
@@ -419,6 +432,7 @@ function ViewCurrencyConverter(id_currency_converter) {
           me.currency_converter.date = response.data.result.date;
           me.currency_converter.usd = response.data.result.usd;
           me.currency_converter.clp = response.data.result.clp;
+          me.currency_converter.eur = response.data.result.eur;
           me.currency_converter.state = response.data.result.state;
       }else{
         Swal.fire({ icon: 'error', text: response.data.message, timer: 3000,})
@@ -490,6 +504,25 @@ function CalculateCurrence(index) {
       this.currency_converter_active[index].total = total.toFixed(2);
     }
   }
+
+  if (this.currency_converter_active[index].from == "EUR") {
+    this.currency_converter_active[index].amount = this.currency_converter_active[index].amount.length == 0 ? 0 :this.currency_converter_active[index].amount;
+    if (this.currency_converter_active[index].to == "PEN") {
+      let total = parseFloat(this.currency_converter_active[index].exchange_rate) * parseFloat(this.currency_converter_active[index].amount);
+      this.currency_converter_active[index].amount = parseFloat(this.currency_converter_active[index].amount).toFixed(2);
+      this.currency_converter_active[index].total = total.toFixed(2);
+    }
+  }
+  if (this.currency_converter_active[index].from == "PEN") {
+    this.currency_converter_active[index].amount = this.currency_converter_active[index].amount.length == 0 ? 0 :this.currency_converter_active[index].amount;
+    if (this.currency_converter_active[index].to == "EUR") {
+      let total = parseFloat(this.currency_converter_active[index].amount) / parseFloat(this.currency_converter_active[index].exchange_rate);
+      this.currency_converter_active[index].amount = parseFloat(this.currency_converter_active[index].amount).toFixed(2);
+      this.currency_converter_active[index].total = total.toFixed(2);
+    }
+  }
+
+  
   if (this.currency_converter_active[index].from == "CLP") {
     this.currency_converter_active[index].amount = this.currency_converter_active[index].amount.length == 0 ? 0 :this.currency_converter_active[index].amount;
     if (this.currency_converter_active[index].to == "PEN") {

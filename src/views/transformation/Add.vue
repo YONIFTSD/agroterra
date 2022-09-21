@@ -7,7 +7,7 @@
             <strong> Modulo de Transformación - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
        
                 <b-tabs  v-model="tabIndex" content-class="mt-3" justified>
                   <b-tab :disabled="first" title="Datos de Salida">

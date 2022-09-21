@@ -7,7 +7,7 @@
             <strong> Modulo de Nota de Crédito y Débito - Agregar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
        
                 <b-col md="2">
@@ -151,7 +151,7 @@
                             <td width="60%" class="align-middle text-right text-total">{{ total_sale.subtotal }}</td>
                         </tr>
                         <tr>
-                            <td class="align-middle text-right text-total">IGV:</td>
+                            <td class="align-middle text-right text-total">IGV ({{sale.igv_percentage}}%):</td>
                             <td class="align-middle text-right text-total">{{ total_sale.igv }}</td>
                         </tr>
                         <tr>
@@ -198,13 +198,50 @@
 
                 </b-col>
 
-                <b-col md="4"></b-col>
-                <b-col md="2">
-                  <b-button  type="button" @click="DataPrint(sale.id_sale)" class="form-control" variant="warning" >IMPRIMIR</b-button>
+                <b-col md="12">
+                  <br>
                 </b-col>
-                <b-col md="2">
-                  <b-button  type="submit" class="form-control" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
+
+                <b-col v-if="type_business == 4" md="12">
+                  <b-row>
+                      <b-col md="2">
+                        <b-form-group label="Código SAP:">
+                          <b-form-input type="text" v-model="sale.code_sap"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label="Pedido SAP:">
+                          <b-form-input type="text" v-model="sale.order_sap"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="2">
+                        <b-form-group label="Servicio:">
+                          <b-form-input type="text" v-model="sale.service"></b-form-input>
+                        </b-form-group>
+                      </b-col>
+                      <b-col md="4"></b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="Validate" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
+                        </b-form-group>
+                      </b-col>
+                  </b-row>
                 </b-col>
+                <b-col v-if="type_business != 4" md="12">
+                  <b-row>
+                      <b-col md="5"></b-col>
+                      <b-col md="2">
+                        <b-form-group label=".">
+                          <b-button  type="button" @click="Validate" class="form-control text-white" variant="primary" ><i class="fas fa-save"></i> Guardar (F4)</b-button>
+                        </b-form-group>
+                      </b-col>
+                  </b-row>
+                </b-col>
+
+
+
+
+
               </b-row>
             </b-form>
 
@@ -305,6 +342,12 @@ export default {
         coin: "PEN",
         address: "",
         license_plate : "",
+        code_sap: '',
+        order_sap: '',
+        service: '',
+        check_contingency: "0",
+        check_retention: "0",
+        check_discount: "0",
         way_to_pay: "01-000",
         payment_type: "01",
         payment_method: "008",
@@ -328,7 +371,8 @@ export default {
         total: '0.00',
         state: '1',
         number_to_letters: '',
-        fees_collected:[]
+        fees_collected:[],
+        igv_percentage:'',
       },
       reason:[
         {value:'01',text:'Anulación de la operación'},
@@ -356,7 +400,9 @@ export default {
         {value:'03-45',text:'Credito - 45 Dias'},
         {value:'03-60',text:'Credito - 60 Dias'},
         {value:'03-75',text:'Credito - 75 Dias'},
-        {value:'03-90',text:'Credito - 75 Dias'},
+        {value:'03-90',text:'Credito - 90 Dias'},
+        {value:'03-105',text:'Credito - 105 Dias'},
+        {value:'03-120',text:'Credito - 120 Dias'},
       ],
       type_invoice_sale:'',
       serie_sale:'',
@@ -381,6 +427,8 @@ export default {
           {value :"008", text :'EFECTIVO'},
           {value :"101", text :'TRANSFERENCIAS - COMERCIO EXTERIOR'},
           {value :"102", text :'CHEQUES BANCARIOS  - COMERCIO EXTERIOR'},
+          {value :"333", text :'RETENCIÓN'},
+          {value :"444", text :'DETRACCIÓN'},
           {value :"000", text :'PAGO POR WEB'},
       ],
       cashs:[],
@@ -459,7 +507,8 @@ export default {
     ModalFeedCollected,
 
     ChangeCoin,
-    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadAddSaleDetail','mLoadAddLinkages','mLoadEditCoin']),
+    ...mapActions('Sale',['mLoadResetSaleDetail','mLoadResetLinkages','mLoadAddSaleDetail','mLoadAddLinkages',
+    'mLoadEditCoin','mLoadIgvPercentage']),
   },
 
   computed: {
@@ -479,6 +528,11 @@ export default {
       let user = window.localStorage.getItem("user");
       user = JSON.parse(JSON.parse(je.decrypt(user)));
       return user;
+    },
+    type_business: function () {
+      let type_business = window.localStorage.getItem("type_business");
+      type_business = JSON.parse(JSON.parse(je.decrypt(type_business)));
+      return type_business.type_business;
     },
     id_establishment: function () {
       let establishment = window.localStorage.getItem("id_establishment");
@@ -557,7 +611,9 @@ function ListSeries() {
         let data = response.data.result;
         for (let index = 0; index < data.length; index++) {
           me.series.push( { value : data[index].id_serie , text: data[index].serie } );
-          me.sale.id_serie = data[index].id_serie;
+          if (data[index].default == 1) {
+            me.sale.id_serie = data[index].id_serie;
+          }
         }
         if (response.data.result.length == 0)  {
           me.sale.id_serie = '';
@@ -664,7 +720,8 @@ function ViewSale() {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-      
+      me.sale.igv_percentage = response.data.result.igv_percentage;
+        me.mLoadIgvPercentage(response.data.result.igv_percentage);
         me.client = {id: response.data.result.id_client,full_name: response.data.result.name + ' - ' + response.data.result.document_number};
         me.mLoadEditCoin(response.data.result.coin);
         me.sale.id_sale = response.data.result.id_sale,
@@ -755,13 +812,21 @@ function AddSale() {
   me.sale.id_user = me.user.id_user;
   me.sale.id_establishment = me.id_establishment;
   me.sale.id_client = me.client.id;
+  me.sale.check_contingency = me.total_sale.check_contingency;
+  me.sale.check_detraction = me.total_sale.check_detraction;
+  me.sale.check_retention = me.total_sale.check_retention;
+  me.sale.check_discount = me.total_sale.check_discount;
   me.sale.taxed_operation = me.total_sale.taxed_operation;
   me.sale.unaffected_operation = me.total_sale.unaffected_operation;
   me.sale.exonerated_operation = me.total_sale.exonerated_operation;
+  me.sale.percentage_detraction = me.total_sale.percentage_detraction;
+  me.sale.detraction = me.total_sale.detraction;
+  me.sale.retention = me.total_sale.retention;
   me.sale.discount = me.total_sale.discount;
   me.sale.subtotal = me.total_sale.subtotal;
   me.sale.igv = me.total_sale.igv;
   me.sale.total = me.total_sale.total;
+   me.sale.net_total = me.total_sale.net_total;
   me.sale.number_to_letters = me.total_sale.number_to_letters;
   me.sale.linkages = me.linkages;
   me.sale.sale_detail = me.sale_detail;

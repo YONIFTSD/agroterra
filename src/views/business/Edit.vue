@@ -7,7 +7,7 @@
             <strong> Modulo de Empresa - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-tabs align="center" content-class="mt-3">
                 <b-tab title="Datos de Empresa" active>
                   <b-row>
@@ -30,6 +30,15 @@
                         <b-form-input type="number" step="any"  class="text-right" v-model="business.exchange_rate" ></b-form-input>
                         <small v-if="errors.exchange_rate" class="form-text text-danger">Ingrese un tipo de cambio</small>
                       </b-form-group>
+
+                      <b-form-group label="Tipo de Detracción :">
+                        <b-form-select v-model="business.type_detraction" :options="type_detraction"></b-form-select>
+                      </b-form-group>
+
+                      <b-form-group label="IGV (%) :">
+                        <b-form-select :options="igv_percentage" v-model="business.igv_percentage"></b-form-select>
+                      </b-form-group>
+
 
 
                     </b-col>
@@ -140,12 +149,20 @@
                           </b-form-group>
                         </b-col>
 
-                        <b-col md="3"></b-col>
-                        <b-col md="3">
-                          <b-button type="button" @click="ModalThemeShow" class="form-control text-white"  variant="primary" >Tema</b-button >
+                    
+                        <b-col md="4">
+                          <b-button type="button" @click="DownloadBD" class="form-control text-white"  variant="warning" >
+                              <i class="fas fa-database"></i>  Descargar Respaldo de BD 
+                          </b-button >
                         </b-col>
-                        <b-col md="3">
-                          <b-button type="submit" class="form-control text-white"  variant="primary" >Guardar</b-button >
+                        <b-col md="4">
+                          <b-button type="button" @click="ModalThemeShow" class="form-control text-white"  variant="info" >
+                            <i class="fas fa-star"></i>
+                            Tema
+                          </b-button >
+                        </b-col>
+                        <b-col md="4">
+                          <b-button type="submit" class="form-control text-white"  variant="primary" ><i class="fas fa-save"></i> Guardar</b-button >
                         </b-col>
 
                     </b-row>
@@ -157,12 +174,21 @@
                 </b-tab>
                 <b-tab title="Cuentas Bancarias">
                   <b-row>
-                      <b-col md="5">
+                      <b-col md="2">
+                        <b-form-group label="Tipo de Cuenta :">
+                          <b-form-select  v-model="bank_account.type_account" :options="type_account"></b-form-select>
+                          <small v-if="errors.bank" class="form-text text-danger">Ingrese un banco</small>
+                        </b-form-group>
+                      </b-col>
+
+                      <b-col md="3">
                         <b-form-group label="Banco :">
                           <b-form-select  v-model="bank_account.bank" :options="bank"></b-form-select>
                           <small v-if="errors.bank" class="form-text text-danger">Ingrese un banco</small>
                         </b-form-group>
                       </b-col>
+                      
+                      
                       <b-col md="2">
                         <b-form-group label="Moneda :">
                           <b-form-select  v-model="bank_account.coin" :options="coin"></b-form-select>
@@ -192,7 +218,8 @@
                       <thead>
                         <tr>
                           <th width="5%" class="text-center">#</th>
-                          <th width="50%" class="text-center">Banco</th>
+                          <th width="15%" class="text-center">Tipo</th>
+                          <th width="35%" class="text-center">Banco</th>
                           <th width="10%" class="text-center">Moneda</th>
                           <th width="15%" class="text-center">Cuenta</th>
                           <th width="15%" class="text-center">CCI</th>
@@ -202,6 +229,7 @@
                       <tbody v-for="(item, it) in business.bank_account" :key="it">
                         <tr>
                           <td class="text-center">{{ it + 1 }}</td>
+                          <td class="text-left"> {{ NameTypeAccount(item.type_account)  }}</td>
                           <td class="text-left"> {{ NameBank(item.bank)  }}</td>
                           <td class="text-center"> {{ item.coin  }}</td>
                           <td class="text-left"> {{ item.account  }}</td>
@@ -288,14 +316,56 @@ export default {
         state: 1,
         type_price: 1,
         exchange_rate:0,
+        type_detraction:'',
+        igv_percentage:'',
         bank_account:[],
       },
       bank_account:{
+        type_account:'',
         bank:'',
         coin:'PEN',
         account:'',
         cci:'',
       },
+       type_detraction:[
+        {value:"",text:'Seleccione una Detracción'},
+        {value: '001', text:'001 - Azúcar'},
+        {value: '003', text:'003 - Alcohol etílico'},
+        {value: '004', text:'004 - Recursos hidrobiológicos'},
+        {value: '005', text:'005 - Maíz amarillo duro'},
+        {value: '006', text:'006 - Algodón'},
+        {value: '007', text:'007 - Caña de azúcar'},
+        {value: '008', text:'008 - Madera'},
+        {value: '009', text:'009 - Arena y piedra.'},
+        {value: '010', text:'010 - Residuos, subproductos, desechos, recortes y desperdicios'},
+        {value: '011', text:'011 - Bienes del inciso A) del Apéndice I de la Ley del IGV'},
+        {value: '012', text:'012 - Intermediación laboral y tercerización'},
+        {value: '013', text:'013 - Animales vivos'},
+        {value: '014', text:'014 - Carnes y despojos comestibles'},
+        {value: '015', text:'015 - Abonos, cueros y pieles de origen animal'},
+        {value: '016', text:'016 - Aceite de pescado'},
+        {value: '017', text:'017 - Harina, polvo y “pellets” de pescado, crustáceos, moluscos y demás invertebrados acuáticos'},
+        {value: '018', text:'018 - Embarcaciones pesqueras'},
+        {value: '019', text:'019 - Arrendamiento de bienes muebles'},
+        {value: '020', text:'020 - Mantenimiento y reparación de bienes muebles'},
+        {value: '021', text:'021 - Movimiento de carga'},
+        {value: '022', text:'022 - Otros servicios empresariales'},
+        {value: '023', text:'023 - Leche'},
+        {value: '024', text:'024 - Comisión mercantil'},
+        {value: '025', text:'025 - Fabricación de bienes por encargo'},
+        {value: '026', text:'026 - Servicio de transporte de personas'},
+        {value: '029', text:'029 - Algodón en rama sin desmontar'},
+        {value: '030', text:'030 - Contratos de construcción'},
+        {value: '031', text:'031 - Oro gravado con el IGV'},
+        {value: '032', text:'032 - Páprika y otros frutos de los géneros capsicum o pimienta'},
+        {value: '033', text:'033 - Espárragos'},
+        {value: '034', text:'034 - Minerales metálicos no auríferos'},
+        {value: '035', text:'035 - Bienes exonerados del IGV'},
+        {value: '036', text:'036 - Oro y demás minerales metálicos exonerados del IGV'},
+        {value: '037', text:'037 - Demás servicios gravados con el IGV'},
+        {value: '039', text:'039 - Minerales no metálicos'},
+        {value: '040', text:'040 - Bien inmueble gravado con IGV'},
+      ],
       countries:[
         {value:'PE', text:'Perú'}
       ],
@@ -311,6 +381,12 @@ export default {
       coin:[
         {value: "PEN", text : "Soles"},
         {value: "USD", text : "Dolares"},
+      ],
+      type_account:[
+        {value:'',text:'Seleccione un tipo de cuenta'},
+        {value:'01',text:'Cuenta corriente'},
+        {value:'02',text:'Cuenta de ahorros'},
+        {value:'03',text:'Cuenta de detracción'},
       ],
       bank:[
         {value :'', text:'Seleccione una opción'},
@@ -356,6 +432,10 @@ export default {
       ubigees : [],
       logo: null,
       certificate: null,
+      igv_percentage: [
+        {value:10, text:"10%"},
+        {value:18, text:"18%"},
+      ],
       //errors
       errors: {
         document_number: false,
@@ -392,6 +472,9 @@ export default {
     AddBankAccount,
     DeleteBankAccount,
     NameBank,
+    NameTypeAccount,
+
+    DownloadBD,
     
   },
 
@@ -413,6 +496,15 @@ function onLogoChange(e) {
 function onCertificateChange(e) {
   this.business.certificate_change = e.target.files[0];
 }
+function NameTypeAccount(code) {
+  var type_account = '';
+  switch (code) {
+    case '01': type_account = 'Cuenta corriente'; break;
+    case '02': type_account = 'Cuenta de ahorros'; break;
+    case '03': type_account = 'Cuenta de detracción'; break;
+  }
+  return type_account;
+}
 
 function ListUbigeos() {
  this.ubigees = [];
@@ -432,10 +524,15 @@ function ListUbigeos() {
 }
 
 function AddBankAccount() {
+  if (this.bank_account.type_account.length == 0) {
+    Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); 
+    return false;
+  }
   if (this.bank_account.bank.length == 0) {
     Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); 
     return false;
   }
+  
   if (this.bank_account.coin.length == 0) {
     Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); 
     return false;
@@ -449,12 +546,14 @@ function AddBankAccount() {
     return false;
   }
   this.business.bank_account.push({ 
+    type_account : this.bank_account.type_account,
     bank : this.bank_account.bank,
     coin : this.bank_account.coin,
     account : this.bank_account.account,
     cci : this.bank_account.cci
   });
 
+  this.bank_account.type_account = '';
   this.bank_account.bank = '';
   this.bank_account.coin = '';
   this.bank_account.account = '';
@@ -465,6 +564,13 @@ function NameBank(code) {
 }
 function DeleteBankAccount(index) {
   this.business.bank_account.splice(index, 1);
+}
+
+
+function DownloadBD() {
+  let me = this;
+  let url = me.url_base + "download-backup-sql";
+  window.open(url,'_blank');
 }
 
 //ver usuario
@@ -500,9 +606,11 @@ function ViewBusiness(me) {
         me.business.invoice_url = response.data.result.invoice_url;
         me.business.state = response.data.result.state;
         me.business.type_price = response.data.result.type_price;
+        me.business.type_detraction = response.data.result.type_detraction;
         me.business.exchange_rate = response.data.result.exchange_rate;
         me.business.email_backup = response.data.result.email_backup;
         me.business.bank_account = response.data.result.bank_account;
+        me.business.igv_percentage = response.data.result.igv_percentage;
         for (let index = 0; index < me.ubigees.length; index++) {
           const element = me.ubigees[index];
           if (element.value == me.business.ubigee) {
@@ -554,10 +662,12 @@ function EditBusiness(me) {
   data.append("process_type", me.business.process_type);
   data.append("logo", me.business.logo_change);
   data.append("type_price", me.business.type_price);
+  data.append("type_detraction", me.business.type_detraction);
   data.append("exchange_rate", me.business.exchange_rate);
   data.append("email_backup", me.business.email_backup);
   data.append("phone", me.business.phone);
   data.append("email", me.business.email);
+  data.append("igv_percentage", me.business.igv_percentage);
   data.append("bank_account", JSON.stringify(me.business.bank_account));
   
   axios({
@@ -593,6 +703,7 @@ function Validate() {
   this.errors.process_type = this.business.process_type.length == 0 ? true : false;
   this.errors.phone = this.business.phone.length == 0 ? true : false;
   this.errors.email = this.business.email.length == 0 ? true : false;
+  this.errors.igv_percentage = this.business.igv_percentage.length == 0 ? true : false;
 
 
 
@@ -606,6 +717,7 @@ function Validate() {
   if (this.errors.process_type) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.phone) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
   if (this.errors.email) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  if (this.errors.igv_percentage) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
 
 
 

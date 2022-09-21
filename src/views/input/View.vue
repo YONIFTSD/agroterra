@@ -7,7 +7,7 @@
             <strong> Modulo de Entrada - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-tabs content-class="mt-3" >
                 <b-tab title="Datos de Entrada" active>
                   <b-row>
@@ -80,6 +80,8 @@
                                 <th width="50%" class="text-center">Nombre</th>
                                 <th width="10%" class="text-center">UM</th>
                                 <th width="7%" class="text-center">Cantidad</th>
+                                <th width="7%" class="text-center">Bulto</th>
+                                <!-- <th width="7%" class="text-center">F. Venc.</th> -->
                         
                               </tr>
                             </thead>
@@ -90,6 +92,8 @@
                                   <td class="align-middle text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation ) }}</td>
                                   <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
                                   <td class="align-middle text-right">{{ item.quantity }}</td>
+                                  <td class="align-middle text-right">{{ item.package }}</td>
+                                  <!-- <td class="align-middle text-center">{{ item.expiration_date }}</td> -->
                               </tr>
                             </tbody>
                           </table>

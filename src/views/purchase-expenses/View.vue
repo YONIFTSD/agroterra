@@ -7,7 +7,7 @@
             <strong> Modulo Gastos de Compra - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="6">
@@ -200,6 +200,7 @@ export default {
         {value: "52", text : "Despacho Simplificado - Importación Simplificada"},
         {value: "91", text : "Comprobante de No Domiciliado"},
         {value: "NE", text : "Nota de Entrada"},
+        {value: "RH", text : "Recibo por Honorarios"},
         {value: "00", text : "Otros"},
       ],
 
@@ -311,7 +312,10 @@ function ShowModalProvider() {
 }
 
 function modalExachangeRate() {
-  EventBus.$emit('ModalExchangeRateShow');
+  let data = {
+    date : this.purchase_expenses.broadcast_date
+  }
+  EventBus.$emit('ModalExchangeRateShow',data);
 }
 //ver usuario
 function ViewPurchaseExpenses() {

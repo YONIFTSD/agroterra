@@ -7,7 +7,7 @@
             <strong> Modulo de Kardex Inicial - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
 
@@ -47,9 +47,15 @@
                 </b-col>
 
 
-                <b-col md="9">
+                <b-col md="7">
                   <b-form-group label="Observación:">
                     <b-form-input rows="1"  v-model="initial_kardex.observation" max-rows="2"></b-form-input>
+                  </b-form-group>
+                </b-col>
+
+                <b-col md="2">
+                  <b-form-group label=".">
+                    <b-button type="button" @click="ModalProductShow" variant="primary" class="form-control">Productos</b-button>
                   </b-form-group>
                 </b-col>
 
@@ -181,6 +187,7 @@
     </CRow>
 
     <LoadingComponent :is-visible="isLoading"/>
+    <ModalProduct />
   </div>
 </template>
 
@@ -215,11 +222,13 @@ import converter from "@/assets/js/NumberToLetters";
 import { mapState,mapActions } from "vuex";
 import LoadingComponent from './../pages/Loading'
 import CodeToName from "@/assets/js/CodeToName";
+import ModalProduct from './components/ModalProduct'
 export default {
   name: "UsuarioAdd",
   props: ["id_initial_kardex"],
   components:{
       LoadingComponent,
+      ModalProduct,
   },
   data() {
     return {
@@ -285,6 +294,13 @@ export default {
     };
   },
   mounted() {
+    EventBus.$on('RefreshInitialDetail', () => {
+      this.isLoading = true;
+      this.totalRows = this.initial_kardex_detail.length
+      this.ListWarehouses();
+      this.ViewInitialKardex();
+  
+    });
     this.isLoading = true;
     this.totalRows = this.initial_kardex_detail.length
     this.ListWarehouses();
@@ -332,6 +348,8 @@ export default {
 
     NameUnitMeasure,
 
+    ModalProductShow,
+
     ...mapActions('InitialKardex',['mLoadAddInitialKardexDetail','mLoadResetInitialKardexDetail']),
   },
 
@@ -362,6 +380,11 @@ export default {
     }
   },
 };
+
+
+function ModalProductShow() {
+    EventBus.$emit('ModalProductsShow',3,this.initial_kardex.id_initial_kardex);
+}
 
 function NameUnitMeasure(code) {
   return CodeToName.NameUnitMeasure(code);

@@ -1,40 +1,78 @@
 <template>
   <div>
-    <b-modal size="lg" hide-footer v-model="modalEECC" class="w-100" title="Cuentas por cobrar por cliente">
+    <b-modal size="xl" hide-footer v-model="modalEECC" class="w-100" title="Cuentas por Pagar por Proveedor">
      
-      <b-col md="12">
-        <div class="table-responsive mt-3">
-          <table class="table table-hover table-bordered">
-            <thead>
-              <tr>
-                <th width="5%" class="text-center">#</th>
-                <th width="65%" class="text-center">Cliente</th>
-                <th width="15%" class="text-center">Deuda en <br> Soles</th>
-                <th width="15%" class="text-center">Deuda en <br> Dolares</th>
-              </tr>
-            </thead>
-            <tbody v-for="(item, it) in accoun_receivable_pending" :key="it">
-              <tr>
-                <td class="text-center">{{ it + 1 }}</td>
-                <td class="text-left">{{ item.client }}</td>
-                <td class="text-right">{{ item.balance_pen }}</td>
-                <td class="text-right">{{ item.balance_usd }}</td>
-        
-          
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </b-col>
+      <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
+            <b-row>
 
-      <b-row class="mt-4">
-        <b-col md="8">
-          <b-pagination v-model="currentPage_pending" v-on:input="ListAccountReceivablePending" :total-rows="rows_pending" :per-page="perPage_pending" align="center"></b-pagination>
-        </b-col>
-        <b-col md="4 text-center">
-          <p>Pagina Actual: {{ currentPage_pending }}</p>
-        </b-col>
-      </b-row>
+               
+                
+
+                <b-col sm="12" md="10">
+                  <b-form-group>
+                    <label>Proveedor: </label>
+                    <v-select placeholder="Todos" @input="Validate" class="w-100" :filterable="false" label="name" v-model="provider" @search="SearchProviders" :options="providers"></v-select>
+                  </b-form-group>
+                </b-col>
+
+   
+
+                <b-col sm="12" md="2">
+                  <b-form-group label="Moneda">
+                    <b-form-select @change="Validate" v-model="report.coin" :options="coin"></b-form-select>
+                  </b-form-group>
+                </b-col>
+
+
+
+            </b-row>
+          </b-form>
+
+
+            <div class="table-responsive mt-3">
+              <table class="table table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th class="text-center" colspan="19">CUENTAS POR PAGAR AL {{report.to}} {{NameCoin(report.coin)}} ) </th>
+                  </tr>
+                  <tr>
+                    <th width="8%" class="text-center">F. Emision</th>
+                    <th width="8%" class="text-center">F. Vcto</th>
+                    <th width="12%" class="text-center">Documento</th>
+                    <th width="48%" class="text-center">Acreedor</th>
+                    <th width="7%" class="text-center">Moneda</th>
+                    <th width="8%" class="text-center">Importe</th>
+                    <th width="8%" class="text-center">A Cuenta</th>
+                    <th width="8%" class="text-center">Saldo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, it) in data_table" :key="it">
+                    <td class="text-center">{{item.broadcast_date}}</td>
+                    <td class="text-center">{{item.expiration_date}}</td>
+                    <td class="text-center">{{ item.document }}</td>
+                    <td class="text-left">{{ item.provider }}</td>
+                    <td class="text-center">{{item.coin}}</td>
+                    <td class="text-right">{{item.total}}</td>
+                    <td class="text-right">{{item.fee}}</td>
+                    <td class="text-right">{{item.balance}}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="text-right">TOTAL DOLARES</td>
+                    <td class="text-right">{{total_usd.total}}</td>
+                    <td class="text-right">{{total_usd.fee}}</td>
+                    <td class="text-right">{{total_usd.balance}}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="5" class="text-right">TOTAL SOLES</td>
+                    <td class="text-right">{{total_pen.total}}</td>
+                    <td class="text-right">{{total_pen.fee}}</td>
+                    <td class="text-right">{{total_pen.balance}}</td>
+                  </tr>
+                </tbody>
+               
+              </table>
+            </div>
 
       
     </b-modal>
@@ -46,6 +84,10 @@
 
 </style>
 <script>
+import vSelect from "vue-select";
+import 'vue-select/dist/vue-select.css';
+import "vue-select/src/scss/vue-select.scss";
+
 const axios = require("axios").default;
 const Swal = require("sweetalert2");
 const je = require("json-encrypt");
@@ -55,21 +97,47 @@ import CodeToName from "@/assets/js/CodeToName";
 var moment = require("moment");
 export default {
   name: "ModalsProduct",
+  components:{
+    vSelect,
+  },
   data() {
     return {
         modalEECC:false,
-        module:'AccountReceivable',
-        role:3,
+        isLoading: false,
+      module: 'AccountPay',
+      role:1,
+      perPage: 15,
+      currentPage: 1,
+      rows: 0,
+      data_table: [],
+      report:{
+        id_provider:'',
+        to:moment(new Date()).local().format("YYYY-MM-DD"),
+        coin:'all',
+      },
+      total_pen:{
+        total:'0.00',
+        fee:'0.00',
+        balance:'0.00',
+      },
+      total_usd:{
+        total:'0.00',
+        fee:'0.00',
+        balance:'0.00',
+      },
+      providers: [],
+      provider:null,
+      coin:[
+        {value:'all',text:'Todos'},
+        {value:'PEN',text:'Soles'},
+        {value:'USD',text:'Dólares'},
+      ],
+      
+      errors:{
+        to:false,
+        from:false,
+      }
 
-        isLoading:false,
-  
-        perPage_pending: 15,
-        currentPage_pending: 1,
-        rows_pending: 0,
-        search_pending: "",
-        accoun_receivable_pending: [],
-        clients_pending: [],
-        client_pending:null,
   
     };
   },
@@ -79,12 +147,19 @@ export default {
   mounted () {
     EventBus.$on('ModalEECCShow', () => {
       this.modalEECC = true;
-      this.ListAccountReceivablePending();
+      this.Validate();
     });
     
   },
   methods: {
-      ListAccountReceivablePending,
+      // Report,
+
+      Validate,
+      Report,
+      ExportExcel,
+      SearchProviders,
+      CodeInvoice,
+      NameCoin,
   },
   computed: {
     ...mapState(["url_base"]),
@@ -106,24 +181,76 @@ export default {
   },
 };
 
-function ListAccountReceivablePending() {
+
+function NameCoin(code) {
+  let name = '';
+  if (code == 'PEN') {
+    name = 'EXPRESADO EN SOLES';
+  }
+  if (code == 'USD') {
+    name = 'EXPRESADO EN DOLARES';
+  }
+  return name;
+}
+
+function CodeInvoice(code) {
+  return CodeToName.CodeInvoice(code);
+}
+
+function SearchProviders(search, loading) {
+  
+    let me = this;
+    let url = this.url_base + "search-providers/" + search;
+    if (search !== "") {
+      loading(true);
+      axios({
+        method: "GET",
+        url: url,
+      }).then(function (response) {
+            me.providers = response.data.result;
+            loading(false);
+      })
+    }
+    
+}
+
+function ExportExcel() {  
   let me = this;
-  let url = this.url_base + "account-receivable/list-eecc/"+ this.id_establishment +"?page=" + this.currentPage_pending;
+   me.report.id_provider = me.provider == null ? 'all':me.provider.id;
+  let url = me.url_base + "excel-report-accounts-pay/"+me.report.id_provider+"/"+me.report.to+"/"+me.report.coin;
+  window.open(url,'_blank');
+}
+
+function Validate() {
+  
+  // this.errors.id_establishment = this.kardex.id_establishment.length == 0 ? true : false;
+  // if (this.errors.id_establishment == true) { this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que campos necesarios esten llenados', timer: 2000,}); return false;}else{ this.validate = false; }
+  this.Report(this);
+}
+
+
+function Report(me) {
+
+  
+  let url = this.url_base + "report/accounts-pay";
+  me.report.id_provider = me.provider == null ? 'all':me.provider.id;
+  let data = me.report;
+  me.isLoading = true;
   axios({
-    method: "GET",
+    method: "POST",
     url: url,
+    data: data,
     headers: { token: this.token, module: this.module, role: 1,},
   })
     .then(function (response) {
       if (response.data.status == 200) {
-        me.rows_pending = response.data.result.data.total;
-        me.accoun_receivable_pending = response.data.result.result;
+        me.data_table = response.data.result.result;
+        me.total_pen = response.data.result.total_pen;
+        me.total_usd = response.data.result.total_usd;
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }
+      me.isLoading = false;
     })
-    .catch((error) => {
-      Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
-    });
 }
 </script>

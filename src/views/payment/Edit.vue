@@ -7,7 +7,7 @@
             <strong> Modulo Registro de Pagos - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
                
                 

@@ -7,7 +7,7 @@
             <strong> Modulo de Producto - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="3">
@@ -143,15 +143,21 @@
 
                          
 
-                          <b-col md="3">
-                            <b-form-group label="Peso Bruto :">
+                          <b-col md="2">
+                            <b-form-group label="Precio de Compra :">
                               <b-form-input type="number" class="text-right" step="any" ref="gross_weight" v-model="product.gross_weight"></b-form-input>
+                            </b-form-group>
+                          </b-col>
+
+                          <b-col md="2">
+                            <b-form-group label="Peso Bruto :">
+                              <b-form-input type="number" class="text-right" step="any" v-model="product.purchase_price"></b-form-input>
                             </b-form-group>
                           </b-col>
                           
                           
 
-                          <b-col md="3">
+                          <b-col md="2">
                             <b-form-group label="Web:">
                               <b-form-select v-model="product.web" :options="web"></b-form-select>
                             </b-form-group>
@@ -182,9 +188,10 @@
                           </b-col>
 
                           <b-col md="9">
-                            <b-form-group label="Proveedor :">
-                            <v-select placeholder="Seleccione un proveedor" class="w-100" :filterable="false" label="name" v-model="mprovider" @search="SearchProvider" :options="providers"></v-select>
-                            <small v-if="errors.id_provider" class="form-text text-danger">Seleccione un proveedor</small>
+                            <b-form-group>
+                              <label>Proveedor: <span @click="modalProviders" class="text-info link">Nuevo</span></label>
+                              <v-select placeholder="Seleccione un proveedor" class="w-100" :filterable="false" label="name" v-model="mprovider" @search="SearchProvider" :options="providers"></v-select>
+                              <small v-if="errors.id_provider" class="form-text text-danger">Seleccione un proveedor</small>
                             </b-form-group>
                           </b-col>
 
@@ -220,6 +227,8 @@
       </CCol>
     </CRow>
 
+
+    <ModalProviders />
     <LoadingComponent :is-visible="isLoading"/>
     <Keypress key-event="keyup" :key-code="115" @success="Validate" />
   </div>
@@ -237,13 +246,16 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
 import LoadingComponent from './../pages/Loading'
+import ModalProviders from '@/views/components/ModalProvider'
+import EventBus from '@/assets/js/EventBus';
 
 export default {
   name: "UsuarioAdd",
   components:{
       vSelect,
       Keypress: () => import('vue-keypress'),
-    LoadingComponent,
+      LoadingComponent,
+      ModalProviders,
   },
   data() {
     return {
@@ -312,6 +324,8 @@ export default {
         {value:'LBR',text:'LIBRAS'},
         {value:'LTR',text:'LITRO'},
         {value:'MTR',text:'METRO'},
+        {value:'MTK',text:'METRO CUADRADO'},
+        {value:'MTQ',text:'METRO CUBICO'},
         {value:'MGM',text:'MILIGRAMOS'},
         {value:'MIL',text:'MILLARES'},
         {value:'UM',text:'MILLON DE UNIDADES'},
@@ -376,6 +390,9 @@ export default {
     AddProduct,
     Validate,
     SearchProvider,
+
+    modalProducts,
+    modalProviders,
   },
 
   computed: {
@@ -392,6 +409,19 @@ function onFileChange(e) {
   // e.preventDefault();
   this.product.photo = e.target.files[0];
 }
+
+function modalProducts() {
+  let data = {
+    role : 2,
+    id_establishment : this.id_establishment,
+  }
+  EventBus.$emit('ModalProductsShow',data);
+}
+
+function modalProviders() {
+  EventBus.$emit('ModalProvidersShow');
+}
+
 
 function SearchProvider(search, loading) {
   
@@ -602,7 +632,7 @@ function AddProduct(_this) {
         
         Swal.fire({ icon: 'success', text: 'Se ha registrado el nuevo producto', timer: 3000,})
       } else {
-        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+        Swal.fire({ icon: 'error', text: response.data.message, timer: 3000,})
       }
       me.isLoading = false;
     })

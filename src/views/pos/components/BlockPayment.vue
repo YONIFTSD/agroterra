@@ -5,7 +5,7 @@
         <b-col md="12">
           <br>
         </b-col>
-        <b-col md="8" class="text-center">
+        <b-col md="10" class="text-center">
            <b-input-group>
            
             <b-input-group-append>
@@ -21,9 +21,9 @@
           </b-input-group>
         </b-col>
  
-        <b-col md="4">
+        <b-col md="2">
           <b-form-group>
-              <b-button @click="Back" type="button" class="form-control" variant="danger">Regresar</b-button>
+              <b-button @click="Back" type="button" title="Regresar" class="form-control" variant="danger"><i class="fas fa-arrow-alt-circle-left"></i></b-button>
           </b-form-group>
         </b-col>
       </b-row>
@@ -35,7 +35,14 @@
           <div class="w-100 text-center"><strong class="text-total-payment">{{ sale.coin == "PEN" ? "S/":"$"}} {{total_pos.total}}</strong></div>
 
           <div class="w-100 size-pos" :style="size_pos"><br>
-            <div class="table-responsive">
+{{igv_percentage +"as"}}
+            <b-col md="12">
+              <b-form-group>
+                <label class="control-label">Forma de Pago: </label>
+                <b-form-select @change="ChangeWayToPay"  v-model="sale.way_to_pay" :options="way_to_pay"></b-form-select>
+              </b-form-group>
+            </b-col>
+            <div v-if="type_pay == '01'" class="table-responsive">
               <table  class="table  table-lg mt-lg mb-0">
                 <thead>
                   <tr>
@@ -59,8 +66,37 @@
                 </thead>
               </table>
             </div>
+            <div v-if="type_pay == '03'" class="table-responsive">
+              <table  class="table  table-lg mt-lg mb-0">
+                <thead>
+                  <tr>
+                    <th width="20%" class="text-center">Dias</th>
+                    <th width="40%" class="text-center">Fecha</th>
+                    <th width="35%" class="text-center">Total</th>
+                    <th width="5%" class="text-center"></th>
+                  </tr>
+                </thead>
+                <thead>
+                  <tr v-for="(item, it) in fees_collected" :key="it" >
+                    <td class="text-center">
+                      <b-form-input @change="UpdateFeeColleted(it)" class="text-center" v-model="item.days" type="number"></b-form-input>
+                    </td>
+                    <td class="text-center">
+                      <b-form-input disabled class="text-center" :max="max_date" :min="min_date" v-model="item.date" type="date"></b-form-input>
+                    </td>
+                    <td class="text-right">
+                        <b-form-input class="text-right" v-model="item.total" type="number" step="any"></b-form-input>
+                    </td>
+                    <td class="text-center">
+                       <b-button @click="DeleteFeeCollected(it)" type="button" variant="danger"><i class="fas fa-trash"></i></b-button>
+                    </td>
+                  </tr>
+                </thead>
+              </table>
+            </div>
             <div class="w-100">
-            <b-link  @click="AddPaymentCash"><i class="fas fa-plus"></i> Agregar pago</b-link>
+            <b-link v-if="type_pay == '01'"  @click="AddPaymentCash"><i class="fas fa-plus"></i> Agregar pago</b-link>
+            <b-link v-if="type_pay == '03'"  @click="AddFeeCollected"><i class="fas fa-plus"></i> Agregar cuota</b-link>
           </div>
           </div>
           
@@ -166,7 +202,21 @@ export default {
       series: null,
       way_to_pay:[
         {value:"01-000", text :'Contado'},
+        {value:'03-7',text:'Credito - 7 Dias'},
+        {value:'03-15',text:'Credito - 15 Dias'},
+        {value:'03-30',text:'Credito - 30 Dias'},
+        {value:'03-45',text:'Credito - 45 Dias'},
+        {value:'03-60',text:'Credito - 60 Dias'},
+        {value:'03-75',text:'Credito - 75 Dias'},
+        {value:'03-90',text:'Credito - 90 Dias'},
+        {value:'03-105',text:'Credito - 105 Dias'},
+        {value:'03-120',text:'Credito - 120 Dias'},
       ],
+      type_pay:'01',
+      fees_collected:[],
+      min_date:moment(new Date()).local().format("YYYY-MM-DD"),
+      max_date:moment(new Date()).local().format("YYYY-MM-DD"),
+      days:0,
 
        payment_method: [
           {value :"001", text :'DEPÓSITO EN CUENTA'},
@@ -183,7 +233,7 @@ export default {
 
       cashs:[],
       payment_cash : [],
-
+      igv_percentage:'',
 
       errors: {
         id_serie: false,
@@ -218,6 +268,7 @@ export default {
       }
       
     });
+   this.GetInformationSale();
    this.ViewEstablishment();
    this.ListSeries();
    this.AddPaymentCash();
@@ -239,6 +290,13 @@ export default {
     DeletePaymentCash,
     Back,
     ViewEstablishment,
+    GetInformationSale,
+
+    ChangeWayToPay,
+    AddFeeCollected,
+    UpdateFeeColleted,
+    DeleteFeeCollected,
+    CalculateFeesCollected,
     
     ...mapActions('SalePOS',['mLoadResetPOSDetail']),
   },
@@ -267,6 +325,23 @@ export default {
     }
   },
 };
+
+function GetInformationSale() {
+  
+  let me = this;
+  let url = this.url_base + "get-information-sale";
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: this.role, },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.igv_percentage = response.data.result.igv_percentage;;
+      } 
+    })
+}
+
 function ViewEstablishment() {
   let me = this;
   let url = me.url_base + "establishment/view/" + this.id_establishment;
@@ -326,7 +401,9 @@ function ListSeries() {
         let data = response.data.result;
         for (let index = 0; index < data.length; index++) {
           me.series.push( { value : data[index].id_serie , text: data[index].serie+"-"+data[index].number } );
-          me.sale.id_serie = data[index].id_serie;
+          if (data[index].default == 1) {
+            me.sale.id_serie = data[index].id_serie;
+          }
         }
         if (response.data.result.length == 0)  {
           me.sale.id_serie = '';
@@ -376,16 +453,28 @@ function AddSale() {
   me.sale.id_user = me.user.id_user;
   me.sale.id_establishment = me.id_establishment;
   me.sale.id_client = me.mclient.id;
+  me.sale.address = me.sale.address;
+  me.sale.fees_collected = me.fees_collected;
+  me.sale.check_contingency = me.sale.check_contingency;
+  me.sale.check_detraction = me.sale.check_detraction;
+  me.sale.check_retention = me.sale.check_retention;
+  me.sale.check_discount = me.sale.check_discount;
+
   me.sale.taxed_operation = me.total_pos.taxed_operation;
   me.sale.unaffected_operation = me.total_pos.unaffected_operation;
   me.sale.exonerated_operation = me.total_pos.exonerated_operation;
+  me.sale.percentage_detraction = me.total_pos.percentage_detraction;
+  me.sale.detraction = me.total_pos.detraction;
   me.sale.discount = me.total_pos.discount;
+  me.sale.retention = me.total_pos.retention;
   me.sale.subtotal = me.total_pos.subtotal;
   me.sale.igv = me.total_pos.igv;
   me.sale.total = me.total_pos.total;
+  me.sale.net_total = me.total_pos.net_total;
   me.sale.number_to_letters = me.total_pos.number_to_letters;
   me.sale.sale_detail = me.pos_detail;
   me.sale.payment_cash = me.payment_cash;
+  me.sale.igv_percentage = me.igv_percentage;
 
   
   let data = me.sale;
@@ -412,9 +501,9 @@ function AddSale() {
         me.sale.broadcast_time = "";
         me.sale.expiration_date = moment(new Date()).local().format("YYYY-MM-DD");
         me.sale.coin = "PEN";
-        me.sale.way_to_pay = "01-008";
+        me.sale.way_to_pay = "01-000";
         me.sale.payment_type = "01";
-        me.sale.payment_method = "008";
+        me.sale.payment_method = "000";
         me.sale.payment_deadline = "0";
         me.sale.observation = "";
         me.sale.modified_document_type = "";
@@ -513,9 +602,9 @@ function Validate() {
     }
   }else{
     this.payment_cash = [];
-    if (this.sale.fees_collected.length > 0) {
-      for (let index = 0; index < this.sale.fees_collected.length; index++) {
-        const element = this.sale.fees_collected[index];
+    if (this.fees_collected.length > 0) {
+      for (let index = 0; index < this.fees_collected.length; index++) {
+        const element = this.fees_collected[index];
         if (element.date == "") {
           this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas cuenten con un fecha', timer: 2000,}); return false;
         }
@@ -527,7 +616,7 @@ function Validate() {
         }
         total += parseFloat(element.total);
       }
-      let balance_fee_collection = parseFloat(this.total_pos.total) - parseFloat(total);
+      let balance_fee_collection = parseFloat(this.total_pos.net_total) - parseFloat(total);
       console.log(balance_fee_collection)
       if (balance_fee_collection < 0 || balance_fee_collection > 0.15) {
         this.validate = true; Swal.fire({ icon: 'warning', text: 'Verifique que las cuotas coincidan con el total del comprobante', timer: 4000,}); 
@@ -628,5 +717,68 @@ function  DeletePaymentCash(index) {
 
 function Back() {
     EventBus.$emit('ChangeTypeProcess',1);
+}
+
+
+function ChangeWayToPay() {
+  let payment_method = this.sale.way_to_pay.split("-");
+  if (payment_method[0] == "01") {
+    this.payment_cash = [];
+    this.fees_collected = [];
+    this.type_pay = "01";
+    this.AddPaymentCash();
+  }else{
+    this.payment_cash = [];
+    this.fees_collected = [];
+    this.type_pay = "03";
+    this.AddFeeCollected();
+    this.CalculateFeesCollected();
+  }
+}
+
+
+function CalculateFeesCollected() {
+  let total = this.total_pos.total;
+  let payment_method = this.sale.way_to_pay.split("-");
+  if (payment_method[0] == "03") {
+      let total_fee_collected = parseFloat(total) / parseFloat(this.fees_collected.length);
+      for (let index = 0; index < this.fees_collected.length; index++) {
+        this.fees_collected[index].total = parseFloat(total_fee_collected).toFixed(2);
+      }
+      this.days = payment_method[1];
+  }else{
+    this.fees_collected = [];
+  }
+
+  EventBus.$emit('ChangeFeesCollected',this.fees_collected);
+}
+
+function UpdateFeeColleted(index) {
+  let payment_type = this.sale.way_to_pay.split('-');
+  let days_payment = payment_type[1];
+
+  this.fees_collected[index].days = this.fees_collected[index].days.length == 0 ? 1 :this.fees_collected[index].days;
+  this.fees_collected[index].days = parseFloat(this.fees_collected[index].days) < 0 ? 1: this.fees_collected[index].days;
+  this.fees_collected[index].days = parseFloat(this.fees_collected[index].days) > parseFloat(days_payment) ? days_payment: this.fees_collected[index].days;
+  let days = parseFloat(this.fees_collected[index].days);
+  this.fees_collected[index].date = moment(this.min_date, "YYYY-MM-DD").add('days',parseInt(days)).local().format("YYYY-MM-DD");
+}
+
+function AddFeeCollected() {
+this.min_date = this.sale.broadcast_date;
+let payment_type = this.sale.way_to_pay.split('-');
+let days = payment_type[1];
+this.max_date = moment(this.min_date, "YYYY-MM-DD").add('days',parseInt(days)).local().format("YYYY-MM-DD");
+this.fees_collected.push({
+   days: days,
+   date: moment(this.min_date, "YYYY-MM-DD").add('days',parseInt(days)).local().format("YYYY-MM-DD"),
+   total: (0).toFixed(2),
+ })
+ this.CalculateFeesCollected();
+}
+
+function DeleteFeeCollected(index) {
+  this.fees_collected.splice(index, 1);
+  this.CalculateFeesCollected();
 }
 </script>

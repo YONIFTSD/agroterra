@@ -7,7 +7,7 @@
             <strong> Modulo Liquidación de pagos - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-tabs v-model="tabIndex" content-class="mt-3">
                 <b-tab :disabled="first" title="Cuentas por Pagar" active>
                   <b-row>
@@ -342,7 +342,6 @@ export default {
 };
 
 function UpdateCoin() {
-  alert(this.settlement_payment.coin)
   this.mLoadUpdateSettlementPaymentCoin(this.settlement_payment.coin);
 }
 function DeleteAccountPay(index) {

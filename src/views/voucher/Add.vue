@@ -7,7 +7,7 @@
             <strong> Modulo de Comprobante - Nuevo</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="AddVoucher">
+            <b-form id="Form" autocomplete="off" @submit.prevent="AddVoucher">
               <b-row>
                
      

@@ -1,7 +1,7 @@
 <template>
   <div class="w-100">
         <div class="table-responsive mt-3">
-              <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+              <table  class="table table-information-detail table-bordered table-hover table-lg mt-lg mb-0">
                 <thead>
                   <tr>
                     <th width="3%" class="text-center">#</th>
@@ -32,7 +32,7 @@
                       </td>
                       <td class="align-middle text-right">{{ item.total_price }}</td>
                       <td class="align-middle text-center">
-                        <button :disabled="type_invoice == '07' && !(reason == '07')" type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>  
+                        <b-button size="sm" :disabled="type_invoice == '07' && !(reason == '07')" type="button" @click="DeleteDetail(item.id_product)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></b-button>  
                       </td>
 
                   </tr>

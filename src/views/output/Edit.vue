@@ -7,7 +7,7 @@
             <strong> Modulo de Salida - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="6">
@@ -432,7 +432,7 @@ function EditOutput(mthis) {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: response.data.response,
+          text: response.data.message,
         })
       }
       me.isLoading = false;

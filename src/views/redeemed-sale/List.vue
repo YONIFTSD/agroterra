@@ -388,7 +388,8 @@ function ConfirmDeleteSale(id_redeemed_sale) {
 // eliminar usuario
 function DeleteSale(id_redeemed_sale) {
   let me = this;
-  let url = this.url_base + "redeemed-sale/delete/" + id_redeemed_sale;
+  let id_user = me.user.id_user;
+  let url = this.url_base + "redeemed-sale/delete/" + id_redeemed_sale+"/"+id_user;
   axios({
     method: "delete",
     url: url,

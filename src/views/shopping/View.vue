@@ -7,7 +7,7 @@
             <strong> Modulo Compras - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="6">
@@ -112,7 +112,7 @@
                   </b-form-group>
                 </b-col>
                 <!-- Detalle Entrada -->
-                 <div class="col-md-12">
+                <div class="col-md-12">
                   <div class="table-responsive mt-3">
                         <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                           <thead >
@@ -152,7 +152,7 @@
                           </tbody>
                         </table>
                       </div>
-                    </div>
+                </div>
                 <small v-if="errors.shopping_detail" class="col-md-12 form-text text-center text-danger">Agregue productos</small>
                 <!-- Detalle Entrada -->
                 <b-col md="12" class="mt-3"></b-col>
@@ -317,6 +317,7 @@ export default {
         {value: "52", text : "Despacho Simplificado - Importación Simplificada"},
         {value: "91", text : "Comprobante de No Domiciliado"},
         {value: "NE", text : "Nota de Entrada"},
+        {value: "NV", text : "Nota de Venta"},
         {value: "00", text : "Otros"},
       ],
 
@@ -340,6 +341,8 @@ export default {
         {value:"03-60",text:'Crédito - 60 dias'},
         {value:"03-75",text:'Crédito - 75 dias'},
         {value:"03-90",text:'Crédito - 90 dias'},
+        {value:"03-105",text:'Crédito - 105 dias'},
+        {value:"03-120",text:'Crédito - 120 dias'},
       ],
 
       affection_for_detraction: [
@@ -449,14 +452,17 @@ function ChangeExpensesValue() {
 }
 
 function modalExachangeRate() {
-  EventBus.$emit('ModalExchangeRateShow');
+  let data = {
+    date : this.shopping.broadcast_date
+  }
+  EventBus.$emit('ModalExchangeRateShow',data);
 }
 
 
 function ListWarehouse() {
    
   let me = this;
-  let url = this.url_base + "active-warehouses/"+this.id_establishment;
+  let url = this.url_base + "active-warehouses-all";
   axios({
     method: "GET",
     url: url,

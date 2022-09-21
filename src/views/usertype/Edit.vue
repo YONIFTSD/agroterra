@@ -7,7 +7,7 @@
             <strong> Modulo de Tipo Usuario - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="EditUserType">
+            <b-form id="Form" autocomplete="off" @submit.prevent="EditUserType">
               <b-row>
                 
                 <b-col md="3">

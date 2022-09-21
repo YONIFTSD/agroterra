@@ -132,6 +132,10 @@ export default {
     };
   },
   mounted () {
+    EventBus.$on('GetDataClient', (data) => {
+      this.client = {id:data.id_client,full_name:data.name+" - "+data.document_number};
+      this.ChangeClient();
+    });
      this.client = this.mclient;
      this.ViewEstablishment();
   },
@@ -146,9 +150,9 @@ export default {
 
     modalSizePOSShow,
     UpdateSize,
-   
+    AddressClient,
 
-    ...mapActions('SalePOS',['mLoadEditPOSDetail','mLoadDeletePOSDetail','mLoadEditClient','mLoadTotalPOSDetail']),
+    ...mapActions('SalePOS',['mLoadEditPOSDetail','mLoadDeletePOSDetail','mLoadEditClient','mLoadTotalPOSDetail','mLoadEditClientAddress']),
       
   },
   computed: {
@@ -166,6 +170,27 @@ export default {
     }
   },
 };
+
+function AddressClient() {
+
+  let me = this;
+  if (this.client == null) {
+    me.mLoadEditClientAddress('');
+    return false;
+  }
+  
+  let url = this.url_base + "client/view/"+this.client.id;
+  axios({
+    method: "GET",
+    url: url,
+    headers: { token: this.token, module: this.module, role: this.role, },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        me.mLoadEditClientAddress(response.data.result.address);
+      } 
+    })
+}
 
 function ViewEstablishment() {
   let me = this;
@@ -228,6 +253,7 @@ function SearchClients(search, loading) {
 }
 function ChangeClient() {
   this.mLoadEditClient(this.client);
+  this.AddressClient();
 }
 function modalClients() {
   EventBus.$emit('ModalClientsShow');

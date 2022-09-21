@@ -7,7 +7,7 @@
             <strong> Modulo de Canje Venta - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
        
                 <b-col md="2">
@@ -135,13 +135,9 @@
 
                 <b-col md="12" class="mt-2"></b-col>
 
-                <b-col md="8">
-                  <b-form-group class="m-0" >
-                    <b-form-input readonly v-model="sale.number_to_letters" ></b-form-input>
-                  </b-form-group>
-                  <b-row>
+           
                     
-                    <b-col md="6">
+                    <b-col md="3">
                         <div class="table-responsive mt-3">
                           <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
                             <thead class="">
@@ -159,28 +155,91 @@
                           </table>
                         </div>
                     </b-col>
-                    <b-col md="6">
+                    <b-col md="3">
                       <b-form-group label="Observación:">
                         <b-form-textarea disabled rows="1"  v-model="sale.observation" max-rows="2"></b-form-textarea>
                       </b-form-group>
                     </b-col>
+               
+
+                 <b-col md="3">
+                  <b-row>
+                      <div class="table-responsive">
+                        <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                          <tbody >
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox disabled value="1" unchecked-value="0" v-model="sale.check_detraction" switch size="sm" name="check-button" >¿Tiene Detracción?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="">
+                                  <b-form-checkbox disabled value="1" unchecked-value="0" v-model="sale.check_retention" switch size="sm" name="check-button" >¿Tiene retención de igv?</b-form-checkbox>
+                                </td>
+                            </tr>
+                            <!-- <tr>
+                                <td class="">
+                                  <b-form-checkbox value="1" unchecked-value="0" @change="mLoadTotalSaleDetail" v-model="total_sale.check_discount" switch size="sm" name="check-button" >¿Tiene Descuento Global?</b-form-checkbox>
+                                </td>
+                            </tr> -->
+                          </tbody>
+                        </table>
+                      </div>
+           
+     
+                    
                   </b-row>
                 </b-col>
+               
 
-                <b-col md="4">
-                  <b-form-group class="m-0" label-cols-lg="8" label="Subtotal:" label-align="right" >
-                    <b-form-input readonly class="text-right" v-model="sale.subtotal"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group  class="m-0"  label-cols-lg="8" label="IGV (18%):"  label-align="right">
-                    <b-form-input readonly class="text-right" v-model="sale.igv"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group  class="m-0" label-cols-lg="8" label="Total:" label-align="right">
-                    <b-form-input readonly class="text-right" v-model="sale.total"></b-form-input>
-                    <small  v-if="errors.total"  class="form-text text-danger">Ingrese un monto</small>
-                  </b-form-group>
-
+                <b-col md="3">
+                  <div class="table-responsive">
+                    <table  class="table   table-hover table-lg mt-lg mb-0">
+                      <tbody>
+                         <tr v-if="sale.check_detraction == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Detracción :</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <div class="input-group">
+                                <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.percentage_detraction"></b-form-input>
+                                <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.detraction"></b-form-input>
+                              </div>
+                            </td>
+                        </tr>
+                        <tr v-if="sale.check_retention == '1'">
+                            <td width="50%" class="align-middle text-right text-total">Retencion (3%):</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.retention"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="50%" class="align-middle text-right text-total">Subtotal:</td>
+                            <td width="50%" class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.subtotal"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr v-if="sale.check_discount == '1'">
+                            <td class="align-middle text-right text-total">Descuento:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.discount"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">IGV ({{sale.igv_percentage}}%):</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.igv"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle text-right text-total">Total:</td>
+                            <td class="align-middle text-right text-total">
+                              <b-form-input readonly size="sm" type="number" step="any" class="text-right" v-model="sale.total"></b-form-input>
+                            </td>
+                        </tr>
+                        <tr>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </b-col>
 
                 <b-col md="3"></b-col>
@@ -246,30 +305,38 @@ export default {
       module: 'Sale',
       role: 5,
       sale: {
-        id_redeemed_sale: "",
+        id_sale: "",
         id_client: "",
         id_serie: "",
-        id_warehouse: '',
-        linkages:[],
+        id_warehouse: "",
         type_operation: "01",
+        linkages: [],
         type_invoice: "03",
         serie: "",
         number: "",
         broadcast_date: moment(new Date()).local().format("YYYY-MM-DD"),
         broadcast_time: "",
         expiration_date: moment(new Date()).local().format("YYYY-MM-DD"),
+        web_pay: 0,
         coin: "PEN",
-        address: "",
-        way_to_pay: "01-008",
+        address: '',
+        way_to_pay: "01-000",
         payment_type: "01",
         payment_method: "008",
         payment_deadline: "0",
+        fees_collected:[],
         observation: "",
         license_plate: "",
+        code_sap: '',
+        order_sap: '',
+        service: '',
         modified_document_type: "",
         modified_serie: "",
         modified_number: "",
         modified_emission_date: "",
+        check_contingency:"0",
+        check_retention:"0",
+        check_discount:"0",
         reason: "",
         support: "",
         sunat_message: "",
@@ -278,12 +345,15 @@ export default {
         taxed_operation: '0.00',
         exonerated_operation: '0.00',
         unaffected_operation: '0.00',
+        retention: '0.00',
         discount: '0.00',
         subtotal: '0.00',
         igv: '0.00',
         total: '0.00',
+        net_total: '0.00',
         state: '1',
         number_to_letters: '',
+        igv_percentage:'',
       },
       sale_detail:[],
       series: null,
@@ -443,7 +513,7 @@ function ViewSale() {
   })
     .then(function (response) {
       if (response.data.status == 200) {
-      
+        me.sale.igv_percentage = response.data.result.igv_percentage;
         me.client = {id: response.data.result.id_client,full_name: response.data.result.name + ' - ' + response.data.result.document_number};
 
         me.sale.id_redeemed_sale = response.data.result.id_redeemed_sale,
@@ -463,7 +533,9 @@ function ViewSale() {
         }else{
           me.sale.way_to_pay = response.data.result.payment_type+'-'+response.data.result.payment_deadline;
         }
-        
+        me.sale.code_sap = response.data.result.code_sap;
+        me.sale.order_sap = response.data.result.order_sap;
+        me.sale.service = response.data.result.service;
         me.sale.payment_type = response.data.result.payment_type;
         me.sale.payment_method = response.data.result.payment_method;
         me.sale.payment_deadline = response.data.result.payment_deadline;
@@ -478,19 +550,23 @@ function ViewSale() {
         me.sale.sunat_message = response.data.result.sunat_message;
         me.sale.hash_cpe = response.data.result.hash_cpe;
         me.sale.hash_cdr = response.data.result.hash_cdr;
+        me.sale.check_contingency = response.data.result.check_contingency;
+        me.sale.check_detraction = response.data.result.check_detraction;
+        me.sale.check_retention = response.data.result.check_retention;
+        me.sale.check_discount = response.data.result.check_discount;
         me.sale.taxed_operation = response.data.result.taxed_operation;
         me.sale.exonerated_operation = response.data.result.exonerated_operation;
         me.sale.unaffected_operation = response.data.result.unaffected_operation;
+        me.sale.percentage_detraction = response.data.result.percentage_detraction;
+        me.sale.detraction = response.data.result.detraction;
+        me.sale.retention = response.data.result.retention;
         me.sale.discount = response.data.result.discount;
         me.sale.subtotal = response.data.result.subtotal;
         me.sale.igv = response.data.result.igv;
         me.sale.total = response.data.result.total;
         me.sale.state = response.data.result.state;
         me.sale.number_to_letters = response.data.result.number_to_letters;
-       
         me.sale_detail = response.data.detail_result;
-      
-        
       } else {
         Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
       }

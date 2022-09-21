@@ -88,12 +88,13 @@
                       <b-dropdown bloque size="sm" text="Acciones" right>
                         <b-dropdown-item v-if="Permission('SaleEdit')  && (item.state == 1 || item.state == 3)" @click="EditSale(item.id_sale)">Editar</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleView')"  @click="ViewSale(item.id_sale)">Ver</b-dropdown-item>
-                        <b-dropdown-item v-if="Permission('SaleEdit') && item.state == 4 && (item.type_invoice == '01' || item.type_invoice == '03' )"  @click="AddNotaCreditoDebito(item.id_sale)">Gen. Nota Cred. / Deb.</b-dropdown-item>
+                        <b-dropdown-item v-if="Permission('SaleAdd') && item.state == 4 && (item.type_invoice == '01' || item.type_invoice == '03' )"  @click="AddNotaCreditoDebito(item.id_sale)">Gen. Nota Cred. / Deb.</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 4)" @click="showModalSaleLow(it)">Anular</b-dropdown-item>
                         <b-dropdown-item v-if="Permission('SaleDelete') && (item.state == 1 || item.state == 3)" @click="ConfirmDeleteSale(item.id_sale)">Eliminar</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 0 || item.state == 5" @click="GenerateXML(item.id_sale)">Generar XML</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 3 || item.state == 5" @click="SendXML(item.id_sale)">Enviar XML</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 4" @click="modalCPESunat(item.id_sale)">Ver CPE</b-dropdown-item>
-                        <b-dropdown-item v-if="item.state == 1 || item.state == 3 || item.state == 4"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
+                        <b-dropdown-item v-if="item.state == 3 || item.state == 4"  @click="ViewReferralGuide(item.id_sale)">Generar G.R.</b-dropdown-item>
                         <b-dropdown-item v-if="item.state == 1"  @click="TradeSale(item.id_sale)">Canjear Venta</b-dropdown-item>
                       </b-dropdown>
                     </td>
@@ -230,6 +231,7 @@ export default {
 
     ViewReferralGuide,
     SendXML,
+    GenerateXML,
     modalCPESunat,
 
     AddNotaCreditoDebito,
@@ -359,6 +361,33 @@ function modalCPESunat(id_sale) {
   //   })
 }
 
+
+
+
+function GenerateXML(id_sale) {
+  this.isLoading = true;
+  let me = this;
+  let url = this.url_base + "home/regenerate-xml/" + id_sale;
+  axios({
+    method: "get",
+    url: url,
+    headers: { token: this.token, module: this.module,role: 1 },
+  })
+    .then(function (response) {
+      if (response.data.status == 200) {
+        for (var i = 0; i < me.data_table.length; i++) {
+          if (me.data_table[i].id_sale == id_sale) {
+            me.data_table[i].state = response.data.result.state;
+            break;
+          }
+        }
+      } else {
+        Swal.fire({ icon: 'error', text: 'A ocurrido un error', timer: 3000,})
+      }
+      me.isLoading = false;
+    })
+}
+
 function SendXML(id_sale) {
   this.isLoading = true;
   let me = this;
@@ -379,7 +408,7 @@ function SendXML(id_sale) {
         if (response.data.result.state == 4) {
           Swal.fire({ icon: 'success', text: 'El comprobante, ha sido aceptado', timer: 3000,})
         }else if(response.data.result.state == 5){
-          Swal.fire({ icon: 'error', text: response.data.result.sunat_message, timer: 3000,})
+          Swal.fire({ icon: 'error', text: response.data.result.sunat_message})
         }
         
       } else {
@@ -411,7 +440,8 @@ function ConfirmDeleteSale(id_sale) {
 // eliminar usuario
 function DeleteSale(id_sale) {
   let me = this;
-  let url = this.url_base + "sale/delete/" + id_sale;
+  let id_user = me.user.id_user;
+  let url = this.url_base + "sale/delete/" + id_sale +"/"+id_user;
   axios({
     method: "delete",
     url: url,

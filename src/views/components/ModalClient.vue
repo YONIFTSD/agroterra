@@ -3,7 +3,7 @@
     <b-modal size="xl" class="modal-size" hide-footer v-model="modal_client" title="NUEVO CLIENTE">
       <b-row>
         <b-col md="12">
-          <b-form id="Form" @submit.prevent="Validate">
+          <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
              
                 <b-col md="2">
@@ -306,45 +306,6 @@ function SearchClient() {
         me.error_document_number = 'El nro de ducumento debe contener 11 digitos';
       }
   }
-
-
-  // let me = this;
-  // if (me.client.document_type == 1) {
-  //     if (me.client.document_number.length == 8) {
-  //       me.errors.document_number = false;
-  //       axios({
-  //         method: "GET",
-  //         url: 'https://dni.optimizeperu.com/api/persons/'+me.client.document_number,
-  //       }).then(function (response) {
-  //         console.log(response);
-  //           if (response.data.name != undefined ) {
-  //             me.client.name = response.data.first_name + ' ' + response.data.last_name + ' ' + response.data.name ;
-  //           }
-  //       })
-  //     }else{
-  //       me.errors.document_number = true;
-  //       me.error_document_number = 'El nro de ducumento debe contener 8 digitos';
-  //     }
-  // }
-
-  // if (me.client.document_type == 6) {
-  //     if (me.client.document_number.length == 11) {
-  //       me.errors.document_number = false;
-  //       axios({
-  //         method: "GET",
-  //         url: 'https://dniruc.apisperu.com/api/v1/ruc/'+me.client.document_number+'?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNlZ2NhbmFodWlyZUBnbWFpbC5jb20ifQ.wEYHsSfNliepUjte7SjQVBPxEEB_4TDy9ZEZ_SwArJM',
-  //       }).then(function (response) {
-  //         console.log(response);
-  //           if (response.data.razonSocial != undefined ) {
-  //             me.client.name = response.data.razonSocial;
-  //           }
-  //       })
-  //     }else{
-  //       me.errors.document_number = true;
-  //       me.error_document_number = 'El nro de ducumento debe contener 11 digitos';
-  //     }
-  // }
-  
 }
 
 function AddClient(_this) {
@@ -385,6 +346,9 @@ function AddClient(_this) {
         me.client.marital_status = "";
         me.client.state = 1;
         me.mubigee = null;
+
+        EventBus.$emit('GetDataClient',response.data.result);
+
         Swal.fire({ icon: 'success', text: 'Se ha creado el nuevo cliente', timer: 3000,})
       }else if(response.data.status == 400){
         Swal.fire({ icon: 'warning', text: 'El cliente ingresado ya se encuentra registrado', timer: 3000,})

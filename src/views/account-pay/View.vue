@@ -7,7 +7,7 @@
             <strong> Modulo Cuentas por Pagar - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form">
+            <b-form id="Form" autocomplete="off">
               <b-row>
 
                 <b-col md="6">
@@ -70,6 +70,53 @@
                   </b-form-group>
                 </b-col>
 
+              
+
+                <div class="col-md-12" v-if="detail.length > 0">
+                  <div class="table-responsive mt-3">
+                        <table  class="table  table-bordered table-hover table-lg mt-lg mb-0">
+                          <thead >
+                            <tr>
+                              <th rowspan="2" width="3%" class="text-center">#</th>
+                              <th rowspan="2" width="5%" class="text-center">Cod.</th>
+                              <th rowspan="2" width="38%" class="text-center">Nombre</th>
+                              <th rowspan="2" width="8%" class="text-center">UM</th>
+                              <th rowspan="2" width="8%" class="text-center">Cantidad</th>
+                              <th rowspan="2" width="9%" class="text-center">Imp. Unit.</th>
+                              <th colspan="2" width="10%" class="text-center">Descuento</th>
+                              <th rowspan="2" width="7%" class="text-center">V. Unit. <br> Neto</th>
+                              <th rowspan="2" width="7%" class="text-center">Valor Total</th>
+                              <th rowspan="2" width="5%" class="text-center">Bultos</th>
+                           
+                            </tr>
+                            <tr>
+                              <th class="text-center">%</th>
+                              <th class="text-center">Importe</th>
+                            </tr>
+                          </thead>
+                          <tbody v-for="(item, it) in detail" :key="it">
+                            <tr>
+                                <td class="align-middle text-center">{{ it + 1 }}</td>
+                                <td class="align-middle text-left">{{ item.code }}</td>
+                                <td class="align-middle text-left">{{ item.name + (item.presentation.length == 0 ? '':' - '+item.presentation) }}</td>
+                                <td class="align-middle text-center">{{ NameUnitMeasure(item.unit_measure) }}</td>
+                                <td class="align-middle text-right">{{ item.quantity }}</td>
+                                <td class="align-middle text-center">{{ item.unit_value }}</td>
+                                <td class="align-middle text-center">{{ item.percentage_discount }}</td>
+                                <td class="align-middle text-right">{{ item.unit_discount }}</td>
+                                <td class="align-middle text-right">{{ item.net_unit_value }}</td>
+                                <td class="align-middle text-right">{{ item.net_total_value }}</td>
+                                <td class="align-middle text-center">{{ item.package }}</td>
+                  
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                </div>
+                  <b-col md="12"> 
+                  <br>
+                </b-col>
+
                 <b-col md="5"></b-col>
                 <b-col md="2">
                   <b-link class="btn btn-primary form-control" :to="{ path: '/cuentas-por-pagar/listar' }" append >REGRESAR</b-link>
@@ -89,6 +136,7 @@ const Swal = require("sweetalert2");
 const je = require("json-encrypt");
 import { mapState } from "vuex";
 import LoadingComponent from './../pages/Loading'
+import CodeToName from "@/assets/js/CodeToName";
 
 export default {
   name: "CategoriaView",
@@ -138,7 +186,7 @@ export default {
       ],
       providers: [],
       provider:null,
-
+      detail:[],
       coins:[
         {value: "PEN", text : "Soles"},
         {value: "USD", text : "Dolares"},
@@ -150,6 +198,7 @@ export default {
   },
   methods: {
     ViewAccountPay,
+      NameUnitMeasure,
 
   },
 
@@ -162,6 +211,11 @@ export default {
     },
   },
 };
+
+function NameUnitMeasure(code) {
+  return CodeToName.NameUnitMeasure(code);
+}
+
 
 
 //ver usuario
@@ -195,6 +249,7 @@ function ViewAccountPay() {
           me.account_pay.fee = response.data.result.fee;
           me.account_pay.balance = response.data.result.balance;
           me.account_pay.state = response.data.result.state;
+          me.detail = response.data.detail;
       } else {
         Swal.fire("Sistema", "A Ocurrido un error", "error");
       }

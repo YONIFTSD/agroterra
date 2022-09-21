@@ -7,7 +7,7 @@
             <strong> Modulo de Entrada - Editar</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-tabs content-class="mt-3" >
                 <b-tab title="Datos de Entrada" active>
                   <b-row>

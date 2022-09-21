@@ -10,7 +10,7 @@
 
               <b-row class="mt-1">
                   <b-col sm="4" md="3" lg="3"  xl="3" v-for="(item,index) in room_control" :key="index">
-                    <b-form id="Form">
+                    <b-form id="Form" autocomplete="off">
                       <b-card-body :class="BackgroundColor(item.state)+' '+'mb-2'">
                         <b-card-title class="text-center text-white">{{item.room_number}}</b-card-title>
                         <b-card-text class="text-white">

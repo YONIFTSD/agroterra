@@ -30,7 +30,8 @@ const actions = {
         let detail = context.state.shopping_detail;
         let unit_value = context.state.munit_value;
         for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_product == product.id_product) {
+            // if (detail[index].id_product == product.id_product) {
+            if (1 == 2) {
 
                 detail[index].quantity = parseFloat(detail[index].quantity) + parseFloat(product.quantity);
                 detail[index].unit_value = detail[index].unit_value.length == 0 ? (0).toFixed(5) : parseFloat(detail[index].unit_value).toFixed(5);
@@ -149,11 +150,11 @@ const actions = {
         context.commit('mExpensesValueShopping',value);
     },
     
-    mLoadEditShoppingDetail(context,id_product){
+    mLoadEditShoppingDetail(context,index){
         let detail = context.state.shopping_detail;
         let unit_value = context.state.munit_value;
-        for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_product == id_product) {
+        // for (let index = 0; index < detail.length; index++) {
+        //     if (detail[index].id_product == id_product) {
                 detail[index].quantity = detail[index].quantity.length == 0 ? 0 : parseFloat(detail[index].quantity);
                 detail[index].unit_value = detail[index].unit_value.length == 0 ? (0).toFixed(5) : parseFloat(detail[index].unit_value).toFixed(5);
                 
@@ -206,21 +207,21 @@ const actions = {
                 detail[index].total_price = detail[index].total_price.toFixed(5);
 
                 context.dispatch('mLoadTotalsShoppingDetail');
-                break;
-            }
-        }
+        //         break;
+        //     }
+        // }
     },
 
-    mLoadDeleteShoppingDetail(context,id_product){
+    mLoadDeleteShoppingDetail(context,index){
         let detail = context.state.shopping_detail;
 
-        for (let index = 0; index < detail.length; index++) {
-            if (detail[index].id_product == id_product) {
+        // for (let index = 0; index < detail.length; index++) {
+        //     if (detail[index].id_product == id_product) {
                 context.commit('mDeleteShoppingDetail',index);
                 context.dispatch('mLoadTotalsShoppingDetail');
-                break;
-            }
-        }
+        //         break;
+        //     }
+        // }
     },
 
     mLoadResetShoppingDetail(context){
@@ -241,7 +242,6 @@ const actions = {
             total:0
         }
         let detail = context.state.shopping_detail;
-        console.log(detail)
         for (let index = 0; index < detail.length; index++) {
             total.discount += parseFloat(detail[index].total_discount);
             if (detail[index].igv == '10') {

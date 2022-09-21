@@ -7,7 +7,7 @@
             <strong> Modulo de Producto - Ver</strong>
           </CCardHeader>
           <CCardBody>
-            <b-form id="Form" @submit.prevent="Validate">
+            <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
               <b-row>
 
                 <b-col md="3">
@@ -140,7 +140,13 @@
 
                         
 
-                          <b-col md="3">
+                          <b-col md="2">
+                            <b-form-group label="Precio Compra:">
+                              <b-form-input disabled type="number" class="text-right" step="any" v-model="product.purchase_price"></b-form-input>
+                            </b-form-group>
+                          </b-col>
+
+                           <b-col md="2">
                             <b-form-group label="Peso Bruto :">
                               <b-form-input disabled type="number" class="text-right" step="any" ref="gross_weight" v-model="product.gross_weight"></b-form-input>
                             </b-form-group>
@@ -148,7 +154,7 @@
                           
                           
 
-                          <b-col md="3">
+                          <b-col md="2">
                             <b-form-group label="Web:">
                               <b-form-select disabled type="text" v-model="product.web" :options="web"></b-form-select>
                             </b-form-group>
@@ -302,6 +308,8 @@ export default {
         {value:'LBR',text:'LIBRAS'},
         {value:'LTR',text:'LITRO'},
         {value:'MTR',text:'METRO'},
+        {value:'MTK',text:'METRO CUADRADO'},
+        {value:'MTQ',text:'METRO CUBICO'},
         {value:'MGM',text:'MILIGRAMOS'},
         {value:'MIL',text:'MILLARES'},
         {value:'UM',text:'MILLON DE UNIDADES'},

@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-modal size="xl" hide-footer v-model="modal_bill_exchange" class="w-100" title="Letras de Cambio">
-      <b-form id="Form" @submit.prevent="Validate">
+      <b-form id="Form" autocomplete="off" @submit.prevent="Validate">
         <b-row>
           <b-col md="2">
             <b-form-group label="N° de Letra:">
